@@ -178,10 +178,6 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
         setInputController('');
     }
 
-    useEffect(() => { }, [
-        window.location.reload()
-    ])
-
 
     return (
         <Layout>
@@ -405,13 +401,22 @@ export async function getServerSideProps({ req, res }: any) {
     const paramsArr = req.url.split("=");
     const courseId = paramsArr[1]
 
+    console.log({ req: req.url  });
+
+
+    console.log({ courseId });
+
+
     const response = await http.get(`/get-course-by-id?id=${courseId}`);
     const assessments = await http.get(`/get-assessments?course=${courseId}`)
 
+    console.log({ assessments: response.data.data });
+
+
     return {
         props: {
-            course: response?.data?.data,
-            assessments: assessments?.data?.data,
+            course: response.data.data || null,
+            assessments: assessments.data.data || null,
         },
     };
 }

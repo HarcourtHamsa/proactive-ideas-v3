@@ -165,9 +165,6 @@ function Create({ course, quizzes }: { course: any, quizzes: any }) {
         setCurrentItem('')
     }
 
-    useEffect(() => { }, [
-        window.location.reload()
-    ])
 
 
     return (
@@ -372,8 +369,8 @@ export async function getServerSideProps({ req, res }: any) {
 
     return {
         props: {
-            course: response?.data?.data,
-            quizzes: quizzes?.data?.data,
+            course: response?.data?.data || null,
+            quizzes: quizzes?.data?.data || null,
         },
     };
 }
