@@ -3,7 +3,7 @@ import Layout from '@/components/admin/Layout'
 import { useCreateAssessmentMutation, useCreateQuizMutation, useFetchCoursesQuery } from '@/features/apiSlice'
 import http from '@/lib/http'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { IoAddCircle, IoClose, IoTrashBin } from 'react-icons/io5'
 import { QuizTypes } from '../../../../types/types'
 import CustomInput from '@/components/CustomInput'
@@ -45,7 +45,7 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
     });
     const router = useRouter()
 
-  
+
 
 
     const handleQuestionChange = (e: any) => {
@@ -113,7 +113,7 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
 
     const handleCreateQuiz = async () => {
         const assessmentExists = assessments[0];
-       
+
 
         const myOptionsArr = questionType == QuizTypes.trueOrFalse && [{ text: 'false' }, { text: 'true' }]
 
@@ -129,7 +129,7 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
 
         setQuestions((prevState) => ([...prevState, quiz]))
 
-      
+
 
 
         setQuestionType('');
@@ -147,18 +147,18 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
             title: title
         }
 
-      
+
 
         try {
             createAssessment({ data, token: authState.auth.user.accessToken }).then((res) => {
-             
+
                 notify({ msg: 'New accessment created!', type: 'success' });
                 setTimeout(() => {
                     // setModalIsOpen(!modalIsOpen);
                     router.push("/admin/assessment")
                 }, 1000 * 2);
             }).catch((err) => {
-             
+
                 notify({ msg: 'Oops! an error occured', type: 'error' });
             })
         } catch (error) {
@@ -177,6 +177,10 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
         setRefenceID('');
         setInputController('');
     }
+
+    useEffect(() => { }, [
+        window.location.reload()
+    ])
 
 
     return (

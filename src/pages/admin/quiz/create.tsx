@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import ReactPortal from '@/components/ReactPortal'
 import Layout from '@/components/admin/Layout'
 import { useCreateQuizMutation, useFetchCoursesQuery, useUpdateQuizMutation } from '@/features/apiSlice'
@@ -44,7 +45,7 @@ function Create({ course, quizzes }: { course: any, quizzes: any }) {
     const [isUpdateOperation, setIsUpdateOperation] = useState<null | boolean>(null)
     const authState = useSelector((state: RootState) => state.auth);
     const router = useRouter()
-    
+
     const handleQuestionChange = (e: any) => {
         setQuestion(e.target.value);
     }
@@ -164,6 +165,10 @@ function Create({ course, quizzes }: { course: any, quizzes: any }) {
         setCurrentItem('')
     }
 
+    useEffect(() => { }, [
+        window.location.reload()
+    ])
+
 
     return (
         <Layout>
@@ -175,7 +180,7 @@ function Create({ course, quizzes }: { course: any, quizzes: any }) {
                 <div className='mt-8'>
                     {
                         course?.sections?.map((section: any) => {
-                       
+
 
                             return (
                                 <div key={Math.random()}>
@@ -198,7 +203,7 @@ function Create({ course, quizzes }: { course: any, quizzes: any }) {
                                                     {quizzes.map((quiz: any) => {
                                                         if (quiz.sub_section === ss._id) {
                                                             return (
-                                                                <p  key={Math.random()} className='py-2.5 flex items-center justify-between px-4 ml-8 relative mt-6 bg-white border rounded'>
+                                                                <p key={Math.random()} className='py-2.5 flex items-center justify-between px-4 ml-8 relative mt-6 bg-white border rounded'>
                                                                     <span className='absolute -top-4 border text-sm rounded-full px-4 bg-white'>Quiz</span>
 
                                                                     Question: {quiz.question}
