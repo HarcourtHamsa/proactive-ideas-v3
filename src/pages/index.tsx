@@ -23,6 +23,7 @@ import IdeaCard from '@/components/IdeaCard'
 
 import useLocalStorage from '@/hooks/useLocalStorage'
 import SkeletonLoader from '@/components/SkeletonLoader'
+import Loader from '@/components/Loader'
 
 function Index({ heroContent, certContent, newsletterContent }: any) {
   const router = useRouter();

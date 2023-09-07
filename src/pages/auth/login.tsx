@@ -26,6 +26,8 @@ import { supabase } from "@/lib/supabaseClient";
 import { Role } from "../../../types/types";
 
 
+
+
 function Login() {
     const [isLoading, setIsLoading] = useState(false);
     const [email, setEmail] = useState("");
@@ -33,8 +35,9 @@ function Login() {
     const router = useRouter();
     const { next } = router.query
     const dispatch = useDispatch()
+    const { data: session } = useSession()
 
-    
+
 
     async function handleSubmit(e: any) {
         e.preventDefault();
@@ -93,6 +96,8 @@ function Login() {
                 break;
         }
     }
+
+
     return (
         <>
             <div className="bg-[#11393C] min-h-screen h-fit overflow-hidden w-full grid grid-cols-3">
@@ -102,7 +107,7 @@ function Login() {
                     {/* <Image src={logo} alt="logo" className="mx-auto mb-6 scale-75" width={200} height={80} /> */}
                     <div className="w-full h-full bg-[#FAF7ED] px-4 md:px-8 border-gray-900 py-3  z-50">
                         <div className="text-left space-y-2 my-8">
-                            <h1 className="text-2xl text-black md:text-3xl font-medium pt-2">
+                            <h1 className="text-2xl text-black md:text-3xl xl:font-semibold font-medium pt-2">
                                 Login
                             </h1>
                             <p className="text-gray-500 -translate-y-2">Sign in to your account</p>
@@ -118,6 +123,8 @@ function Login() {
                             </div>
 
                             <div className="space-y-6">
+
+                                <button onClick={() => signOut()}>Google signout</button>
 
                                 <CustomInput
                                     label="Email Address"

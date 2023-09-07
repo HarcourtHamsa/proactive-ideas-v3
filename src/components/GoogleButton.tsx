@@ -1,5 +1,6 @@
 import React from 'react';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { useSession, signIn, signOut } from 'next-auth/react'
 import { getUserByEmail, handleSetCookie, login, register } from '@/helper';
 import { Role } from '../../types/types';
 import { useDispatch } from 'react-redux';
@@ -19,85 +20,83 @@ function GoogleButton() {
     }
 
     const handleGoogleLogin = async () => {
-        await signInWithPopup(auth, provider)
-            .then(async (result: any) => {
-                // This gives you a Google Access Token. You can use it to access the Google API.
-                const credential = GoogleAuthProvider.credentialFromResult(result);
-                const token = credential?.accessToken;
-                // The signed-in user info.
-                const user = result.user;
-                // IdP data available using getAdditionalUserInfo(result)
-                // ...
-            }).then(async () => {
+      
+
+         signIn('google', { redirect: false })
 
 
-                const authObj = {
-                    email: auth?.currentUser?.email as string,
-                    first_name: auth?.currentUser?.displayName?.split(" ")[0] as string,
-                    last_name: auth?.currentUser?.displayName?.split(" ")[1] as string || auth?.currentUser?.displayName?.split(" ")[0] as string,
-                    password: auth?.currentUser?.providerId as string
-                }
+
+         .then(async (res) => {
+            console.log({ res });
 
 
-                const user = await getUserByEmail({
-                    email: authObj.email as string
+            const authObj = {
+                email: auth?.currentUser?.email as string,
+                first_name: auth?.currentUser?.displayName?.split(" ")[0] as string,
+                last_name: auth?.currentUser?.displayName?.split(" ")[1] as string || auth?.currentUser?.displayName?.split(" ")[0] as string,
+                password: auth?.currentUser?.providerId as string
+            }
+
+
+            const user = await getUserByEmail({
+                email: authObj.email as string
+            })
+
+            if (user?.data) {
+
+                await handleSetCookie({
+                    user: {
+                        email: authObj?.email,
+                        name: authObj?.first_name + " " + authObj.last_name,
+                        role: user.data?.role,
+                        id: user?.data.id,
+                        accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjM1NzI0MmQzLWRiNDEtNDQ0MC1iNTI0LWJhNDcwOWY2MzFkYiIsImlhdCI6MTY4OTUwOTI5MH0.NjUUZdBCS5du0rhsRX4YZ7tScymszekHQjV2Q2QZU0E"
+                    },
+                    expiresAt: ''
                 })
 
-                if (user?.data) {
-
-                    await handleSetCookie({
-                        user: {
-                            email: authObj?.email,
-                            name: authObj?.first_name + " " + authObj.last_name,
-                            role: user.data?.role,
-                            id: user?.data.id,
-                            accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjM1NzI0MmQzLWRiNDEtNDQ0MC1iNTI0LWJhNDcwOWY2MzFkYiIsImlhdCI6MTY4OTUwOTI5MH0.NjUUZdBCS5du0rhsRX4YZ7tScymszekHQjV2Q2QZU0E"
-                        },
-                        expiresAt: ''
-                    })
-
-                    if (next) {
-                        router.push(next as string)
-                        return;
-                    } else {
-                        router.push("/")
-                    }
-
+                if (next) {
+                    router.push(next as string)
+                    return;
                 } else {
-
-                    await register({
-                        body: {
-                            ...authObj
-                        }
-
-                    }).then(async () => {
-                        await login({
-                            email: authObj.email,
-                            password: authObj.password
-                        }).then((res) => {
-                            dispatch(setAuth({
-                                user: {
-                                    ...authObj,
-                                    email: res.data.email,
-                                    role: res.data?.role,
-                                    name: res.data.first_name + " " + res.data.last_name,
-                                    accessToken: res?.data.accessToken
-                                },
-                            }))
-                            router.push("/")
-                        })
-                    })
-
-
+                    router.push("/")
                 }
 
+            } else {
+
+                await register({
+                    body: {
+                        ...authObj
+                    }
+
+                }).then(async () => {
+                    await login({
+                        email: authObj.email,
+                        password: authObj.password
+                    }).then((res) => {
+                        dispatch(setAuth({
+                            user: {
+                                ...authObj,
+                                email: res.data.email,
+                                role: res.data?.role,
+                                name: res.data.first_name + " " + res.data.last_name,
+                                accessToken: res?.data.accessToken
+                            },
+                        }))
+                        router.push("/")
+                    })
+                })
+
+
+            }
 
 
 
 
-            }).catch((error: any) => {
-                throw error
-            });
+
+        }).catch((error: any) => {
+            throw error
+        });
 
 
     }

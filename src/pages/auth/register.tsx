@@ -125,7 +125,7 @@ function Register() {
 
                     <div className="w-full h-fit bg-[#FAF7ED] px-4 md:px-8 rounded shadow-inner border border-gray-900 py-3  z-50">
                         <div className="text-left space-y-2 my-8">
-                            <h1 className="text-2xl text-black md:text-3xl font-medium  pt-2">
+                            <h1 className="text-2xl text-black md:text-3xl xl:font-semibold font-medium  pt-2">
                                 Register
                             </h1>
                             <p className="-translate-y-2 text-gray-500">Create a new account</p>

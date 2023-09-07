@@ -19,7 +19,6 @@ function Newsletter({ content }: any) {
 
         await subscribe({ email })
             .then((res) => {
-                console.log(res);
                 setIsSuccessful(true)
                 setMsg('Subscription Successful')
             })
@@ -30,9 +29,15 @@ function Newsletter({ content }: any) {
                 setIsLoading(false)
                 setTimeout(() => {
                     setHasRegisteredButtonClick(true)
-                    setIsSuccessful(null)
                     // setHasRegisteredButtonClick(false)
                 }, 1000);
+
+
+                setTimeout(() => {
+                    setHasRegisteredButtonClick(false)
+                    setIsSuccessful(null)
+                    setMsg(null)
+                }, 1000 * 4);
             })
     }
 
@@ -54,11 +59,17 @@ function Newsletter({ content }: any) {
                             </button>
                         </div>
 
-                        {hasRegisteredButtonClick ? isSuccessful ? <div className='border px-8 w-fit border-green-200 rounded-full py-2 bg-green-50 text-green-800'>
-                            {msg}
-                        </div> : <div className='border px-8 w-fit border-red-200 rounded-full py-2 bg-red-50 text-red-800'>
-                            {msg}
-                        </div> : null}
+                       
+
+                        {hasRegisteredButtonClick ?
+                            isSuccessful === true ?
+                                <div className='border px-8 w-fit border-green-200 rounded-full py-2 bg-green-50 text-green-800'>
+                                    {msg}
+                                </div> :
+                                <div className='border px-8 w-fit border-red-200 rounded-full py-2 bg-red-50 text-red-800'>
+                                    {msg}
+                                </div> :
+                            null}
 
 
 

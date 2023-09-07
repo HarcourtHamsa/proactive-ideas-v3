@@ -145,6 +145,16 @@ export async function fetchCourseEnrollment(course: string, user: string) {
   }
 }
 
+export async function fetchUserEnrollments(user: string) {
+
+  try {
+    const res = await http.get(`/get-user-enrollments?user=${user}`);
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
 
 export async function createBlogPost({
   body,

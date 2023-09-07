@@ -8,7 +8,7 @@ export const apiSlice = createApi({
         headers: {
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type'
-        }
+        },
         // baseUrl: 'http://localhost:8000/api/',
     }),
     endpoints: (builder) => ({

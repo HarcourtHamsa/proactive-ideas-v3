@@ -293,11 +293,11 @@ function Preview({ subscriber }: any) {
 
                             </div>
 
-                            {/* {course?.data?.certificate &&
+                            {course?.data?.certificate &&
                                 <div className="lg:h-[250px] h-[250px] mt-4 shadow p-4 rounded w-full bg-white">
                                     <Image src={certificate} alt="" className="w-full h-full" />
                                 </div>
-                            } */}
+                            }
                         </div>
                     </div>
                 </div>

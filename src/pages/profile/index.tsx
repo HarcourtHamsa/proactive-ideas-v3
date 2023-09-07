@@ -1,19 +1,30 @@
 import Footer from '@/components/Footer'
+import { getCookie } from 'cookies-next';
 import Navbar from '@/components/Navbar'
+import { NextApiRequest, NextApiResponse } from 'next';
 import React from 'react'
 import { IoPencil } from 'react-icons/io5'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
+import { decryptData, fetchUserEnrollments } from '@/helper';
+import Card from '@/components/Card';
+import useCookie from '@/hooks/useCookie';
 
-function Profile() {
+function Profile({ enrollments }) {
+    const cookie = useCookie()
+    const parsedEnrollments = JSON.parse(enrollments)
+
+
+
+
     return (
         <div className='bg-[#FAF7ED]'>
             <Navbar />
-            <div className='h-screen py-20'>
-                <div className='lg:h-[300px] h-[200px] flex items-center'>
+            <div className='h-fit py-20 w-[85%] mx-auto '>
+                {/* <div className='lg:h-[300px] h-[200px] flex items-center'>
                     <div className='container w-[85%] mx-auto flex justify-between'>
                         <div>
-                            <h3 className='lg:text-5xl text-3xl mb-10'>My Profile</h3>
+                            <h3 className='lg:text-3xl font-semibold text-3xl mb-10'>My Profile</h3>
                             <div className='flex gap-4 lg:gap-8'>
                                 <div className=' w-[80px] lg:w-[100px] lg:h-[100px] h-[80px] relative rounded-xl bg-[#404eed] flex items-center justify-center'>
                                     <div className='w-6 h-6 border-4 rounded-full absolute border-[#FAF7ED] bg-[#22BB22] -bottom-2 -right-2 '></div>
@@ -28,26 +39,52 @@ function Profile() {
                         </div>
 
                     </div>
-                </div>
+                </div> */}
 
-                <div className='w-[85%] mx-auto'>
-                <Tabs>
-                    <TabList>
-                        <Tab>About</Tab>
-                        <Tab>Activity</Tab>
-                        <Tab>Settings</Tab>
-                    </TabList>
 
-                    <TabPanel>
-                        <p>Any content 1</p>
-                    </TabPanel>
-                    <TabPanel>
-                        <p>Any content 2</p>
-                    </TabPanel>
-                    <TabPanel>
-                        <p>Any content 3</p>
-                    </TabPanel>
-                </Tabs>
+
+
+                <div className=''>
+                    <Tabs>
+                        <TabList>
+                            <Tab>About Me</Tab>
+                            <Tab>Learning Resources</Tab>
+                            <Tab>Settings</Tab>
+                        </TabList>
+
+                        <TabPanel className={'mb-10'}>
+                            <div className='mb-10'>
+                                {/* <p className='text-2xl pb-2'>My Profile</p> */}
+
+                                <div className='flex items-center gap-4'>
+                                    <div className='w-[100px] h-[100px] bg-red-400 flex items-center justify-center rounded-full'>
+                                        <p className='text-3xl'>{cookie?.user.name.split(' ')[0][0]} {cookie?.user.name.split(' ')[1][0]}</p>
+                                    </div>
+
+                                    <div>
+                                        <p>Email: {cookie?.user.email}</p>
+                                        <p>Full Name: {cookie?.user.name}</p>
+                                        <p>Role: {cookie?.user.role}</p>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </TabPanel>
+                        <TabPanel className={'mb-10'}>
+                            <div className='mb-20'>
+
+                                <div className='grid grid-cols-3'>
+                                    {parsedEnrollments.map((enrollment: any) => {
+                                        return <Card key={Math.random()} data={enrollment.course} />
+                                    })}
+                                </div>
+                            </div>
+                        </TabPanel>
+                        <TabPanel className={'mb-10'}>
+                            <p>Any content 3</p>
+                        </TabPanel>
+                    </Tabs>
                 </div>
             </div>
             <Footer />
@@ -56,3 +93,23 @@ function Profile() {
 }
 
 export default Profile
+
+
+// This gets called on every request
+export const getServerSideProps = async ({ req, res }: { req: NextApiRequest, res: NextApiResponse }) => {
+
+    const encryptedTkn = getCookie('tkn', { req, res }) as string
+    const cookie = decryptData(encryptedTkn)
+    const userId = cookie?.user.id
+
+    // // Fetch data from external API
+    const enrollmentApiResponse = await fetchUserEnrollments(userId)
+    const enrollments = enrollmentApiResponse?.data
+
+    // Pass data to the page via props
+    return {
+        props: {
+            enrollments: JSON.stringify(enrollments) || null
+        }
+    }
+}

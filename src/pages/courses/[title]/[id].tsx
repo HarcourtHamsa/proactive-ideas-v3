@@ -229,7 +229,7 @@ function SingleCourse({ course, lessons, subscriber }: any) {
 
                         <div className='w-[80%] lg:w-[25%] border-r bg-[#11393C] h-screen fixed left-0 top-0 bottom-0 hidden  xl:block' style={{ display: showSidebar ? 'block' : '' }}>
                             <aside className='h-screen lg:w-[100%] w-[90%] -z-1 bg-[#11393C]  mx-auto lg:col-span-1 mb-10 lg:mb-0 '>
-                                <div className=' mb-2 px-4 py-3 h-[15%]  items-center bg-[#11393C] gap-2'>
+                                <div className='px-4 py-3 h-[15%] mb-4  items-center bg-[#11393C] gap-2'>
                                     <p className="text-white leading-snug capitalize line-clamp-2 mb-4">{course?.title}</p>
 
                                     <p className='text-white'>Progress: {progress}%</p>
@@ -413,7 +413,7 @@ export const getServerSideProps = async ({ req, res }: { req: NextApiRequest, re
     const courseIDSplit = req.url?.split('/') as string[];
     const courseId = courseIDSplit[courseIDSplit?.length - 1]
 
-    console.log("course id...", courseId);
+ 
 
 
 
