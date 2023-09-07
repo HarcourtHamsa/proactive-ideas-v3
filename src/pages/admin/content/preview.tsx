@@ -13,13 +13,6 @@ function PreviewContent() {
     const blogData = useSelector((state: RootState) => state?.blog);
     const [showTableOfContents, setShowTableOfContents] = useState(false);
     const sidebarRef = useRef<HTMLDivElement>(null);
-    const mainRef = useRef<HTMLDivElement>(null);
-    const [sidebarWidth, setSidebarWidth] = useState<number | undefined>(undefined);
-    const [sidebarTop, setSidebarTop] = useState<number | undefined>(undefined);
-    const [mainHeight, setMainHeight] = useState<number | undefined>(undefined);
-    const [mainTop, setMainTop] = useState<number | undefined>(undefined);
-    const [modifiedHtmlString, setModifiedHtmlString] = useState("")
-
 
     var [title, content] = seperateBlogDataIntoComponents(blogData.content);
 
