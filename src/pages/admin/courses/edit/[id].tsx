@@ -11,7 +11,7 @@ import { RootState } from '@/store';
 import { getSingleCourse, seperateBlogDataIntoComponents } from '@/helper';
 import Spinner from '@/components/Spinner';
 import http from '@/lib/http';
-import { TbEdit, TbEditCircle, TbEye, TbPencil, TbPlus, TbSubtask, TbTrash, TbWriting } from 'react-icons/tb';
+import { TbDragDrop, TbEdit, TbEditCircle, TbEye, TbPencil, TbPlus, TbSubtask, TbTrash, TbWriting } from 'react-icons/tb';
 import ReactPortal from '@/components/ReactPortal';
 import Modal from '@/components/Modal';
 import { AiOutlineClose, AiOutlineDelete } from 'react-icons/ai';
@@ -21,7 +21,7 @@ import useRole from '@/hooks/useRole';
 import dynamic from 'next/dynamic';
 import edjsParser from "editorjs-parser";
 import { Role } from '../../../../../types/types';
-import { BsArrowReturnLeft, BsArrowReturnRight, BsViewStacked } from 'react-icons/bs';
+import { MdOutlineDragIndicator } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
 import { setSection } from '@/features/sections/sectionsSlice'
 import DynamicPricingInput from '@/components/admin/DynamicPricingInput';
@@ -77,6 +77,58 @@ function EditSingleCourse({ course }: any) {
         description: course?.description,
         summary: course?.summary,
     })
+
+    const dragItemRef = useRef(null)
+    const dragItemOverRef = useRef(null);
+
+    const handleDragStart = (e: any, item: any) => {
+        dragItemRef.current = item
+    }
+
+
+    const handleDragOver = (e: any, item: any) => {
+        dragItemOverRef.current = item
+    }
+
+    const handleDrop = () => {
+        // Make a shallow copy of sub_sections from activeSection
+        const shallowCopyOfActiveSections = Object.assign({}, activeSection);
+
+        // Make a shallow copy of sub_sections from activeSection
+        const shallowCopyOfSubSections = [...activeSection?.sub_sections || []];
+
+        // Find the index of the dragged item and the item being dragged over
+        const indexOfDraggedItem = shallowCopyOfSubSections.indexOf(dragItemRef.current);
+        const indexOfDraggedOverItem = shallowCopyOfSubSections.indexOf(dragItemOverRef.current);
+
+        // Remove the dragged item from the array
+        const foundDraggedItem = shallowCopyOfSubSections.splice(indexOfDraggedItem, 1)[0];
+
+        // Insert the dragged item at the new position
+        shallowCopyOfSubSections.splice(indexOfDraggedOverItem, 0, foundDraggedItem);
+
+        // Clear drag references
+        dragItemOverRef.current = null;
+        dragItemRef.current = null;
+
+
+        shallowCopyOfActiveSections.sub_sections = shallowCopyOfSubSections
+
+
+        // Find the index of the activeSection in courseInfoData
+        const indexOfActiveSection = courseInfoData.findIndex((course) => course.title === shallowCopyOfActiveSections.title);
+
+        // Create a shallow copy of courseInfoData and update the activeSection
+        const shallowCopyOfCourseInfoData = [...courseInfoData];
+        shallowCopyOfCourseInfoData[indexOfActiveSection] = shallowCopyOfActiveSections;
+
+        // Update courseInfoData
+        setCourseInfoData(shallowCopyOfCourseInfoData);
+
+        // Clear activeSection
+        setActiveSection({});
+    };
+
 
 
     const [newSectionData, setNewSectionData] = useState({
@@ -442,80 +494,89 @@ function EditSingleCourse({ course }: any) {
                         </div>
 
                         <div className='px-4 my-8 space-y-3'>
-                            {courseInfoData.map((section: any, index: number) => {
-                                return (
-                                    <div key={Math.random()}>
-                                        <div className='flex items-center gap-1'>
-                                            <div className='flex items-center w-full relative border rounded bg-white  justify-between px-3'>
-                                                <div className='px-4 py-4 rounded'>
-                                                    <p className=''>{section.title}</p>
-                                                </div>
-
-                                                <span className='text-sm px-2 py border rounded-full bg-gray-50 -top-2 absolute'>Section</span>
-
+                            {courseInfoData.map((section: any, index: number) => (
+                                <div key={section.id}>
+                                    <div className='flex items-center gap-1'>
+                                        <div className='flex items-center w-full relative border rounded bg-white justify-between px-3'>
+                                            <div className='px-4 py-4 rounded'>
+                                                <p className=''>{section.title}</p>
                                             </div>
-                                            <div className='flex  items-center gap-2'>
-                                                <TbPencil
-                                                    size={20}
-                                                    className='cursor-pointer ml-3'
-                                                    onClick={() => {
-                                                        setActiveSection({ section, index })
-                                                        setEditSectionModalIsOpen(true)
-                                                    }} />
-
-                                                <IoAddCircle size={20}
-                                                    className='-rotate-180 ml-4 cursor-pointer' onClick={() => {
-                                                        setCurrentSection(section)
-                                                        setModalIsOpen(true);
-                                                    }
-
-                                                    } />
-                                                <TbTrash size={20} className='cursor-pointer ml-3' onClick={() => {
-                                                    setCurrentSection(section)
-                                                    setDeleteModalIsOpen(true)
-                                                }} />
-                                            </div>
+                                            <span className='text-sm px-2 py border rounded-full bg-gray-50 -top-2 absolute'>Section</span>
                                         </div>
-                                        <div>
-                                            {section.sub_sections.map((ss: any) => {
-                                                return (
-                                                    <div className='flex items-center mt-4 ' key={Math.random()}>
-                                                        <div className='w-[80%] px-4 py-3 flex  justify-between relative ml-auto rounded bg-gray-50 my-2 s' >
-
-                                                            <span className='ml-2'>
-                                                                {ss.title}
-                                                            </span>
-                                                            {/* <span className='ml-2'>
-                                                            {ss.id}
-                                                        </span> */}
-                                                            <span className='text-sm px-2 py border rounded-full bg-white -top-2 absolute'>Sub-Section</span>
-                                                        </div>
-
-
-                                                        <TbPencil size={20} className='cursor-pointer ml-3' onClick={() => {
-                                                            setActiveSubSection(ss)
-                                                            setEditModalIsOpen(true)
-                                                        }} />
-
-                                                        <TbTrash
-                                                            className='ml-3 cursor-pointer'
-                                                            size={20}
-                                                            onClick={() => {
-                                                                setCurrentSection(section);
-                                                                setCurrentSubSection(ss);
-                                                                setDeleteSubSectionModalIsOpen(true);
-                                                            }}
-                                                        />
-                                                    </div>
-                                                )
-                                            })}
+                                        <div className='flex items-center gap-2'>
+                                            <TbPencil
+                                                size={20}
+                                                className='cursor-pointer ml-3'
+                                                onClick={() => {
+                                                    setActiveSection({ section, index });
+                                                    setEditSectionModalIsOpen(true);
+                                                }}
+                                            />
+                                            <IoAddCircle
+                                                size={20}
+                                                className='-rotate-180 ml-4 cursor-pointer'
+                                                onClick={() => {
+                                                    setCurrentSection(section);
+                                                    setModalIsOpen(true);
+                                                }}
+                                            />
+                                            <TbTrash
+                                                size={20}
+                                                className='cursor-pointer ml-3'
+                                                onClick={() => {
+                                                    setCurrentSection(section);
+                                                    setDeleteModalIsOpen(true);
+                                                }}
+                                            />
                                         </div>
                                     </div>
-                                )
-                            })}
+                                    <div>
+                                        {section.sub_sections.map((ss: any) => (
+                                            <div
+                                                className='flex items-center gap-2 justify-end hover:cursor-move'
+                                                key={ss.id}
+                                                onDragStart={(e: any) => {
+                                                    setActiveSection(section);
+                                                    handleDragStart(e, ss);
+                                                }}
+                                                onDragOver={(e: any) => handleDragOver(e, ss)}
+                                                onDragEnd={handleDrop}
+                                                draggable>
 
+                                                <MdOutlineDragIndicator size={20} className='text-gray-400'/>
+                                                <div
+                                                    className='flex items-center mt-4 w-full '
 
+                                                >
+                                                    <div className='w-[100%] px-4 py-3 flex justify-between relative ml-auto rounded bg-gray-100 my-2 border'>
+                                                        <span className='ml-2'>{ss.title}</span>
+                                                        <span className='text-sm px-2 py border rounded-full bg-white -top-2 absolute'>Sub-Section</span>
+                                                    </div>
+                                                    <TbPencil
+                                                        size={20}
+                                                        className='cursor-pointer ml-3'
+                                                        onClick={() => {
+                                                            setActiveSubSection(ss);
+                                                            setEditModalIsOpen(true);
+                                                        }}
+                                                    />
+                                                    <TbTrash
+                                                        className='ml-3 cursor-pointer'
+                                                        size={20}
+                                                        onClick={() => {
+                                                            setCurrentSection(section);
+                                                            setCurrentSubSection(ss);
+                                                            setDeleteSubSectionModalIsOpen(true);
+                                                        }}
+                                                    />
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
                         </div>
+
 
                         <div className='border-t px-4 pt-1 pb-4'>
                             <button

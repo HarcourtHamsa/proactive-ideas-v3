@@ -1,16 +1,12 @@
 import { Menu, Transition } from "@headlessui/react";
-import { hasCookie, deleteCookie } from 'cookies-next';
-import React, { useState, useEffect } from "react";
+import { deleteCookie } from 'cookies-next';
+import React, { useState } from "react";
 import {
-
-  IoMenu,
-
   IoChevronUp,
   IoChevronForward,
   IoClose,
 } from "react-icons/io5";
-import { BsChevronUp, BsChevronRight } from "react-icons/bs";
-import { TbSmartHome, TbUsers } from "react-icons/tb";
+
 import HMenu from "../Menu";
 import UsersSVG from "../../components/SVGs/Users"
 import HomeSVG from "../../components/SVGs/Home"
@@ -22,18 +18,17 @@ import LogoutSVG from "../../components/SVGs/Logout"
 import NotificationSVG from "../../components/SVGs/Notification"
 import Logo from "../Logo";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { useDispatch } from "react-redux";
-import { resetAuth } from "@/features/auth/authSlice";
 import { useRouter } from "next/router";
 import useRole from "@/hooks/useRole";
 import useAuth from "@/hooks/useAuth";
 import { Role } from "../../../types/types";
 import Unauthorized from "./Unauthorized";
 import useCookie from "@/hooks/useCookie";
-import { handleDeleteCookie } from "@/helper";
+import { useSession, signOut } from "next-auth/react"
+
 
 const links = [
   { href: "/account-settings", label: "My Profile" },
@@ -45,11 +40,9 @@ const links = [
 function Layout({ children }: { children: React.ReactNode }) {
   const { data } = useSession();
   const authState = useSelector((state: RootState) => state.auth)
-  const dispatch = useDispatch()
   const [mobileNavIsOpen, setMobileNavIsOpen] = useState(false)
   const router = useRouter();
   const role = useRole();
-  const auth = useAuth();
   const cookie = useCookie();
 
   const clearCookie = () => {
@@ -57,22 +50,24 @@ function Layout({ children }: { children: React.ReactNode }) {
   };
 
   const generateAVI = () => {
-    if (!cookie) return
-
-    const arr = cookie?.user.name.split(" ");
-
-    if (arr) {
-      const firstChar = arr[0].charAt(0)
-      const lastChar = arr[1].charAt(0)
-
-      return firstChar + lastChar
+    // Check if 'cookie.user' exists
+    if (!cookie?.user) {
+      return;
     }
 
-    return cookie.user?.email?.charAt(0).toUpperCase()
-  }
+    // Split 'user.name' by spaces and get the first and last characters
+    const arr = (cookie.user.name ?? '').split(" ");
+    const firstChar = arr[0]?.charAt(0);
+    const lastChar = arr[1]?.charAt(0) || firstChar;
+
+    // If 'firstChar' and 'lastChar' exist, return them; otherwise, return the first letter of 'user.email' in uppercase
+    return firstChar && lastChar ? firstChar + lastChar : cookie.user.email?.charAt(0).toUpperCase();
+  };
 
   const logout = async () => {
     clearCookie()
+    deleteCookie('tkn')
+    signOut()
     router.push('/')
   }
 

@@ -22,8 +22,6 @@ function Card({ data }: any) {
 
   const { data: subscriber, isLoading } = useFetchCourseEnrollmentQuery({ course: courseId, user: userId })
 
-  console.log({ subscriber });
-
 
 
   return (
