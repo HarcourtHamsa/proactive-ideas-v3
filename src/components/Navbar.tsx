@@ -1,29 +1,23 @@
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image';
-import { useSession, signOut } from "next-auth/react"
 
-import useAuth from '@/hooks/useAuth';
 import { useDispatch } from 'react-redux'
-import { resetAuth } from '@/features/auth/authSlice';
+
 import { IoCaretDownOutline, IoChevronDown, IoClose, IoMenu } from 'react-icons/io5'
-import { CiMenuFries } from "react-icons/ci";
+
 import Menu from "./Menu"
 
-import userAVI from "../assets/user.png"
 import Logo from './Logo'
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import usePreviousRoute from '@/hooks/usePreviousPath';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/store';
-import { useFetchGeolocationDataQuery } from '@/features/apiSlice';
 
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import useRole from '@/hooks/useRole';
 import { Role } from '../../types/types';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import useCookie from '@/hooks/useCookie';
 import { deleteCookie } from 'cookies-next';
+import { useSession, signOut } from "next-auth/react"
 
 
 
@@ -50,26 +44,26 @@ function Navbar() {
   const logout = () => {
     setDropDownIsOpen(false)
     deleteCookie('tkn')
-    window.location.reload()
+    signOut()
+    // window.location.reload()
   }
 
 
   const generateAVI = () => {
+    // Check if 'cookie.user' exists
     if (!cookie?.user) {
-      return
+      return;
     }
 
-    const arr = cookie?.user?.name.split(" ");
+    // Split 'user.name' by spaces and get the first and last characters
+    const arr = (cookie.user.name ?? '').split(" ");
+    const firstChar = arr[0]?.charAt(0);
+    const lastChar = arr[1]?.charAt(0) || firstChar;
 
-    if (arr) {
-      const firstChar = arr[0].charAt(0)
-      const lastChar = arr[1].charAt(0)
+    // If 'firstChar' and 'lastChar' exist, return them; otherwise, return the first letter of 'user.email' in uppercase
+    return firstChar && lastChar ? firstChar + lastChar : cookie.user.email?.charAt(0).toUpperCase();
+  };
 
-      return firstChar + lastChar
-    }
-
-    return cookie?.user?.email?.charAt(0).toUpperCase()
-  }
 
   useEffect(() => {
     setCountry(geo?.country)

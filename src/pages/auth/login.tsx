@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-
 import CustomInput from "../../components/CustomInput";
 import Spinner from "../../components/Spinner";
 import logo from "../../assets/logo.png"
@@ -35,9 +34,6 @@ function Login() {
     const router = useRouter();
     const { next } = router.query
     const dispatch = useDispatch()
-    const { data: session } = useSession()
-
-
 
     async function handleSubmit(e: any) {
         e.preventDefault();
@@ -57,7 +53,7 @@ function Login() {
             }
 
             notify({ msg: "Authentication successful", type: 'success' })
-            dispatch(setAuth(authObj))
+            // dispatch(setAuth(authObj))
 
             await handleSetCookie(authObj)
 
@@ -123,9 +119,6 @@ function Login() {
                             </div>
 
                             <div className="space-y-6">
-
-                                <button onClick={() => signOut()}>Google signout</button>
-
                                 <CustomInput
                                     label="Email Address"
                                     type="email"

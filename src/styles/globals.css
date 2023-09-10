@@ -143,10 +143,11 @@ body {
 
 
 .ck-content {
-  min-height: 300px;
+  min-height: 500px;
   height: fit-content;
-  border-radius: 8px;
-  background-color: rebeccapurple;
+  padding: 12px 30px !important;
+  /* border-radius: 8px; */
+  /* background-color: rebeccapurple; */
 }
 
 /* @media only screen and (max-width: 670px) {

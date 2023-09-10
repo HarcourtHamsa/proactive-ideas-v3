@@ -39,7 +39,7 @@ function Table({ data }: any) {
         setShowDeleteLoader(true);
 
 
-        await deleteIdeas({ id: current?.id, token: cookie?.user.accessToken })
+        await deleteIdeas({ id: current?.id, token: '' })
             .then((res: any) => {
 
                 notify({ msg: "Idea post deleted", type: "success" });

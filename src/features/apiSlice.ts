@@ -78,6 +78,9 @@ export const apiSlice = createApi({
         fetchCourses: builder.query({
             query: () => "/get-courses?status=active"
         }),
+        fetchAllCourses: builder.query({
+            query: () => "/get-courses"
+        }),
         fetchSingleCourse: builder.query({
             query: ({ id }: any) => ({
                 url: `/get-course-by-id?id=${id}`,
@@ -362,6 +365,7 @@ export const {
     useFetchCourseEnrollmentQuery,
     useEnrollToCourseMutation,
     useUpdateQuizMutation,
-    useFetchEmailListQuery
+    useFetchEmailListQuery,
+    useFetchAllCoursesQuery,
 }
     = apiSlice

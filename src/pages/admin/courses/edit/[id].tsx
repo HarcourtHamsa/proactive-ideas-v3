@@ -11,7 +11,7 @@ import { RootState } from '@/store';
 import { getSingleCourse, seperateBlogDataIntoComponents } from '@/helper';
 import Spinner from '@/components/Spinner';
 import http from '@/lib/http';
-import { TbEdit, TbEditCircle, TbPencil, TbPlus, TbSubtask, TbTrash, TbWriting } from 'react-icons/tb';
+import { TbDragDrop, TbEdit, TbEditCircle, TbEye, TbPencil, TbPlus, TbSubtask, TbTrash, TbWriting } from 'react-icons/tb';
 import ReactPortal from '@/components/ReactPortal';
 import Modal from '@/components/Modal';
 import { AiOutlineClose, AiOutlineDelete } from 'react-icons/ai';
@@ -21,9 +21,10 @@ import useRole from '@/hooks/useRole';
 import dynamic from 'next/dynamic';
 import edjsParser from "editorjs-parser";
 import { Role } from '../../../../../types/types';
-import { BsArrowReturnLeft, BsArrowReturnRight, BsViewStacked } from 'react-icons/bs';
+import { MdOutlineDragIndicator } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
 import { setSection } from '@/features/sections/sectionsSlice'
+import DynamicPricingInput from '@/components/admin/DynamicPricingInput';
 
 
 const parser = new edjsParser();
@@ -45,7 +46,7 @@ function EditSingleCourse({ course }: any) {
     const courseId = router.query.id;
 
 
-    const { data: categories, isLoading: isFetchingCategories } = useFetchCategoriesQuery("");
+    const { data: categories, isLoading: isFetchingCategories } = useFetchCategoriesQuery({ group: 'course' });
     const [isUpdatingGeneralInfo, setIsUpdatingGeneralInfo] = useState(false);
     const [isUpdatingCourseInfo, setIsUpdatingCourseInfo] = useState(false);
     const { "0": updateCourse } = useUpdateCourseMutation();
@@ -70,10 +71,65 @@ function EditSingleCourse({ course }: any) {
     const [generalInfoData, setGeneralInfoData] = useState({
         title: course?.title,
         author: course?.author,
-        price: course?.price,
+        // prices: course?.prices,
         tags: '',
+        category: course?.category,
         description: course?.description,
+        summary: course?.summary,
     })
+
+    const dragItemRef = useRef(null)
+    const dragItemOverRef = useRef(null);
+
+    const handleDragStart = (e: any, item: any) => {
+        dragItemRef.current = item
+    }
+
+
+    const handleDragOver = (e: any, item: any) => {
+        dragItemOverRef.current = item
+    }
+
+    const handleDrop = () => {
+        // Make a shallow copy of sub_sections from activeSection
+        const shallowCopyOfActiveSections = Object.assign({}, activeSection);
+
+        // Make a shallow copy of sub_sections from activeSection
+        const shallowCopyOfSubSections = [...activeSection?.sub_sections || []];
+
+        // Find the index of the dragged item and the item being dragged over
+        const indexOfDraggedItem = shallowCopyOfSubSections.indexOf(dragItemRef.current);
+        const indexOfDraggedOverItem = shallowCopyOfSubSections.indexOf(dragItemOverRef.current);
+
+        // Remove the dragged item from the array
+        const foundDraggedItem = shallowCopyOfSubSections.splice(indexOfDraggedItem, 1)[0];
+
+        // Insert the dragged item at the new position
+        shallowCopyOfSubSections.splice(indexOfDraggedOverItem, 0, foundDraggedItem);
+
+        // Clear drag references
+        dragItemOverRef.current = null;
+        dragItemRef.current = null;
+
+
+        shallowCopyOfActiveSections.sub_sections = shallowCopyOfSubSections
+
+
+        // Find the index of the activeSection in courseInfoData
+        const indexOfActiveSection = courseInfoData.findIndex((course) => course.title === shallowCopyOfActiveSections.title);
+
+        // Create a shallow copy of courseInfoData and update the activeSection
+        const shallowCopyOfCourseInfoData = [...courseInfoData];
+        shallowCopyOfCourseInfoData[indexOfActiveSection] = shallowCopyOfActiveSections;
+
+        // Update courseInfoData
+        setCourseInfoData(shallowCopyOfCourseInfoData);
+
+        // Clear activeSection
+        setActiveSection({});
+    };
+
+
 
     const [newSectionData, setNewSectionData] = useState({
         id: uuidv4(),
@@ -102,22 +158,34 @@ function EditSingleCourse({ course }: any) {
                     author: e.target.value
                 }))
                 break;
-            case 'price':
-                setGeneralInfoData((prevState: any) => ({
-                    ...prevState,
-                    price: e.target.value
-                }))
-                break;
+            // case 'prices':
+            //     setGeneralInfoData((prevState: any) => ({
+            //         ...prevState,
+            //         prices: e.target.value
+            //     }))
+            //     break;
             case 'tags':
                 setGeneralInfoData((prevState: any) => ({
                     ...prevState,
                     tags: e.target.value
                 }))
                 break;
+            case 'category':
+                setGeneralInfoData((prevState: any) => ({
+                    ...prevState,
+                    category: e.target.value
+                }))
+                break;
             case 'description':
                 setGeneralInfoData((prevState: any) => ({
                     ...prevState,
                     description: e.target.value
+                }))
+                break;
+            case 'summary':
+                setGeneralInfoData((prevState: any) => ({
+                    ...prevState,
+                    summary: e.target.value
                 }))
                 break;
 
@@ -139,7 +207,7 @@ function EditSingleCourse({ course }: any) {
         const courseObj = Object.assign({}, course, generalInfoData);
 
         courseObj.tags = [courseObj.tags];
-        
+
 
 
         delete courseObj.certificateId;
@@ -167,36 +235,19 @@ function EditSingleCourse({ course }: any) {
 
         const courseShallowCopy = Object.assign({}, course, { sections: courseInfoData })
 
-        console.log("data...", courseShallowCopy);
-
-
-
-        if (role === Role.superAdmin) {
-            try {
-                updateCourse({ token, id: courseId, data: courseShallowCopy })
-                    .then((res) => notify({ msg: 'Course updated ', type: 'success' }))
-                    .catch(err => {
-                        notify({ msg: 'An error occued!', type: 'error' })
-                    })
-            } catch (error) {
-                console.log(error)
-            } finally {
-                setIsUpdatingGeneralInfo(false)
-            }
-        } else {
-            try {
-                updateCourseDraft({ token, id: courseId, data: courseShallowCopy })
-                    .then((res) => notify({ msg: 'Draft updated ', type: 'success' }))
-                    .catch(err => {
-                        notify({ msg: 'An error occued!', type: 'error' })
-                    })
-            } catch (error) {
-                console.log(error)
-            } finally {
-                setIsUpdatingGeneralInfo(false)
-                setIsUpdatingCourseInfo(false)
-            }
+        try {
+            updateCourseDraft({ token, id: courseId, data: courseShallowCopy })
+                .then((res) => notify({ msg: 'Draft updated ', type: 'success' }))
+                .catch(err => {
+                    notify({ msg: 'An error occued!', type: 'error' })
+                })
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setIsUpdatingGeneralInfo(false)
+            setIsUpdatingCourseInfo(false)
         }
+
 
 
 
@@ -353,137 +404,162 @@ function EditSingleCourse({ course }: any) {
         return <Loader />
     }
 
-    console.log("courseInfoData...", courseInfoData);
-
-
-
     return (
-        <Layout>
-            <ToastContainer />
-            <div className="p-4 mt-8">
-                <div className='flex items-center gap-1 mb-2' onClick={() => router.back()}>
-                    <div className='w-8 h-8 bg-white border flex justify-center items-center rounded-full cursor-pointer'>
-                        <IoChevronBack size={20} />
+        <div>
+            <Layout>
+                <ToastContainer />
+                <div className="p-4 mt-8">
+                    <div className='flex items-center gap-1 mb-2' onClick={() => router.back()}>
+                        <div className='w-8 h-8 bg-white border flex justify-center items-center rounded-full cursor-pointer'>
+                            <IoChevronBack size={20} />
+                        </div>
+                        <p>Back</p>
                     </div>
-                    <p>Back</p>
-                </div>
-                <h1 className='text-2xl md:text-4xl font-semibold'>Edit Course</h1>
-                <p>Course: {course?.title}</p>
+                    <h1 className='text-2xl md:text-4xl font-semibold'>Edit Course</h1>
+                    <p>Course: {course?.title}</p>
 
-                <div className=' h-fit bg-white rounded border mt-4'>
-                    <div className='px-4 py-2 border-b'>
-                        <p className=''>General Information</p>
+                    <div className=' h-fit bg-white rounded border mt-4'>
+                        <div className='px-4 py-2 border-b'>
+                            <p className=''>General Information</p>
+                        </div>
+
+                        <div className='px-4 my-8 space-y-3'>
+                            <CustomInput label='Course title' type='text' name='courseTitle' value={generalInfoData.title} onChange={handleChange} />
+
+                            <div className='grid grid-cols-2 gap-4'>
+                                <CustomInput label='Author' type='text' name='author' value={generalInfoData.author} onChange={handleChange} />
+                                {/* <CustomInput label='Price' type='text' name='price' value={generalInfoData.price} onChange={handleChange} /> */}
+                                <div>
+                                    <label htmlFor="countries" className="block text-black">Category</label>
+                                    <select id="countries" className="bg-white border-2 text-gray-900 rounded focus:ring-blue-500 outline-blue-500 focus:border-blue-500 block w-full p-2.5" name='category' value={generalInfoData.category} onChange={handleChange}>
+                                        <option>Choose a category</option>
+                                        {categories?.data.map((category: any) => {
+                                            if (category.group === "course") {
+                                                return (
+                                                    <option value={category.name} key={Math.random()}>{category.name}</option>
+                                                )
+                                            }
+                                        })}
+                                    </select>
+
+                                </div>
+                            </div>
+
+
+                            {/* <div className='mt-8'>
+                            <p>Prices</p>
+                            <div className='col-span-2 space-y-2'>
+                                {course.prices.map((price: any) => {
+                                    return (
+                                        <DynamicPricingInput price={price} placeholder="" onChange={handlePriceChange} />
+                                    )
+                                })}
+                        
+                            </div>
+                        </div> */}
+
+                            <div className=''>
+                                <label htmlFor="message" className="block font-medium text-gray-900">Description</label>
+                                <textarea id="message" rows={4} className="block p-2.5 w-full text-gray-900 bg-white rounded outline-blue-500 focus:ring-blue-500 focus:border-blue-500 border-2" placeholder="Write your thoughts here..." name='description' value={generalInfoData.description} onChange={handleChange}></textarea>
+                            </div>
+
+                            <div className=''>
+                                <label htmlFor="message" className="block font-medium text-gray-900">Summary</label>
+                                <textarea id="message" rows={4} className="block p-2.5 w-full text-gray-900 bg-white rounded outline-blue-500 focus:ring-blue-500 focus:border-blue-500 border-2" placeholder="Write your thoughts here..." name='description' value={generalInfoData.summary} onChange={handleChange}></textarea>
+                            </div>
+
+
+
+                        </div>
+                        <div className='border-t px-4 pb-4'>
+                            <button
+                                className='bg-[#11393C] px-4 py-2 rounded text-white mt-4 flex'
+                                onClick={handleSubmit}>
+                                {isUpdatingGeneralInfo && <Spinner />} Save Changes
+                            </button>
+
+                        </div>
                     </div>
 
-                    <div className='px-4 my-8 space-y-3'>
-                        <CustomInput label='Course title' type='text' name='courseTitle' value={generalInfoData.title} onChange={handleChange} />
 
-                        <div className='grid grid-cols-2 gap-4'>
-                            <CustomInput label='Author' type='text' name='author' value={generalInfoData.author} onChange={handleChange} />
-                            {/* <CustomInput label='Price' type='text' name='price' value={generalInfoData.price} onChange={handleChange} /> */}
-                            <div>
-                                <label htmlFor="countries" className="block text-black">Category</label>
-                                <select id="countries" className="bg-white border-2 text-gray-900 rounded focus:ring-blue-500 outline-blue-500 focus:border-blue-500 block w-full p-2.5" name='tags' value={generalInfoData.tags} onChange={handleChange}>
-                                    <option>Choose a category</option>
-                                    {categories?.data.map((category: any) => {
-                                        if (category.group === "course") {
-                                            return (
-                                                <option value={category.name} key={Math.random()}>{category.name}</option>
-                                            )
-                                        }
-                                    })}
-                                </select>
+                    <div className=' h-fit bg-white rounded border mt-10'>
+                        <div className='px-4 py-2 border-b flex justify-between items-center'>
+                            <p >Course Information</p>
 
+
+                            <div className='space-x-4'>
+                                <button className='px-4 py-2 border rounded' onClick={() => handleCoursePreview()}>Preview</button>
+                                <button className='px-4 py-2 border rounded' onClick={() => createNewSection()}>New section</button>
                             </div>
                         </div>
 
-                        <div className=''>
-                            <label htmlFor="message" className="block font-medium text-gray-900">Description</label>
-                            <textarea id="message" rows={4} className="block p-2.5 w-full text-gray-900 bg-white rounded outline-blue-500 focus:ring-blue-500 focus:border-blue-500 border-2" placeholder="Write your thoughts here..." name='description' value={generalInfoData.description} onChange={handleChange}></textarea>
-                        </div>
-
-
-
-                    </div>
-                    <div className='border-t px-4 pb-4'>
-                        <button
-                            className='bg-[#11393C] px-4 py-2 rounded text-white mt-4 flex'
-                            onClick={handleSubmit}>
-                            {isUpdatingGeneralInfo && <Spinner />} Save Changes
-                        </button>
-
-                    </div>
-                </div>
-
-
-                <div className=' h-fit bg-white rounded border mt-10'>
-                    <div className='px-4 py-2 border-b flex justify-between items-center'>
-                        <p >Course Information</p>
-
-
-                        <div className='space-x-4'>
-                            <button className='px-4 py-2 border rounded' onClick={() => handleCoursePreview()}>Preview</button>
-                            <button className='px-4 py-2 border rounded' onClick={() => createNewSection()}>New section</button>
-                        </div>
-                    </div>
-
-                    <div className='px-4 my-8 space-y-3'>
-                        {courseInfoData.map((section: any, index: number) => {
-                            return (
-                                <div key={Math.random()}>
+                        <div className='px-4 my-8 space-y-3'>
+                            {courseInfoData.map((section: any, index: number) => (
+                                <div key={section.id}>
                                     <div className='flex items-center gap-1'>
-                                        <div className='flex items-center w-full relative border rounded bg-white  justify-between px-3'>
+                                        <div className='flex items-center w-full relative border rounded bg-white justify-between px-3'>
                                             <div className='px-4 py-4 rounded'>
                                                 <p className=''>{section.title}</p>
                                             </div>
-
                                             <span className='text-sm px-2 py border rounded-full bg-gray-50 -top-2 absolute'>Section</span>
-
                                         </div>
-                                        <div className='flex  items-center gap-2'>
+                                        <div className='flex items-center gap-2'>
                                             <TbPencil
                                                 size={20}
                                                 className='cursor-pointer ml-3'
                                                 onClick={() => {
-                                                    setActiveSection({ section, index })
-                                                    setEditSectionModalIsOpen(true)
-                                                }} />
-
-                                            <IoAddCircle size={20}
-                                                className='-rotate-180 ml-4 cursor-pointer' onClick={() => {
-                                                    setCurrentSection(section)
+                                                    setActiveSection({ section, index });
+                                                    setEditSectionModalIsOpen(true);
+                                                }}
+                                            />
+                                            <IoAddCircle
+                                                size={20}
+                                                className='-rotate-180 ml-4 cursor-pointer'
+                                                onClick={() => {
+                                                    setCurrentSection(section);
                                                     setModalIsOpen(true);
-                                                }
-
-                                                } />
-                                            <TbTrash size={20} className='cursor-pointer ml-3' onClick={() => {
-                                                setCurrentSection(section)
-                                                setDeleteModalIsOpen(true)
-                                            }} />
+                                                }}
+                                            />
+                                            <TbTrash
+                                                size={20}
+                                                className='cursor-pointer ml-3'
+                                                onClick={() => {
+                                                    setCurrentSection(section);
+                                                    setDeleteModalIsOpen(true);
+                                                }}
+                                            />
                                         </div>
                                     </div>
                                     <div>
-                                        {section.sub_sections.map((ss: any) => {
-                                            return (
-                                                <div className='flex items-center mt-4 ' key={Math.random()}>
-                                                    <div className='w-[80%] px-4 py-3 flex  justify-between relative ml-auto rounded bg-gray-50 my-2 s' >
+                                        {section.sub_sections.map((ss: any) => (
+                                            <div
+                                                className='flex items-center gap-2 justify-end hover:cursor-move'
+                                                key={ss.id}
+                                                onDragStart={(e: any) => {
+                                                    setActiveSection(section);
+                                                    handleDragStart(e, ss);
+                                                }}
+                                                onDragOver={(e: any) => handleDragOver(e, ss)}
+                                                onDragEnd={handleDrop}
+                                                draggable>
 
-                                                        <span className='ml-2'>
-                                                            {ss.title}
-                                                        </span>
-                                                        {/* <span className='ml-2'>
-                                                            {ss.id}
-                                                        </span> */}
+                                                <MdOutlineDragIndicator size={20} className='text-gray-400'/>
+                                                <div
+                                                    className='flex items-center mt-4 w-full '
+
+                                                >
+                                                    <div className='w-[100%] px-4 py-3 flex justify-between relative ml-auto rounded bg-gray-100 my-2 border'>
+                                                        <span className='ml-2'>{ss.title}</span>
                                                         <span className='text-sm px-2 py border rounded-full bg-white -top-2 absolute'>Sub-Section</span>
                                                     </div>
-
-
-
-                                                    <TbPencil size={20} className='cursor-pointer ml-3' onClick={() => {
-                                                        setActiveSubSection(ss)
-                                                        setEditModalIsOpen(true)
-                                                    }} />
-
+                                                    <TbPencil
+                                                        size={20}
+                                                        className='cursor-pointer ml-3'
+                                                        onClick={() => {
+                                                            setActiveSubSection(ss);
+                                                            setEditModalIsOpen(true);
+                                                        }}
+                                                    />
                                                     <TbTrash
                                                         className='ml-3 cursor-pointer'
                                                         size={20}
@@ -494,220 +570,226 @@ function EditSingleCourse({ course }: any) {
                                                         }}
                                                     />
                                                 </div>
-                                            )
-                                        })}
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
-                            )
-                        })}
+                            ))}
+                        </div>
 
+
+                        <div className='border-t px-4 pt-1 pb-4'>
+                            <button
+                                className='bg-[#11393C] px-4  rounded text-white mt-2 py-2 flex'
+                                onClick={handleCourseUpdate}>
+                                {isUpdatingCourseInfo && <Spinner />} Save Changes
+                            </button>
+                        </div>
 
                     </div>
 
-                    <div className='border-t px-4 pt-1 pb-4'>
-                        <button
-                            className='bg-[#11393C] px-4  rounded text-white mt-2 py-2 flex'
-                            onClick={handleCourseUpdate}>
-                            {isUpdatingCourseInfo && <Spinner />} Save Changes
-                        </button>
-                    </div>
-
-                </div>
-
-                {editSectionModalIsOpen && <ReactPortal>
-                    <Modal>
-                        <div>
-                            <label>Edit Section Title</label>
-                            <textarea id="message" rows={4} className="block p-2.5 w-full text-gray-900 bg-white rounded outline-blue-500 focus:ring-blue-500 focus:border-blue-500 border-2" placeholder="Write your thoughts here..." value={activeSection.section.title}
-                                onChange={(e) => {
-                                    setActiveSection((prevState: any) => ({
-                                        ...prevState,
-                                        section: {
-                                            ...prevState.section,
-                                            title: e.target.value
-                                        }
-                                    }))
-                                }}></textarea>
-
-                            <div>
-                                <div className='mt-4 flex items-center space-x-2'>
-                                    <button className='border px-4 py-2 w-[50%]  text-black  rounded' onClick={() => {
-                                        setEditSectionModalIsOpen(false)
-                                        setActiveSection({})
-                                    }
-
-                                    }>Cancel</button>
-                                    <button
-                                        className='border px-4 py-2  w-[50%] text-black  rounded'
-                                        onClick={handleEditSection}
-                                    >Save Changes</button>
-                                </div>
-                            </div>
-                        </div>
-                    </Modal></ReactPortal>}
-
-                {deleteModalIsOpen && <ReactPortal>
-                    <Modal>
-                        <IoWarning size={40} className='mx-auto' />
-                        <div className='text-center'>
-                            <p>Are you sure you want to delete ?</p>
-                            <p className='text-gray-600 text-sm'>This action cannot be undone</p>
-
-                            <div className='mt-4 flex w-fit mx-auto'>
-                                <button className='border px-3 mr-4 flex items-center gap-1 py-2 rounded' onClick={deleteSection}>
-                                    {deleteMutationStatus.isLoading && <Spinner />} Delete</button>
-                                <button className='border px-3 py-2 rounded' onClick={() => setDeleteModalIsOpen(false)}>Cancel</button>
-                            </div>
-                        </div>
-                    </Modal>
-                </ReactPortal>}
-
-
-                {deleteSubSectionModalIsOpen && <ReactPortal>
-                    <Modal>
-                        <IoWarning size={40} className=' mx-auto' />
-                        <div className='text-center'>
-                            <p>Are you sure you want to delete ?</p>
-                            <p className='text-gray-600 text-sm'>This action cannot be undone</p>
-
-                            <div className='mt-4 flex mx-auto text-center gap-2'>
-                                <button className='border w-[100%] px-3 py-2 rounded' onClick={deleteSubSection}>
-                                    {deleteSubSectionMutationStatus.isLoading && <Spinner />} Delete</button>
-                                <button className='border w-[100%] px-3 py-2 rounded' onClick={() => setDeleteSubSectionModalIsOpen(false)}>Cancel</button>
-                            </div>
-                        </div>
-                    </Modal>
-                </ReactPortal>}
-
-                {modalIsOpen &&
-                    <ReactPortal>
-                        <div className="h-screen w-screen bg-black opacity-60 fixed z-50 top-0 flex justify-center items-center transition duration-75"></div>
-                        <div className="h-screen w-screen bg-transparent fixed top-0 z-[100] flex items-center justify-center transition duration-75">
-                            <div className="w-[90%] h-fit sm:w-[90%] sm:h-[fit] z-[100] bg-[#fff] rounded shadow-md p-4 transition duration-75">
-                                <div className=' w-fit ml-auto space-x-4'>
-                                    <button className='py-1 px-4 border rounded' onClick={(e) => handleModalSubmit(e)}>Save changes</button>
-                                    <button className='py-1 px-4 border rounded' onClick={() => {
-                                        setSubSectionData({
-                                            id: uuidv4(),
-                                            title: "",
-                                            content: "",
-                                        });
-                                        setFilesSelected([]);
-                                        setModalIsOpen(false);
-                                    }}>Close</button>
-                                </div>
-
-                                <div className='mt-6'>
-                                    <ReactQuillEditor
-
-                                        onChange={(value: any) => {
-                                            const [title, content] = seperateBlogDataIntoComponents(value as string);
-
-                                            setSubSectionData((prevState: any) => ({
-                                                title: title,
-                                                content: value,
-                                                id: prevState?.id
-                                            }))
-
-                                        }
-                                        }
-                                    />
-                                </div>
-                            </div>
-
-
-
-                        </div>
-                    </ReactPortal>
-                }
-
-
-                {editModalIsOpen &&
-                    <ReactPortal>
-                        <div className="h-screen w-screen bg-black opacity-60 fixed z-50 top-0 flex justify-center items-center transition duration-75"></div>
-                        <div className="h-screen w-screen bg-transparent fixed top-0 z-[100] flex items-center justify-center transition duration-75">
-                            <div className="w-[90%] h-fit sm:w-[90%] sm:h-[fit] z-[100] bg-[#fff] rounded shadow-md p-4 transition duration-75">
-                                <div className=' w-fit ml-auto space-x-4'>
-                                    <button className='py-1 px-4 border rounded' onClick={(e) => handleEditSubSection(e)}>Save changes</button>
-                                    <button className='py-1 px-4 border rounded' onClick={() => {
-                                        setActiveSubSection({ title: '', content: '', _id: '' });
-                                        setEditModalIsOpen(false);
-                                    }}>Close</button>
-                                </div>
-
-                                <div className='mt-6'>
-                                    <ReactQuillEditor
-                                        value={activeSubSection?.content}
-                                        onChange={(value: any) => {
-                                            const [title, content] = seperateBlogDataIntoComponents(value as string);
-                                            setSubSectionData((prevState) => ({
-                                                title,
-                                                content: value,
-                                                id: activeSubSection?._id
-                                            }))
-                                        }
-
-                                        }
-                                    />
-                                </div>
-                            </div>
-
-
-
-                        </div>
-                    </ReactPortal>
-                }
-
-
-                {newSectionModalIsOpen &&
-                    <ReactPortal>
+                    {editSectionModalIsOpen && <ReactPortal>
                         <Modal>
-                            <div className="flex justify-between border-b pb-2">
-                                <h3 className="text-base font-normal">Create new section</h3>
+                            <div>
+                                <label>Edit Section Title</label>
+                                <textarea id="message" rows={4} className="block p-2.5 w-full text-gray-900 bg-white rounded outline-blue-500 focus:ring-blue-500 focus:border-blue-500 border-2" placeholder="Write your thoughts here..." value={activeSection.section.title}
+                                    onChange={(e) => {
+                                        setActiveSection((prevState: any) => ({
+                                            ...prevState,
+                                            section: {
+                                                ...prevState.section,
+                                                title: e.target.value
+                                            }
+                                        }))
+                                    }}></textarea>
 
-                                <div
-                                    className="w-6 h-6 border rounded-full flex items-center justify-center cursor-pointer"
-                                    onClick={() => {
-                                        setNewSectionModalIsOpen(false);
-                                    }}
-                                >
-                                    <AiOutlineClose size={12} />
+                                <div>
+                                    <div className='mt-4 flex items-center space-x-2'>
+                                        <button className='border px-4 py-2 w-[50%]  text-black  rounded' onClick={() => {
+                                            setEditSectionModalIsOpen(false)
+                                            setActiveSection({})
+                                        }
+
+                                        }>Cancel</button>
+                                        <button
+                                            className='border px-4 py-2  w-[50%] text-black  rounded'
+                                            onClick={handleEditSection}
+                                        >Save Changes</button>
+                                    </div>
                                 </div>
                             </div>
+                        </Modal></ReactPortal>}
 
-                            <div className='mt-4'>
-                                <CustomInput label='Name of section' type='text' name='author' value={newSectionData.title} onChange={(e: any) => {
-                                    setNewSectionData((prevState: any) => ({
-                                        ...prevState,
-                                        title: e.target.value
-                                    }))
-                                }} />
-                            </div>
+                    {deleteModalIsOpen && <ReactPortal>
+                        <Modal>
+                            <IoWarning size={40} className='mx-auto' />
+                            <div className='text-center'>
+                                <p>Are you sure you want to delete ?</p>
+                                <p className='text-gray-600 text-sm'>This action cannot be undone</p>
 
-                            <div className="flex gap-3 mt-4">
-                                <button
-                                    className="py-3 w-[100%] border px-4 rounded "
-                                    onClick={(e) => addNewSection()}
-                                >
-                                    Submit
-                                </button>
-                                <button
-                                    className="py-3 w-[100%] border px-4 rounded"
-                                    onClick={() => {
-                                        setSubSectionData({ title: "", content: "", id: uuidv4() });
-                                        setNewSectionModalIsOpen(false);
-                                    }}
-                                >
-                                    Cancel
-                                </button>
+                                <div className='mt-4 flex w-fit mx-auto'>
+                                    <button className='border px-3 mr-4 flex items-center gap-1 py-2 rounded' onClick={deleteSection}>
+                                        {deleteMutationStatus.isLoading && <Spinner />} Delete</button>
+                                    <button className='border px-3 py-2 rounded' onClick={() => setDeleteModalIsOpen(false)}>Cancel</button>
+                                </div>
                             </div>
                         </Modal>
+                    </ReactPortal>}
 
 
-                    </ReactPortal>
-                }
+                    {deleteSubSectionModalIsOpen && <ReactPortal>
+                        <Modal>
+                            <IoWarning size={40} className=' mx-auto' />
+                            <div className='text-center'>
+                                <p>Are you sure you want to delete ?</p>
+                                <p className='text-gray-600 text-sm'>This action cannot be undone</p>
 
-                {/* {deleteSectionModalIsOpen && <ReactPortal>
+                                <div className='mt-4 flex mx-auto text-center gap-2'>
+                                    <button className='border w-[100%] px-3 py-2 rounded' onClick={deleteSubSection}>
+                                        {deleteSubSectionMutationStatus.isLoading && <Spinner />} Delete</button>
+                                    <button className='border w-[100%] px-3 py-2 rounded' onClick={() => setDeleteSubSectionModalIsOpen(false)}>Cancel</button>
+                                </div>
+                            </div>
+                        </Modal>
+                    </ReactPortal>}
+
+                    {modalIsOpen &&
+                        <ReactPortal>
+                            <div className="h-screen w-screen bg-black opacity-60 fixed z-50 top-0 flex justify-center items-center transition duration-75"></div>
+                            <div className="h-screen w-screen bg-transparent fixed top-0 z-[100] flex items-center justify-center transition duration-75">
+                                <div className="w-[90%] h-fit sm:w-[90%] sm:h-[fit] z-[100] bg-[#fff] rounded shadow-md p-4 transition duration-75">
+                                    <div className=' w-fit ml-auto space-x-4'>
+                                        <button className='py-1 px-4 border rounded' onClick={(e) => handleModalSubmit(e)}>Save changes</button>
+                                        <button className='py-1 px-4 border rounded' onClick={() => {
+                                            setSubSectionData({
+                                                id: uuidv4(),
+                                                title: "",
+                                                content: "",
+                                            });
+                                            setFilesSelected([]);
+                                            setModalIsOpen(false);
+                                        }}>Close</button>
+                                    </div>
+
+                                    <div className='mt-6'>
+                                        <ReactQuillEditor
+
+                                            onChange={(value: any) => {
+                                                const [title, content] = seperateBlogDataIntoComponents(value as string);
+
+                                                setSubSectionData((prevState: any) => ({
+                                                    title: title,
+                                                    content: value,
+                                                    id: prevState?.id
+                                                }))
+
+                                            }
+                                            }
+                                        />
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                        </ReactPortal>
+                    }
+
+
+                    {editModalIsOpen &&
+                        <ReactPortal>
+                            <div className="h-screen w-screen bg-black opacity-60 fixed z-50 top-0 flex justify-center items-center transition duration-75 overflow-auto"></div>
+                            <div className="h-screen w-screen bg-transparent fixed top-0 z-[100] transition duration-75">
+                                <div className="w-[97%] pb-20 h-[100%] sm:w-[99%] sm:h-[100%] z-[100] bg-[#fff] overflow-scroll shadow-md p-4 transition duration-75">
+                                    <div className=' w-fit ml-auto space-x-4 px-4'>
+                                        <button
+                                            className='py-1 px-4 border rounded'
+                                            onClick={() => router.push({
+                                                pathname: '/admin/courses/preview/sub-section',
+                                                query: {
+                                                    content: activeSubSection?.content
+                                                }
+                                            })}>Preview</button>
+                                        <button className='py-1 px-4 border rounded' onClick={(e) => handleEditSubSection(e)}>Save changes</button>
+                                        <button className='py-1 px-4 border rounded' onClick={() => {
+                                            setActiveSubSection({ title: '', content: '', _id: '' });
+                                            setEditModalIsOpen(false);
+                                        }}>Close</button>
+                                    </div>
+
+                                    <div className='mt-6 md:w-[60%] mx-auto'>
+                                        <ReactQuillEditor
+                                            value={activeSubSection?.content}
+                                            onChange={(value: any) => {
+                                                const [title, content] = seperateBlogDataIntoComponents(value as string);
+                                                setSubSectionData((prevState) => ({
+                                                    title,
+                                                    content: value,
+                                                    id: activeSubSection?._id
+                                                }))
+                                            }
+
+                                            }
+                                        />
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                        </ReactPortal>
+                    }
+
+
+                    {newSectionModalIsOpen &&
+                        <ReactPortal>
+                            <Modal>
+                                <div className="flex justify-between border-b pb-2">
+                                    <h3 className="text-base font-normal">Create new section</h3>
+
+                                    <div
+                                        className="w-6 h-6 border rounded-full flex items-center justify-center cursor-pointer"
+                                        onClick={() => {
+                                            setNewSectionModalIsOpen(false);
+                                        }}
+                                    >
+                                        <AiOutlineClose size={12} />
+                                    </div>
+                                </div>
+
+                                <div className='mt-4'>
+                                    <CustomInput label='Name of section' type='text' name='author' value={newSectionData.title} onChange={(e: any) => {
+                                        setNewSectionData((prevState: any) => ({
+                                            ...prevState,
+                                            title: e.target.value
+                                        }))
+                                    }} />
+                                </div>
+
+                                <div className="flex gap-3 mt-4">
+                                    <button
+                                        className="py-3 w-[100%] border px-4 rounded "
+                                        onClick={(e) => addNewSection()}
+                                    >
+                                        Submit
+                                    </button>
+                                    <button
+                                        className="py-3 w-[100%] border px-4 rounded"
+                                        onClick={() => {
+                                            setSubSectionData({ title: "", content: "", id: uuidv4() });
+                                            setNewSectionModalIsOpen(false);
+                                        }}
+                                    >
+                                        Cancel
+                                    </button>
+                                </div>
+                            </Modal>
+
+
+                        </ReactPortal>
+                    }
+
+                    {/* {deleteSectionModalIsOpen && <ReactPortal>
                     <Modal>
                         <div className="flex justify-between border-b pb-2">
                             <h3 className="text-base font-normal">Create new section</h3>
@@ -723,8 +805,9 @@ function EditSingleCourse({ course }: any) {
                         </div>
                     </Modal>
                 </ReactPortal>} */}
-            </div>
-        </Layout>
+                </div>
+            </Layout>
+        </div>
     )
 }
 
@@ -739,7 +822,7 @@ export default EditSingleCourse
 // with a fresh value. If you refresh the page, you will see the new value.
 export async function getServerSideProps({ req, res }: any) {
     const paramsArr = req.url.split("/");
-    
+
 
     const course = paramsArr[paramsArr.length - 1].split(".")[0];
     const courseId = course?.split("?")[0]

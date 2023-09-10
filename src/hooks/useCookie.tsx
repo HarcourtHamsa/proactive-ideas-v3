@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { getCookie } from 'cookies-next';
 import { decryptData } from '@/helper';
+import { useSession } from "next-auth/react";
 
-// Define the shape of the cookie object
 interface CookieInterface {
   user: {
     accessToken: string;
@@ -16,22 +16,20 @@ interface CookieInterface {
 
 export default function useCookie() {
   const [cookieObj, setCookieObj] = useState<CookieInterface | null>(null);
+  const { data: session } = useSession();
+  const typedSession = session as unknown as CookieInterface
 
   useEffect(() => {
-    // Fetch the encrypted token from the cookie
     const encryptedToken = getCookie('tkn');
 
     if (!encryptedToken) {
-      // If no token is found, set cookieObj to null and return
       setCookieObj(null);
       return;
     }
-    
 
-    // Decrypt the token and set the cookieObj
-    const fetchedCookieObj = decryptData(encryptedToken as string);
+    const fetchedCookieObj = decryptData(encryptedToken);
     setCookieObj(fetchedCookieObj);
   }, []);
 
-  return cookieObj;
+  return cookieObj || typedSession || null;
 }

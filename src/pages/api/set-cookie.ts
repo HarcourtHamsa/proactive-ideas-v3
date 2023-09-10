@@ -10,7 +10,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
     res.setHeader('Set-Cookie', cookie.serialize('tkn', encryptedValue, {
         // httpOnly: true,
         secure: process.env.NODE_ENV !== 'development', // Set to true in production
-        sameSite: 'strict',
+        // sameSite: 'strict',
         maxAge: 60 * 60 * 24 * 7, // 7 days
         path: '/',
     }));
