@@ -49,7 +49,7 @@ function CoursesTable({ data }: any) {
     const deleteItem = () => {
 
 
-        deleteCourse({ token: cookie?.user.email, id: currentItem }).then((res: any) => {
+        deleteCourse({ token: cookie?.user?.email, id: currentItem }).then((res: any) => {
 
             notify({ msg: 'Course deleted!', type: 'success' })
         }).catch((err: any) => {

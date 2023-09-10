@@ -13,12 +13,12 @@ import { useFetchCourseEnrollmentQuery } from "@/features/apiSlice";
 // { title, duration }: { title: string; duration: string }
 
 function Card({ data }: any) {
-  const router = useRouter();
+  const router = useRouter(); 
   const geo = useSelector((state: RootState) => state.geo)
   const cookie = useCookie();
 
   const courseId = data?.id
-  const userId = cookie?.user.id
+  const userId = cookie?.user?.id 
 
   const { data: subscriber, isLoading } = useFetchCourseEnrollmentQuery({ course: courseId, user: userId })
 

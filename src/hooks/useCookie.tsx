@@ -17,6 +17,7 @@ interface CookieInterface {
 export default function useCookie() {
   const [cookieObj, setCookieObj] = useState<CookieInterface | null>(null);
   const { data: session } = useSession();
+  const typedSession = session as unknown as CookieInterface
 
   useEffect(() => {
     const encryptedToken = getCookie('tkn');
@@ -30,5 +31,5 @@ export default function useCookie() {
     setCookieObj(fetchedCookieObj);
   }, []);
 
-  return cookieObj || session || null;
+  return cookieObj || typedSession || null;
 }

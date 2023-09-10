@@ -36,7 +36,7 @@ function Table({ data }: any) {
     setShowDeleteLoader(true);
 
 
-    await deleteBlog({ id: current?.id, token: cookie?.user.accessToken })
+    await deleteBlog({ id: current?.id, token: '' })
       .then((res: any) => {
 
         notify({ msg: "Draft deleted", type: "success" });
