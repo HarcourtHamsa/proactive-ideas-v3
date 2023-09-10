@@ -9,12 +9,15 @@ import "react-tabs/style/react-tabs.css";
 import { decryptData, fetchUserEnrollments } from "@/helper";
 import Card from "@/components/Card";
 import useCookie from "@/hooks/useCookie";
+import { BsFillPersonFill, BsFillTelephoneFill } from "react-icons/bs";
+import { HiMail } from "react-icons/hi";
+import { FaUserTie } from "react-icons/fa";
 
 function Profile({ enrollments }) {
   const cookie = useCookie();
   const parsedEnrollments = JSON.parse(enrollments);
 
-  const inputStyling = `h-[55px] border rounded-xl py-2 px-3 flex items-center gap-3`;
+  const inputStyling = `h-[55px] border-t border-b py-2 px-3 flex items-center gap-3 text-[#1F2431E5]`;
 
   console.log(cookie?.user);
 
@@ -62,20 +65,45 @@ function Profile({ enrollments }) {
                     </p>
                   </div>
 
-                  <div className="my-10 lg:w-[70%] grid grid-cols-2 gap-[20px]">
+                  <div className="my-10 lg:w-[50%] grid gap-[20px]">
                     <div className={inputStyling}>
-                      <span>Full Name:</span>
-                      <span>{cookie?.user.name}</span>
+                      <span className="text-[14px] font-medium flex items-center gap-2">
+                        <BsFillPersonFill />
+                        Full Name:
+                      </span>
+                      <span className="text-[16px] font-light">
+                        {cookie?.user.name}
+                      </span>
                     </div>
 
                     <div className={inputStyling}>
-                      <span className="font-medium">Email:</span>
-                      <span className="font-light">{cookie?.user.email}</span>
+                      <span className="font-medium text-[14px] flex items-center gap-2">
+                        <HiMail />
+                        Email:
+                      </span>
+                      <span className="font-light text-[16px]">
+                        {cookie?.user.email}
+                      </span>
                     </div>
 
                     <div className={inputStyling}>
-                      <span> Role:</span>
-                      <span>{cookie?.user.role}</span>
+                      <span className="font-medium text-[14px] flex items-center gap-2">
+                        <FaUserTie />
+                        Role:
+                      </span>
+                      <span className="font-light text-[16px]">
+                        {cookie?.user.role}
+                      </span>
+                    </div>
+
+                    <div className={inputStyling}>
+                      <span className="font-medium text-[14px] flex items-center gap-2">
+                        <BsFillTelephoneFill />
+                        phone number:
+                      </span>
+                      <span className="font-light text-[16px]">
+                        Not specified
+                      </span>
                     </div>
                   </div>
                 </div>
