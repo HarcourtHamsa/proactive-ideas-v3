@@ -5,7 +5,7 @@ import Layout from '@/components/admin/Layout'
 
 import { IoPeople, IoDocumentText, IoLibrary } from "react-icons/io5";
 import { useSession } from 'next-auth/react';
-import { useFetchBlogPostsQuery, useFetchCoursesQuery, useFetchUsersQuery } from '@/features/apiSlice';
+import { useFetchBlogPostsQuery, useFetchCoursesQuery, useFetchIdeasPostDraftsQuery, useFetchIdeasPostsQuery, useFetchUsersQuery } from '@/features/apiSlice';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import { useRouter } from 'next/router';
@@ -17,6 +17,7 @@ function Index() {
     const { data: blogPosts } = useFetchBlogPostsQuery("")
     const { data: courses } = useFetchCoursesQuery("")
     const { data: users } = useFetchUsersQuery({ token: authState?.auth?.user?.accessToken })
+    const { data: ideas } = useFetchIdeasPostDraftsQuery({ token: authState?.auth?.user?.accessToken })
     const cookie = useCookie()
 
     function fnc() {
@@ -60,7 +61,7 @@ function Index() {
                 />
                 <InfoCard
                     label="Ideas"
-                    number={'0'}
+                    number={ideas?.data?.filter((blog: any) => blog.status !== 'deleted').length}
                     bg="purple-500"
                     icon={<IoLibrary color="white" size={30} />}
                 />

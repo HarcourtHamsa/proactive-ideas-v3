@@ -54,7 +54,7 @@ function Index({ heroContent, certContent, newsletterContent }: any) {
               <div className='flex justify-between gap-4 lg:items-center my-10 flex-col lg:flex-row'>
                 <div>
                   <p className='text-[#11393C] uppercase before:w-10 before:h-[2px] before:bg-[#11393C] before:inline-flex before:-translate-y-1 before:mr-4'>courses</p>
-                  <h2 className="mb-4 text-3xl font-medium leading-snug lg:font-extrabold lg:text-4xl lg:leading-none text-[#11393C] lg:mb-7 md:w-[600px]">
+                  <h2 className="mb-4 text-3xl font-semibold leading-snug lg:font-extrabold lg:text-4xl lg:leading-none text-[#11393C] lg:mb-7 md:w-[600px]">
                     Explore inspiring online courses
                   </h2>
                 </div>
@@ -100,7 +100,7 @@ function Index({ heroContent, certContent, newsletterContent }: any) {
         <div className='container w-[90%] mx-auto items-center grid grid-cols-1 lg:grid-cols-2'>
           <div className='space-y-4'>
             <p className='text-[#11393C] uppercase before:w-10 before:h-[2px] before:bg-[#11393C] before:inline-flex before:-translate-y-1 before:mr-4'>Certification</p>
-            <h2 className="mb-4 text-3xl font-medium leading-snug lg:font-extrabold lg:text-4xl lg:leading-none text-[#11393C] lg:mb-7 md:w-[500px]">{certContent[0]?.header}</h2>
+            <h2 className="mb-4 text-3xl font-semibold  leading-snug lg:font-extrabold lg:text-4xl lg:leading-none text-[#11393C] lg:mb-7 md:w-[500px]">{certContent[0]?.header}</h2>
             <p className='text-black'>
               {certContent[0]?.subHeader}
 
@@ -120,7 +120,7 @@ function Index({ heroContent, certContent, newsletterContent }: any) {
         <div className='flex justify-between gap-4 md:items-center my-10 flex-col md:flex-row'>
           <div>
             <p className='text-[#11393C] uppercase before:w-10 before:h-[2px] before:bg-[#11393C] before:inline-flex before:-translate-y-1 before:mr-4'>Blog</p>
-            <h2 className="text-2xl md:w-[500px] md:text-4xl text-[#11393C] text-left py-4 mx-auto font-medium xl:font-extrabold">
+            <h2 className="text-2xl md:w-[500px] md:text-4xl text-[#11393C] text-left py-4 mx-auto font-semibold  xl:font-extrabold">
               Fresh insights from experts.
             </h2>
 
@@ -163,7 +163,7 @@ function Index({ heroContent, certContent, newsletterContent }: any) {
         <div className='flex justify-between gap-4 md:items-center my-10 flex-col md:flex-row'>
           <div>
             <p className='text-[#11393C] uppercase before:w-10 before:h-[2px] before:bg-[#11393C] before:inline-flex before:-translate-y-1 before:mr-4'>Ideas</p>
-            <h2 className="text-2xl md:w-[500px] md:text-4xl text-[#11393C] text-left py-4 mx-auto font-medium xl:font-extrabold">
+            <h2 className="text-2xl md:w-[500px] md:text-4xl text-[#11393C] text-left py-4 mx-auto font-semibold  xl:font-extrabold">
               Bite-sized contents
             </h2>
 

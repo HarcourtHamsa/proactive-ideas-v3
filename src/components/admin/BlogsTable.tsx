@@ -130,6 +130,11 @@ function Table({ data }: any) {
                     </td>
 
                     <td className="px-4 py-3 text-black whitespace-nowrap">
+                      <span className={`px-4 py-1 rounded-full text-sm ${blog.status === 'active' ? 'bg-green-500/30 text-green-500' : 'bg-orange-500/30 text-orange-500'}`}>
+                        {blog.status === 'active' ? 'Published' : 'Draft'}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-black whitespace-nowrap">
                       {new Date(blog.createdAt).toLocaleDateString()}
                     </td>
                     <td className="px-8 py-3 relative flex">

@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'GT-America';
-  src: url('../assets/fonts/SF-Pro-Display-Medium.woff');
+  src: url('../assets/fonts/Mabry\ Pro\ Medium.otf');
   font-display: swap;
 }
 
@@ -35,7 +35,7 @@
   margin: 0;
   font-family: 'GT-America' !important;
   font-weight: 500;
-  font-size: 15px;
+  /* font-size: 16px !important; */
   line-height: 1.6;
   scroll-behavior: smooth;
 }
@@ -917,12 +917,6 @@ button[data-tracking-id="hamsaharcourt@gmail.com"]{
 };
 
 
-
-.ck-editor__main h1{
-  font-size: 2rem !important;
-  background-color: red !important;
-}
-
 /* h1 strong{
   font-size: 2rem;
 }
@@ -937,3 +931,39 @@ h3 strong
 {
   font-size: 1.35rem !important; 
 } */
+
+
+figure img{
+  background-color: rebeccapurple;
+  /* width: 100%; */
+}
+
+figcaption span{
+  /* background-color: #e0e0e0; */
+  /* width: fit-content; */
+  /* font-size: small !important; */
+  padding: 2px 12px;
+  font-style: italic !important;
+}
+
+ul {
+  margin-left: 1.5rem;
+}
+
+#hero__text {
+  font-size: 1.85rem !important;
+}
+
+@media only screen and (min-width: 600px) {
+  #hero__text {
+    font-size: 2.75rem !important;
+  }
+}
+
+@media only screen and (min-width: 2000px) {
+  #hero__text {
+    font-size: 3.75rem !important;
+  }
+}
+
+

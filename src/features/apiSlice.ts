@@ -15,6 +15,9 @@ export const apiSlice = createApi({
         fetchBlogPosts: builder.query({
             query: () => "/get-blog-posts?status=active"
         }),
+        fetchAllBlogPosts: builder.query({
+            query: () => "/get-blog-posts"
+        }),
         fetchBlogPostDrafts: builder.query({
             query: ({ token }: any) => ({
                 url: `get-blog-posts?status=inactive`,
@@ -367,5 +370,6 @@ export const {
     useUpdateQuizMutation,
     useFetchEmailListQuery,
     useFetchAllCoursesQuery,
+    useFetchAllBlogPostsQuery
 }
     = apiSlice

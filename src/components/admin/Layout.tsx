@@ -85,14 +85,14 @@ function Layout({ children }: { children: React.ReactNode }) {
         aria-label="Sidebar"
       >
         <div className="h-full px-3 py-8  shadow border-[#EDEBE7] overflow-y-auto bg-[#FBF7F4]">
-          <div className="w-fit lg:-translate-x-16  mb-8 -translate-y-0">
+          <div className="w-fit lg:-translate-x-12  mb-8 -translate-y-0">
             <Logo />
           </div>
 
 
 
           <ul className="space-y-2  mt-4">
-            <li>
+            <li className="">
               <Link
                 href="/admin"
                 className="flex items-center p-2  group font-normal rounded text-white hover:bg-gray-100/10"

@@ -21,7 +21,7 @@ function Hero({ data }: any) {
                     {/* column 1 */}
                     <div className="space-y-8 translate-y-10 pt-10 relative  md:translate-y-20 col-span-2">
 
-                    <h1 className="mb-4 text-2xl font-semibold leading-snug lg:font-extrabold lg:text-5xl xl:w-[600px] lg:leading-loose text-white lg:mb-7">
+                    <h1 id="hero__text" className="mb-4 text-2xl font-semibold leading-snug lg:font-extrabold lg:text-5xl xl:w-[600px] lg:leading-loose text-white lg:mb-7">
                     {data[0].header}
                   </h1>
                     {/* <h1 className="mb-4 text-4xl text-white  mt-10 font-semibold leading-snug lg:font-extrabold lg:text-5xl lg:leading-none  lg:mb-4">{data[0].header}</h1> */}

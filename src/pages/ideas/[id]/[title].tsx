@@ -75,7 +75,7 @@ function Title({ blogDetails }: any) {
                     <p className='text-base'>Written by  - {blogDetails?.author} </p>
 
 
-                    <div className='lg:h-[342px] h-[200px] my-10 mx-auto w-[100%] overflow-hidden' >
+                    <div className='lg:h-[342px] h-[200px] bg-white my-10 mx-auto w-[100%] overflow-hidden' >
                         <Image alt='' className='object-cover w-full h-full' src={blogDetails?.header_image} width={684} height={342} />
                     </div>
                 </div>
