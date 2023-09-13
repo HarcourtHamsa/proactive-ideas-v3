@@ -25,10 +25,10 @@ function Card({ data }: any) {
 
 
   return (
-    <div className=" w-[100%] h-[450px] cursor-pointer">
+    <div className=" w-[100%] h-[350px] cursor-pointer">
       <div className="flex flex-col h-full bg-white border rounded overflow-hidden">
 
-        <a className="block focus:outline-none focus-visible:ring-2 relative h-[50%]">
+        <a className="block focus:outline-none focus-visible:ring-2 relative h-[40%]">
           <figure className="relative h-full overflow-hidden">
             <Image className="absolute inset-0 w-full h-full object-cover transform hover:scale-105 transition duration-700 ease-out" src={data?.header_image} width="320" height="180" alt="Course" />
           </figure>

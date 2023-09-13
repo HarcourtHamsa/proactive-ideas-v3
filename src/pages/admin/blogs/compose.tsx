@@ -101,7 +101,7 @@ function Compose() {
 
       setFilesSelected(file);
 
-      
+
 
 
       await imageUpload(file)
@@ -147,80 +147,42 @@ function Compose() {
     });
 
 
+    createBlogPostDraft({
+      body: {
+        author: author,
+        title: title,
+        description: description,
+        content: blogContent,
+        header_image: cloudinaryURL,
+        tags: tags,
+        category: 'category',
+        summary: description,
+      },
+      token: authState?.auth?.user.accessToken,
+    })
+      .then((res: any) => {
 
-    if (role === Role.superAdmin) {
-      createBlogPost({
-        body: {
-          author: author,
-          title: title,
-          description: description,
-          content: blogContent,
-          header_image: cloudinaryURL,
-          tags: tags,
-          category: 'category',
-          summary: description,
-        },
-        token: authState?.auth?.user.accessToken,
+        notify({ msg: "Saved as draft", type: "success" });
+
+        setSelectedCategory(null)
+        setIsOpen(false)
+        setBlogContent("")
+        setTitle("")
+        setDescription("")
+        dispatch(resetBlogData());
+
+
+        router.push("/admin/blogs")
+
       })
-        .then((res: any) => {
-        
-          notify({ msg: "Blog post created", type: "success" });
+      .catch((err: any) => {
 
-          setSelectedCategory(null)
-          setIsOpen(false)
-          setBlogContent("")
-          setTitle("")
-          setDescription("")
-          dispatch(resetBlogData());
-
-
-          router.push("/admin/blogs")
-
-        })
-        .catch((err: any) => {
-        
-          notify({ msg: "Could not create blog post", type: "error" });
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    } else if (role === Role.admin) {
-      createBlogPostDraft({
-        body: {
-          author: author,
-          title: title,
-          description: description,
-          content: blogContent,
-          header_image: cloudinaryURL,
-          tags: tags,
-          category: 'category',
-          summary: description,
-        },
-        token: authState?.auth?.user.accessToken,
+        notify({ msg: "Could not create blog post", type: "error" });
       })
-        .then((res: any) => {
-          
-          notify({ msg: "Saved as draft", type: "success" });
+      .finally(() => {
+        setIsLoading(false);
+      });
 
-          setSelectedCategory(null)
-          setIsOpen(false)
-          setBlogContent("")
-          setTitle("")
-          setDescription("")
-          dispatch(resetBlogData());
-
-
-          router.push("/admin/blogs")
-
-        })
-        .catch((err: any) => {
-         
-          notify({ msg: "Could not create blog post", type: "error" });
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    }
   };
 
   const handleChange = (e: any) => {
@@ -248,8 +210,8 @@ function Compose() {
   };
 
   const showPreview = () => {
-   
-    
+
+
     dispatch(setBlogData({ title: title, content: blogContent, headerImage: cloudinaryURL }));
     router.push("/admin/content/preview");
   }
@@ -377,7 +339,7 @@ function Compose() {
                   <div className="pr-2">
                     <label>Select Category</label>
                     <CustomSelect
-                    group="blog"
+                      group="blog"
                       value={selectedCategory}
                       onChange={handleSelectChange}
                     />

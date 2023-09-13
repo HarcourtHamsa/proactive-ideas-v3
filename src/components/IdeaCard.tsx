@@ -14,14 +14,14 @@ function IdeaCard({
 
 
   return (
-    <div className="shadow h-[400px] cursor-pointer">
+    <div className="shadow h-[350px] cursor-pointer">
       <div className="flex flex-col h-full bg-white border rounded overflow-hidden" onClick={() => router.push({
         pathname: `/ideas/${data.title}`, query: {
           ...data
         }
       }, `/ideas/${data.id}/${data.title.replace(/ /g, "-").toLowerCase()}`)}>
 
-        <a className="block focus:outline-none focus-visible:ring-2 h-[50%]">
+        <a className="block focus:outline-none focus-visible:ring-2 h-[40%]">
           <figure className="relative h-full overflow-hidden ">
             <Image className="absolute inset-0 w-full h-full object-cover transform hover:scale-105 transition duration-700 ease-out" src={data?.header_image} width="320" height="180" alt="Course" />
           </figure>

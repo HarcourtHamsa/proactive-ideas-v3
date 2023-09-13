@@ -272,9 +272,9 @@ function Table({ categories }: { categories: string[] }) {
                       id="countries"
                       className="bg-white border text-gray-900  rounded block w-full p-2.5 py-3" onChange={(e: any) => setCategoryGroup(e.target.value)}
                       value={categoryGroup}>
-                      <option value="blog">Blog</option>
-                      <option value="ideas">Ideas</option>
-                      <option value="course">Course</option>
+                      <option value="blog">blog</option>
+                      <option value="ideas">ideas</option>
+                      <option value="course">course</option>
                     </select>
                   </div>
 

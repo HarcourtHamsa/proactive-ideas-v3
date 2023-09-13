@@ -71,8 +71,11 @@ function EditBlog() {
     return tagsArr
   }
 
+  console.log({summary: blogData});
+  
+
   const [selectedTags, setSelectedTags] = useState<any[] | null>(generatePeviousTags());
-  const [description, setDescription] = useState(router.query.description);
+  const [description, setDescription] = useState(blogData.summary || router.query.summary);
   const [blogTitle, setBlogTitle] = useState<any>(blogData.title || router.query.title);
   const [author, setAuthor] = useState<any>(blogData.author || router.query.author);
   const [blogContent, setBlogContent] = useState(blogData.content || router.query.content);

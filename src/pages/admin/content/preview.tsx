@@ -18,16 +18,16 @@ function PreviewContent() {
 
 
     return (
-        <div className='bg-white'>
+        <div className='bg-[#FAF7ED]'>
             <ProgressBar />
-            <div className='px-4 py-4 flex fixed top-0 left-0 right-0 bg-white justify-between'>
+            <div className='px-4 py-4 flex fixed top-0 left-0 right-0 bg-[#FAF7ED] justify-between'>
                 <BackChevronButton />
             </div>
 
-
+         
             <div className='lg:min-h-[550px] h-fit lg:w-[60%]  p-4 lg:text-center w-[90%] mx-auto pt-28 sm:pt-20 lg:pt-28'>
                 <h1 className=" text-left text-2xl mt-10 font-semibold leading-snug lg:font-extrabold lg:text-4xl lg:leading-none lg:mb-0">{title}</h1>
-                <div className='lg:h-[500px] mt-8 h-[200px] mx-auto w-full overflow-hidden mb-10' >
+                <div className='lg:h-[300px] mt-8 h-[200px] mx-auto w-full overflow-hidden mb-10' >
                     <Image alt='' className='object-cover w-full h-full' src={blogData.headerImage} width={730} height={487} />
                 </div>
             </div>

@@ -49,6 +49,7 @@ function Compose() {
 
     const [blogContent, setBlogContent] = useState(blogData.content || "");
     const [title, setTitle] = useState(blogData.title || "");
+    const [author, setAuthor] = useState(blogData.author || "");
     const [cloudinaryURL, setCloudinaryURL] = useState(blogData.headerImage || "")
     const [tags, setTags] = useState("")
 
@@ -136,86 +137,42 @@ function Compose() {
             tags.push(t.value);
         });
 
-        console.log("running function...");
-        
+        createIdeaPostDraft({
+            body: {
+                author: author,
+                title: title,
+                description: description,
+                content: blogContent,
+                header_image: cloudinaryURL,
+                tags: tags,
+                status: 'inactive',
+                category: 'category',
+                summary: description,
+            },
+            token: authState?.auth?.user.accessToken,
+        })
+            .then((res: any) => {
+                console.log("RES", res?.data);
+                notify({ msg: "Saved as draft", type: "success" });
+
+                setSelectedCategory(null)
+                setIsOpen(false)
+                setBlogContent("")
+                setTitle("")
+                setDescription("")
+                dispatch(resetBlogData());
 
 
-        if (role === Role.superAdmin) {
-            createIdeaPost({
-                body: {
-                    author: "Proactive Ideas",
-                    title: title,
-                    description: description,
-                    content: blogContent,
-                    header_image: cloudinaryURL,
-                    tags: tags,
-                    category: 'category',
-                    summary: 'summary',
-                },
-                token: authState?.auth?.user.accessToken,
+                router.push("/admin/ideas")
+
             })
-                .then((res: any) => {
-                    console.log("RES", res?.data);
-                    notify({ msg: "Blog post created", type: "success" });
-
-                    setSelectedCategory(null)
-                    setIsOpen(false)
-                    setBlogContent("")
-                    setTitle("")
-                    setDescription("")
-                    dispatch(resetBlogData());
-
-
-                    router.push("/admin/ideas")
-
-                })
-                .catch((err: any) => {
-                    console.log("ERR", err);
-                    notify({ msg: "Could not create blog post", type: "error" });
-                })
-                .finally(() => {
-                    setIsLoading(false);
-                });
-        } else if (role === Role.admin) {
-            console.log("role: admin");
-            
-            createIdeaPostDraft({
-                body: {
-                    author: "Proactive Ideas",
-                    title: title,
-                    description: description,
-                    content: blogContent,
-                    header_image: cloudinaryURL,
-                    tags: tags,
-                    status: 'inactive',
-                    category: 'category',
-                    summary: 'summary',
-                },
-                token: authState?.auth?.user.accessToken,
+            .catch((err: any) => {
+                console.log("ERR", err);
+                notify({ msg: "Could not create blog post", type: "error" });
             })
-                .then((res: any) => {
-                    console.log("RES", res?.data);
-                    notify({ msg: "Saved as draft", type: "success" });
-
-                    setSelectedCategory(null)
-                    setIsOpen(false)
-                    setBlogContent("")
-                    setTitle("")
-                    setDescription("")
-                    dispatch(resetBlogData());
-
-
-                    router.push("/admin/ideas")
-
-                })
-                .catch((err: any) => {
-                    console.log("ERR", err);
-                    notify({ msg: "Could not create blog post", type: "error" });
-                })
-                .finally(() => {
-                    setIsLoading(false);
-                });
-        }
+            .finally(() => {
+                setIsLoading(false);
+            });
     };
 
     const handleChange = (e: any) => {
@@ -225,6 +182,9 @@ function Compose() {
                 break;
             case "description":
                 setDescription(e.target.value);
+                break;
+            case "author":
+                setAuthor(e.target.value);
                 break;
             case "tags":
                 setTags(e.target.value);
@@ -359,7 +319,16 @@ function Compose() {
                                 </div>
 
                                 <form className="my-8 space-y-8 text-black">
-
+                                    <div className="my-4 pr-2">
+                                        <p className="capitalize">Author</p>
+                                        <CustomInput
+                                            type="text"
+                                            label=""
+                                            name="author"
+                                            value={author}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
 
                                     <div className="pr-2">
                                         <label>Select Category</label>

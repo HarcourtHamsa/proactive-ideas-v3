@@ -11,10 +11,9 @@ import useCookie from "@/hooks/useCookie";
 function Index() {
     const role = useRole();
     const cookie = useCookie();
-    const { data: ideasPostDrafts, isLoading: isFetchingIdeasPost } = useFetchIdeasPostDraftsQuery({ token: cookie?.user.accessToken });
-    const { data: ideasPost, isLoading: isFetchingDrafts } = useFetchIdeasPostsQuery({ token: cookie?.user.accessToken });
+    const { data: ideasPost, isLoading } = useFetchIdeasPostsQuery({ token: cookie?.user.accessToken });
 
-    if (isFetchingDrafts && isFetchingIdeasPost){
+    if (isLoading){
         return <Loader />
     }
 
@@ -22,8 +21,8 @@ function Index() {
     return (
         <Layout>
            <div className="p-4 mt-8">
-                <h2 className="text-3xl text-black font-bold mb-2">Ideas Post {role === Role.admin ? "Drafts" : null}</h2>
-                <Table data={ role === Role.admin ? ideasPostDrafts : ideasPost}  />
+                <h2 className="text-3xl text-black font-bold mb-2">Ideas Post</h2>
+                <Table data={ideasPost}  />
             </div>
 
         </Layout>

@@ -43,6 +43,10 @@ function CustomSelect({
 
   const newOptions = formatCategories(categories?.data);
 
+  console.log({ newOptions });
+  console.log({ categories: categories?.data });
+
+
   return (
     <Select
       isMulti

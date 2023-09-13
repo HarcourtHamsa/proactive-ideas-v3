@@ -64,7 +64,7 @@ function EditBlog() {
   }
 
   const [selectedTags, setSelectedTags] = useState<any[] | null>(generatePeviousTags());
-  const [description, setDescription] = useState(router.query.description);
+  const [description, setDescription] = useState(router.query.summary);
   const [author, setAuthor] = useState(router.query.author);
 
   console.log(router.query);
@@ -188,117 +188,55 @@ function EditBlog() {
 
 
 
-
-    if (role === Role.superAdmin) {
-      if (urlContainsQueryParam) {
-        updateIdeaPostDraft({
-          id: router.query.id as string,
-          body: {
-            author: author,
-            title: blogTitle,
-            description: description,
-            content: blogContent,
-            header_image: cloudinaryURL,
-            // tags: tags,
-          },
-          token: authState?.auth?.user.accessToken,
-        }).then((res: any) => {
-          console.log("RES", res);
-          notify({ msg: "Idea draft updated", type: "success" });
-
-          setSelectedTags(null)
-          setIsOpen(false)
-          setBlogContent("")
-          setBlogTitle("")
-          setDescription("")
-
-          setTimeout(() => {
-            router.push("/admin/drafts")
-          }, 1000);
-
-        })
-          .catch((err: any) => {
-            console.log("ERR", err);
-            notify({ msg: "Oops! an error occured", type: "error" });
-          })
-          .finally(() => {
-            setIsLoading(false);
-          });
-
-        return;
-      }
+    console.log({
+      body: {
+        author: author,
+        title: blogTitle,
+        description: description,
+        content: blogContent,
+        headerImage: cloudinaryURL,
+        tags: tags,
+      },
+    });
 
 
-      updateIdeaPost({
-        id: router.query.id as string,
-        body: {
-          author: author,
-          title: blogTitle,
-          description: description,
-          content: blogContent,
-          header_image: cloudinaryURL,
-          // tags: tags,
-        },
-        token: authState?.auth?.user.accessToken,
+
+
+    updateIdeaPostDraft({
+      id: router.query.id as string,
+      body: {
+        author: author,
+        title: blogTitle,
+        description: description,
+        summary: description,
+        content: blogContent,
+        headerImage: cloudinaryURL,
+        tags: tags,
+      },
+      token: authState?.auth?.user.accessToken,
+    })
+      .then((res: any) => {
+        notify({ msg: "Content updated", type: "success" });
+
+        setSelectedTags(null)
+        setIsOpen(false)
+        setBlogContent("")
+        setBlogTitle("")
+        setDescription("")
+
+
+
+        // router.push("/admin/ideas")
+
       })
-        .then((res: any) => {
-          console.log("RES", res);
-          notify({ msg: "Idea post updated", type: "success" });
-
-          setSelectedTags(null)
-          setIsOpen(false)
-          setBlogContent("")
-          setBlogTitle("")
-          setDescription("")
-
-
-
-          router.push("/admin/ideas")
-
-        })
-        .catch((err: any) => {
-          console.log("ERR", err);
-          notify({ msg: "Oops! an error occured", type: "error" });
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    } else {
-      updateIdeaPostDraft({
-        id: router.query.id as string,
-        body: {
-          author: "Proactive Ideas",
-          title: blogTitle,
-          description: description,
-          content: blogContent,
-          headerImage: cloudinaryURL,
-          tags: tags,
-        },
-        token: authState?.auth?.user.accessToken,
+      .catch((err: any) => {
+        console.log("ERR", err);
+        notify({ msg: "Oops! an error occured", type: "error" });
       })
-        .then((res: any) => {
-          console.log("RES", res);
-          notify({ msg: "Idea post updated", type: "success" });
+      .finally(() => {
+        setIsLoading(false);
+      });
 
-          setSelectedTags(null)
-          setIsOpen(false)
-          setBlogContent("")
-          setBlogTitle("")
-          setDescription("")
-
-
-
-          router.push("/admin/ideas")
-
-        })
-        .catch((err: any) => {
-          console.log("ERR", err);
-          notify({ msg: "Oops! an error occured", type: "error" });
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    }
   };
 
   const showPreview = () => {
@@ -471,7 +409,7 @@ function EditBlog() {
                 className="rounded flex gap-2 justify-center items-center hover:opacity-80 mb-2 text-center border w-full py-3"
                 onClick={publishBlog}
               >
-                {isLoading && <Spinner />} Update Blog
+                {isLoading && <Spinner />} Update Content
               </button>
               <button
                 className="rounded  text-center border  w-full py-3"

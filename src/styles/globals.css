@@ -80,6 +80,35 @@ h2 strong
   font-size: 1.8rem !important;
 }
 
+h1{
+  font-size: 1.975rem !important;
+  font-weight: bold;
+}
+
+h2{
+  font-size: 1.8rem !important;
+  font-weight: bold;
+}
+
+h3{
+  font-size: 1.55rem !important; 
+  font-weight: bold;
+}
+
+h4{
+  font-size: 1.25rem !important; 
+  font-weight: bold;
+}
+
+
+h1 strong{
+  font-size: 2rem;
+}
+
+h2 strong{
+  font-size: 1.8rem;
+}
+
 
 h3 span,
 h3 strong
@@ -886,3 +915,25 @@ button[data-tracking-id="hamsaharcourt@gmail.com"]{
     transform: scalex(0.3);
   }
 };
+
+
+
+.ck-editor__main h1{
+  font-size: 2rem !important;
+  background-color: red !important;
+}
+
+/* h1 strong{
+  font-size: 2rem;
+}
+
+h2 strong{
+  font-size: 1.8rem;
+}
+
+
+h3 span,
+h3 strong
+{
+  font-size: 1.35rem !important; 
+} */

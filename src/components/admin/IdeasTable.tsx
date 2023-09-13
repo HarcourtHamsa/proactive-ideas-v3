@@ -22,11 +22,8 @@ import useCookie from "@/hooks/useCookie";
 
 function Table({ data }: any) {
     const authState = useSelector((state: RootState) => state.auth);
-    const token = authState?.auth?.user?.accessToken;
     const router = useRouter();
-    // const auth = useAuth();
-    const cookie = useCookie()
-    const role = useRole();
+
 
     const [current, setCurrent] = useState<any>({});
     const [dModalIsOpen, setDModalIsOpen] = useState(false)
@@ -105,6 +102,9 @@ function Table({ data }: any) {
                                     <th scope="col" className="px-4 py-3">
                                         Title
                                     </th>
+                                    <th scope="col" className="px-4 py-3">
+                                        Status
+                                    </th>
                                     <th scope="col" className="px-4 py-3 whitespace-nowrap">
                                         Date created
                                     </th>
@@ -126,6 +126,11 @@ function Table({ data }: any) {
                                         </td>
                                         <td className="px-4 py-3 font-medium truncate block w-[400px] text-black">
                                             <p className="truncate w-[90%]">{blog.title}</p>
+                                        </td>
+                                        <td className="px-4 py-3 text-black whitespace-nowrap">
+                                            <span className={`text-sm px-3 py-1 rounded-full ${blog.status === 'active' ? 'bg-green-500/30 text-green-500' : 'bg-orange-500/30 text-orange-500' }`}>
+                                                {blog.status === 'active' ? 'Published' : 'Draft'}
+                                            </span>
                                         </td>
                                         <td className="px-4 py-3 text-black whitespace-nowrap">
                                             {new Date(blog.createdAt).toLocaleDateString()}
