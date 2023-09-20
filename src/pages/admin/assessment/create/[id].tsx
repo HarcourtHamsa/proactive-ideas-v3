@@ -48,6 +48,10 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
     const [currentItem, setCurrentItem] = useState('');
     const authState = useSelector((state: RootState) => state.auth);
     const [questions, setQuestions] = useState<any[]>(assessmentState.questions || assessments[0]?.questions)
+
+    console.log({questions});
+    
+    
     const [feedback, setFeedback] = useState({
         correct: '',
         incorrect: ''
