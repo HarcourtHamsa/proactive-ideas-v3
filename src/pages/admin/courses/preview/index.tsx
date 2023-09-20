@@ -1,10 +1,12 @@
 import { RootState } from '@/store';
 import React, { useEffect, useState, useRef } from 'react'
 import { IoClose } from 'react-icons/io5'
-import { TbList, TbTable } from 'react-icons/tb';
+import { TbHome, TbList, TbTable } from 'react-icons/tb';
 import { useSelector } from 'react-redux';
 import ReactMarkdown from 'react-markdown'
 import { useRouter } from 'next/router';
+import BackChevronButton from '@/components/BackChevronButton';
+import TableOfContents from '@/components/TableOfContent';
 
 
 function CoursePreview() {
@@ -12,6 +14,7 @@ function CoursePreview() {
     const sectionState: any = useSelector((state: RootState) => state.section);
     const [contents, setContents] = useState(new Set());
     const [count, setCount] = useState(0);
+    const [showTableOfContents, setShowTableOfContents] = useState(false);
 
 
     const generatePageContent = () => {
@@ -24,7 +27,7 @@ function CoursePreview() {
             })
         });
 
-        console.log({contents});
+        console.log({ contents });
         return setContents(newState);
 
     }
@@ -63,38 +66,26 @@ function CoursePreview() {
 
     return (
         <div>
-            <div className='h-16 flex items-center bg-white border-b mb-10 fixed top-0 left-0 right-0'>
-                <div className='flex items-center w-full justify-between px-4'>
-                    <div className='flex items-center gap-2 cursor-pointer' onClick={() => router.back()}>
-                        <IoClose size={25} className='cursor-pointer' />
-                        <p>Close</p>
-                    </div>
 
-                    {/* <div>
-                        <button className='px-4 py-2 border rounded'>Continue</button>
-                    </div> */}
-
-                </div>
-            </div>
-            <div className='mx-auto min-h-screen h-fit mt-16 grid lg:grid-cols-4'>
+            <div className='mx-auto min-h-screen h-fit'>
 
 
-                <aside className='col-span-1 mb-10 lg:mb-0 overflow-hidden border order-1'>
-                    <div className='flex mb-5 px-4 py-3 items-center border-b bg-gray-50 gap-2'>
-                        {/* <TbList size={20} /> */}
-                        <p className='font-bold'>Table of Contents</p>
-                    </div>
-                    <div className='px-4'>
-                        <ul key={Math.random()} className=''>
+                <aside className=' mb-10 lg:mb-0 overflow-hidden fixed xl:w-[20%] hidden xl:block h-screen order-1 bg-[#11393C] overflow-y-auto'>
+
+                    <div className=''>
+                        <div>
+                            <p></p>
+                        </div>
+                        <ul key={Math.random()} className='ul__unset'>
                             {sectionState.sections.map((section: any, index: number) => {
                                 return (
                                     <span key={Math.random()}>
-                                        <li className='py-1 mt-0  cursor-pointer rounded mb-2'>Section {index + 1}:  {section.title}
+                                        <li className='py-1 mt-0 px-4  cursor-pointer  mb-2 bg-gray-200 line-clamp-1 text-sm uppercase tracking-wider'>{section.title}
                                         </li>
-                                        <ul className='ml-10 pl-2'>
+                                        <ul className='pl-2 ul__unset' >
                                             {section?.sub_sections.map((ss: any) => {
                                                 return (
-                                                    <li key={Math.random()} onClick={() => selectContent(ss)} className='cursor-pointer  px-2 rounded-md py-1 mb-2'>{ss.title}</li>
+                                                    <li key={Math.random()} onClick={() => selectContent(ss)} className='cursor-pointer text-gray-200  px-2 rounded-md py-1 mb-2 hover:text-white'>{ss.title}</li>
                                                 )
                                             })}
                                         </ul>
@@ -106,13 +97,24 @@ function CoursePreview() {
                 </aside>
 
 
-                <main className='col-span-1 p-4 lg:col-span-3 order-2'>
-                    {/* <h2 className='text-3xl font-bold'>{generateTitle(Array.from(contents))}</h2> */}
-                    <div dangerouslySetInnerHTML={{ __html: generateBody(Array.from(contents)) }} className='course__content'></div>
-                    <div className='w-fit ml-auto my-8'>
-                        <button onClick={nextContent} className='w-fit px-4  border rounded py-2 text-center'>Next lesson</button>
+                <main className='col-span-1 p-4 min-h-screen xl:w-[80%]  w-[100%] xl:ml-[20%] xl:flex'>
+                    <div className='xl:w-[70%] mr-2'>
+                        <div className='block'>
+                            <BackChevronButton />
+                        </div>
+                        <div dangerouslySetInnerHTML={{ __html: generateBody(Array.from(contents)) }} className='course__content'></div>
+                        <div className='w-fit ml-auto my-8'>
+                            <button onClick={nextContent} className='w-fit px-4 bg-orange-400 text-white border rounded py-2 text-center'>Next lesson</button>
+                        </div>
                     </div>
+
+                  
+
+                    <aside className='xl:w-[30%] min-h-[500px] h-fit border rounded'>
+                    </aside>
                 </main>
+
+
 
 
             </div>

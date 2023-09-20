@@ -8,7 +8,7 @@ import { useRouter } from 'next/router'
 import { IoAddCircle, IoChevronBack, IoCloseCircleOutline, IoTrash, IoWarning } from 'react-icons/io5';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
-import { getSingleCourse, seperateBlogDataIntoComponents } from '@/helper';
+import { extractListItems, getSingleCourse, seperateBlogDataIntoComponents } from '@/helper';
 import Spinner from '@/components/Spinner';
 import http from '@/lib/http';
 import { TbDragDrop, TbEdit, TbEditCircle, TbEye, TbPencil, TbPlus, TbSubtask, TbTrash, TbWriting } from 'react-icons/tb';
@@ -62,12 +62,14 @@ function EditSingleCourse({ course }: any) {
     const [activeSubSection, setActiveSubSection] = useState({
         title: '',
         content: '',
-        _id: ''
+        id: ''
     })
     const [courseInfoData, setCourseInfoData] = useState(course.sections);
     const [currentSection, setCurrentSection] = useState<any>({});
     const [currentSubSection, setCurrentSubSection] = useState<any>({});
-
+    const [objective, setObjective] = useState('')
+    const [editObjectiveModalIsOpen, setEditObjectiveModalIsOpen] = useState(false)
+    const [activeObjective, setActiveObjective] = useState<any>({})
     const [generalInfoData, setGeneralInfoData] = useState({
         title: course?.title,
         author: course?.author,
@@ -76,6 +78,7 @@ function EditSingleCourse({ course }: any) {
         category: course?.category,
         description: course?.description,
         summary: course?.summary,
+        objectives: extractListItems(course.objectives) || []
     })
 
     const dragItemRef = useRef(null)
@@ -195,16 +198,50 @@ function EditSingleCourse({ course }: any) {
                     title: e.target.value,
                 }));
                 break;
+            case 'objectives':
+                setGeneralInfoData((prevState: any) => ({
+                    ...prevState,
+                    objectives: [...prevState.objectives, objective]
+                }))
+                break;
 
             default:
                 break;
         }
     }
 
+    const handleEditObjective = () => {
+
+        var arr: any[] = []
+
+        generalInfoData.objectives.map((objective: any, index: number) => {
+            if (index === activeObjective.index) {
+                arr.push(activeObjective.objective)
+            } else {
+                arr.push(objective)
+            }
+        })
+
+        setGeneralInfoData((prevState: any) => ({
+            ...prevState,
+            objectives: arr
+        }))
+
+        setEditObjectiveModalIsOpen(false)
+
+    }
+
+    function arrayToHTMLList(array: any[]) {
+        const listItems = array.map((item: string) => `<li>${item}</li>`).join('');
+        return `<ul>${listItems}</ul>`;
+    }
+
 
     const handleSubmit = async () => {
 
         const courseObj = Object.assign({}, course, generalInfoData);
+
+
 
         courseObj.tags = [courseObj.tags];
 
@@ -213,6 +250,9 @@ function EditSingleCourse({ course }: any) {
         delete courseObj.certificateId;
         delete courseObj.certificate;
 
+        const parsedObjectives = arrayToHTMLList(generalInfoData.objectives)
+
+        courseObj.objectives = parsedObjectives
 
         setIsUpdatingGeneralInfo(true)
         await updateCourse({ token: token, id: courseId, data: courseObj }).then((res) => {
@@ -228,6 +268,8 @@ function EditSingleCourse({ course }: any) {
     }
 
     const handleCourseUpdate = async () => {
+        console.log('Yeah');
+
         setIsUpdatingCourseInfo(true);
         const data = {
             sections: courseInfoData
@@ -247,11 +289,6 @@ function EditSingleCourse({ course }: any) {
             setIsUpdatingGeneralInfo(false)
             setIsUpdatingCourseInfo(false)
         }
-
-
-
-
-
     }
 
     const deleteSection = () => {
@@ -267,6 +304,21 @@ function EditSingleCourse({ course }: any) {
                 const filteredSection = courseInfoData.filter((section: any) => section.id !== currentSection.id);
                 setCourseInfoData(filteredSection);
             })
+    }
+
+    const handleDeleteObjective = (selectedObjective: string) => {
+
+        if (generalInfoData.objectives.length === 0) return;
+        if (typeof generalInfoData.objectives === null) return;
+
+        const filteredObjectives = generalInfoData.objectives.filter((objective: any) => objective !== selectedObjective)
+
+        setGeneralInfoData((prevState: any) => ({
+            ...prevState,
+            objectives: filteredObjectives
+        }))
+
+        notify({ msg: 'Objective deleted', type: 'success' })
     }
 
     const handleEditSection = () => {
@@ -327,21 +379,40 @@ function EditSingleCourse({ course }: any) {
     const handleEditSubSection = (e: any) => {
         var transformedObj;
 
+
+
         courseInfoData.map((obj: any) => {
             obj.sub_sections.find((ss: any) => {
-                if (ss._id === subSectionData.id) {
 
-                    const filteredData = obj.sub_sections.filter((ss: any) => ss._id === subSectionData.id)[0]
+                // console.log({ ss: ss._id,  subSectionData: subSectionData.id});
+                console.log({ ss: ss.id,  subSectionData: subSectionData.id});
+                
+
+                if (ss._id === subSectionData.id || ss.id === subSectionData.id ) {
+
+                    const filteredData = obj.sub_sections.filter((ss: any) => ss._id === subSectionData.id || ss.id === subSectionData.id)[0]
+
+
+                    console.log({ filteredData });
+
+
                     const indexToUpdate = obj.sub_sections.findIndex((d: any) => d.id === filteredData.id)
 
-                    console.log(filteredData);
-                    console.log(indexToUpdate);
+                    console.log({ indexToUpdate });
+
+
+
 
                     if (indexToUpdate !== -1) {
-                        // Update the name property of the object at the found index
-                        obj.sub_sections[indexToUpdate] = subSectionData;
+
+                        const newObj = Object.assign({}, { ...subSectionData })
+                     
+                        
+
+                    //     // Update the name property of the object at the found index
+                        obj.sub_sections[indexToUpdate] = newObj;
                         // transformedObj = obj
-                        console.log("new obj: ", { obj });
+
 
                     }
 
@@ -359,18 +430,23 @@ function EditSingleCourse({ course }: any) {
     const handleModalSubmit = (e: any) => {
         e.preventDefault();
 
+
+        // console.log( "subSectionData", {...subSectionData, id: uuidv4()} );
+
+
         setCourseInfoData(courseInfoData.map((obj: any) => {
-            console.log({ obj });
-            console.log({ currentSection });
+
 
             if (obj._id === currentSection._id) {
                 // Create a *new* object with changes
-                return { ...obj, sub_sections: [...obj.sub_sections, subSectionData] };
+                return { ...obj, sub_sections: [...obj.sub_sections, {...subSectionData, id: uuidv4()}] };
             } else {
                 // No changes
                 return obj;
             }
         }));
+
+
 
         setModalIsOpen(false)
         setEditModalIsOpen(false)
@@ -468,6 +544,47 @@ function EditSingleCourse({ course }: any) {
                                 <textarea id="message" rows={4} className="block p-2.5 w-full text-gray-900 bg-white rounded outline-blue-500 focus:ring-blue-500 focus:border-blue-500 border-2" placeholder="Write your thoughts here..." name='description' value={generalInfoData.summary} onChange={handleChange}></textarea>
                             </div>
 
+                            <div className=''>
+                                <p>Objectives</p>
+                                <div className='flex gap-2 w-full'>
+                                    <div className='w-full'>
+                                        <CustomInput
+                                            label=''
+                                            type='text'
+                                            value={objective}
+                                            onChange={(e: any) => setObjective(e.target.value)}
+
+                                        />
+                                    </div>
+                                    <button className='border-2 px-4 py-2 rounded' name='objectives' onClick={(e: any) => {
+                                        handleChange(e)
+                                        setObjective('')
+                                    }}>Add</button>
+                                </div>
+                                <ul className='mt-3'>
+                                    {generalInfoData?.objectives?.map((objective: any, index: number) => {
+                                        return (
+                                            <li key={Math.random()} className='py-2 border px-4 my-2 rounded flex justify-between'>
+
+                                                {objective}
+
+                                                <span className='flex gap-4'>
+                                                    <TbPencil size={20} className='cursor-pointer' onClick={() => {
+                                                        setActiveObjective({ objective, index })
+                                                        setEditObjectiveModalIsOpen(!editObjectiveModalIsOpen)
+                                                    }
+
+                                                    } />
+                                                    <TbTrash size={20} className='cursor-pointer' onClick={() => handleDeleteObjective(objective)} />
+                                                </span>
+                                            </li>
+                                        )
+                                    })}
+
+
+                                </ul>
+                            </div>
+
 
 
                         </div>
@@ -516,6 +633,8 @@ function EditSingleCourse({ course }: any) {
                                                 size={20}
                                                 className='-rotate-180 ml-4 cursor-pointer'
                                                 onClick={() => {
+                                                    console.log({ section });
+
                                                     setCurrentSection(section);
                                                     setModalIsOpen(true);
                                                 }}
@@ -543,19 +662,22 @@ function EditSingleCourse({ course }: any) {
                                                 onDragEnd={handleDrop}
                                                 draggable>
 
-                                                <MdOutlineDragIndicator size={20} className='text-gray-400'/>
+                                                <MdOutlineDragIndicator size={20} className='text-gray-400' />
                                                 <div
                                                     className='flex items-center mt-4 w-full '
 
                                                 >
                                                     <div className='w-[100%] px-4 py-3 flex justify-between relative ml-auto rounded bg-gray-100 my-2 border'>
                                                         <span className='ml-2'>{ss.title}</span>
+                                                        <span className='ml-2'>{ss._id} {ss.id}</span>
                                                         <span className='text-sm px-2 py border rounded-full bg-white -top-2 absolute'>Sub-Section</span>
                                                     </div>
                                                     <TbPencil
                                                         size={20}
                                                         className='cursor-pointer ml-3'
                                                         onClick={() => {
+                                                            console.log({ activeSubSection: ss });
+
                                                             setActiveSubSection(ss);
                                                             setEditModalIsOpen(true);
                                                         }}
@@ -587,6 +709,32 @@ function EditSingleCourse({ course }: any) {
                         </div>
 
                     </div>
+
+                    {editObjectiveModalIsOpen && <ReactPortal>
+                        <Modal>
+                            <div>
+                                <label>Objective</label>
+                                <textarea id="message" rows={4} className="block p-2.5 w-full text-gray-900 bg-white rounded outline-blue-500 focus:ring-blue-500 focus:border-blue-500 border-2" placeholder="Write your thoughts here..." value={activeObjective.objective}
+                                    onChange={(e) => {
+                                        setActiveObjective((prevState: any) => ({
+                                            ...prevState,
+                                            objective: e.target.value
+                                        }))
+                                    }}></textarea>
+
+                                <div>
+                                    <div className='mt-4 flex items-center space-x-2'>
+                                        <button className='border px-4 py-2 w-[50%]  text-black  rounded' onClick={() => {
+                                            setEditObjectiveModalIsOpen(false)
+                                            setActiveObjective({})
+                                        }
+
+                                        }>Cancel</button>
+                                        <button className='border px-4 py-2  w-[50%] text-black  rounded' onClick={handleEditObjective}>Save Changes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </Modal></ReactPortal>}
 
                     {editSectionModalIsOpen && <ReactPortal>
                         <Modal>
@@ -657,8 +805,8 @@ function EditSingleCourse({ course }: any) {
                         <ReactPortal>
                             <div className="h-screen w-screen bg-black opacity-60 fixed z-50 top-0 flex justify-center items-center transition duration-75"></div>
                             <div className="h-screen w-screen bg-transparent fixed top-0 z-[100] flex items-center justify-center transition duration-75">
-                                <div className="w-[90%] h-fit sm:w-[90%] sm:h-[fit] z-[100] bg-[#fff] rounded shadow-md p-4 transition duration-75">
-                                    <div className=' w-fit ml-auto space-x-4'>
+                                <div className="w-[100%] h-fit sm:w-screen xl:-translate-x-4 sm:h-screen overflow-y-scroll z-[100] bg-[#fff] shadow-md p-4 transition duration-75">
+                                    <div className=' w-fit ml-auto space-x-4 py-4'>
                                         <button className='py-1 px-4 border rounded' onClick={(e) => handleModalSubmit(e)}>Save changes</button>
                                         <button className='py-1 px-4 border rounded' onClick={() => {
                                             setSubSectionData({
@@ -671,7 +819,7 @@ function EditSingleCourse({ course }: any) {
                                         }}>Close</button>
                                     </div>
 
-                                    <div className='mt-6'>
+                                    <div className='mt-6 xl:w-[60%] w-[100%] mx-auto'>
                                         <ReactQuillEditor
 
                                             onChange={(value: any) => {
@@ -700,7 +848,7 @@ function EditSingleCourse({ course }: any) {
                         <ReactPortal>
                             <div className="h-screen w-screen bg-black opacity-60 fixed z-50 top-0 flex justify-center items-center transition duration-75 overflow-auto"></div>
                             <div className="h-screen w-screen bg-transparent fixed top-0 z-[100] transition duration-75">
-                                <div className="w-[97%] pb-20 h-[100%] sm:w-[99%] sm:h-[100%] z-[100] bg-[#fff] overflow-scroll shadow-md p-4 transition duration-75">
+                            <div className="w-[100%] h-fit sm:w-screen xl:-translate-x-4 sm:h-screen overflow-y-scroll z-[100] bg-[#fff] shadow-md p-4 transition duration-75">
                                     <div className=' w-fit ml-auto space-x-4 px-4'>
                                         <button
                                             className='py-1 px-4 border rounded'
@@ -712,7 +860,7 @@ function EditSingleCourse({ course }: any) {
                                             })}>Preview</button>
                                         <button className='py-1 px-4 border rounded' onClick={(e) => handleEditSubSection(e)}>Save changes</button>
                                         <button className='py-1 px-4 border rounded' onClick={() => {
-                                            setActiveSubSection({ title: '', content: '', _id: '' });
+                                            setActiveSubSection({ title: '', content: '', id: '' });
                                             setEditModalIsOpen(false);
                                         }}>Close</button>
                                     </div>
@@ -725,7 +873,7 @@ function EditSingleCourse({ course }: any) {
                                                 setSubSectionData((prevState) => ({
                                                     title,
                                                     content: value,
-                                                    id: activeSubSection?._id
+                                                    id: activeSubSection?.id
                                                 }))
                                             }
 
@@ -745,7 +893,7 @@ function EditSingleCourse({ course }: any) {
                         <ReactPortal>
                             <Modal>
                                 <div className="flex justify-between border-b pb-2">
-                                    <h3 className="text-base font-normal">Create new section</h3>
+                                    <p className="text-lg font-normal">Create new section</p>
 
                                     <div
                                         className="w-6 h-6 border rounded-full flex items-center justify-center cursor-pointer"
@@ -768,13 +916,7 @@ function EditSingleCourse({ course }: any) {
 
                                 <div className="flex gap-3 mt-4">
                                     <button
-                                        className="py-3 w-[100%] border px-4 rounded "
-                                        onClick={(e) => addNewSection()}
-                                    >
-                                        Submit
-                                    </button>
-                                    <button
-                                        className="py-3 w-[100%] border px-4 rounded"
+                                        className="py-3 w-[100%] bg-[#F08354]/30 text-[#F08354]   px-4 rounded"
                                         onClick={() => {
                                             setSubSectionData({ title: "", content: "", id: uuidv4() });
                                             setNewSectionModalIsOpen(false);
@@ -782,6 +924,13 @@ function EditSingleCourse({ course }: any) {
                                     >
                                         Cancel
                                     </button>
+                                    <button
+                                        className="py-3 w-[100%] px-4 rounded bg-[#F08354] text-white"
+                                        onClick={(e) => addNewSection()}
+                                    >
+                                        Submit
+                                    </button>
+
                                 </div>
                             </Modal>
 
@@ -838,7 +987,7 @@ export async function getServerSideProps({ req, res }: any) {
 
 
     const response = await http.get(url);
-    console.log("response...", response.data.data);
+
 
 
     return {

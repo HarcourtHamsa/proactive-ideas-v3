@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'GT-America';
-  src: url('../assets/fonts/Mabry\ Pro\ Medium.otf');
+  src: url('../assets/fonts/Mabry\ Pro\ Regular.otf');
   font-display: swap;
 }
 
@@ -935,20 +935,27 @@ h3 strong
 
 figure img{
   background-color: rebeccapurple;
-  /* width: 100%; */
+  width: 100%;
 }
 
-figcaption span{
+figcaption, figcaption span{
   /* background-color: #e0e0e0; */
-  /* width: fit-content; */
+  width: fit-content !important;
   /* font-size: small !important; */
-  padding: 2px 12px;
+  padding: 0px 12px;
   font-style: italic !important;
+  border: 2px dashed #858080 !important;
 }
 
-ul {
-  margin-left: 1.5rem;
+ul, ol {
+  margin-left: 2.6rem;
 }
+
+.ul__unset{
+  margin-left: 0px !important;
+  /* background: #000; */
+}
+
 
 #hero__text {
   font-size: 1.85rem !important;

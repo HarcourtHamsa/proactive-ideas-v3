@@ -566,3 +566,21 @@ export const handleDeleteCookie = async () => {
     console.error('Failed to delete cookie');
   }
 }
+
+export function extractListItems(htmlString: string) {
+  if (typeof window === 'undefined') return;
+  
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(htmlString, 'text/html');
+
+  // Use querySelectorAll to select all <li> elements within the <ul>
+  const liElements = doc.querySelectorAll('ul li');
+
+  // Convert the NodeList to an array
+  const liArray = Array.from(liElements);
+
+  // Extract the text content of each <li> element
+  const liTextArray = liArray.map((li) => li.textContent);
+
+  return liTextArray;
+}

@@ -8,9 +8,12 @@ import semiCircle from "../assets/semi-circle.png";
 import yellowSemiCircle from "../assets/header.png";
 import Navbar from './Navbar';
 import { Transition } from '@headlessui/react';
+import { useDispatch } from 'react-redux';
+import { resetQuestions } from '@/features/assessment/assessmentSlice';
 
 function Hero({ data }: any) {
     const router = useRouter();
+    const dispatch = useDispatch()
 
     return (
         <>
@@ -39,6 +42,13 @@ function Hero({ data }: any) {
                             >
                                 Start learning
                             </button>
+                            {/* <button
+                                type="button"
+                                onClick={() => dispatch(resetQuestions()) }
+                                className="text-white bg-[#F08354] whitespace-nowrap hover:opacity-80 focus:ring-4 focus:outline-none font-medium rounded py-2 px-4 text-center md:mr-0 md:block"
+                            >
+                                Start learning
+                            </button> */}
                         </div>
 
                         <svg className='absolute -bottom-20 md:bottom-0 right-0 scale-50 md:scale-75' width="200" height="200" viewBox="0 0 656 602" fill="none" xmlns="http://www.w3.org/2000/svg">

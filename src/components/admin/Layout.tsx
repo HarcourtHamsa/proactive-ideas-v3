@@ -45,10 +45,6 @@ function Layout({ children }: { children: React.ReactNode }) {
   const role = useRole();
   const cookie = useCookie();
 
-  const clearCookie = () => {
-    deleteCookie('tkn')
-  };
-
   const generateAVI = () => {
     // Check if 'cookie.user' exists
     if (!cookie?.user) {
@@ -64,18 +60,13 @@ function Layout({ children }: { children: React.ReactNode }) {
     return firstChar && lastChar ? firstChar + lastChar : cookie.user.email?.charAt(0).toUpperCase();
   };
 
-  const logout = async () => {
-    clearCookie()
-    deleteCookie('tkn')
-    signOut()
+  const logout = () => {
+    console.log('click click');
+    
     router.push('/')
+    deleteCookie('tkn')
+    signOut({redirect: false})
   }
-
-  if (role === Role.user) {
-    // alert(role)
-    return <Unauthorized />
-  }
-
 
   return (
     <React.Fragment>
@@ -285,9 +276,9 @@ function Layout({ children }: { children: React.ReactNode }) {
                 >
                   {/* HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE */}
                   <Menu.Item disabled as={"div"} className="px-4 mb-3">
-                    <p className="">{authState?.auth?.user?.name}</p>
+                    <p className="">{cookie?.user?.name}</p>
                     <p className=" text-gray-400">
-                      {authState?.auth?.user?.email}
+                      {cookie?.user?.email}
                     </p>
 
                     <hr className="my-2" />
@@ -314,7 +305,7 @@ function Layout({ children }: { children: React.ReactNode }) {
                     }
 
                     if (link.label === "Sign Out") {
-                      return <div onClick={logout} key={link.href} className="px-4 py-2 block cursor-pointer whitespace-nowrap hover:bg-gray-100">
+                      return <div onClick={() => logout()} key={link.href} className="px-4 py-2 block cursor-pointer whitespace-nowrap hover:bg-gray-100">
                         <p>{link.label}</p>
                       </div>
                     } else {

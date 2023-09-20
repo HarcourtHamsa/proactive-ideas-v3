@@ -25,7 +25,7 @@ function InfoCard({
     } else if (keyword.includes("course")) {
       return "/admin/courses"
     } else if (keyword.includes("idea")) {
-      return "/admin/blogs"
+      return "/admin/ideas"
     } else {
       return "/"
     }

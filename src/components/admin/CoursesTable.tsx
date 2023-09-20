@@ -146,7 +146,7 @@ function CoursesTable({ data }: any) {
                                         </td>
 
                                         <td className={`px-4 py-3 text-black whitespace-nowrap`}>
-                                            <span className={`w-fit px-4 border rounded-full py-1 ${course.status === 'active' ? 'bg-green-100 text-green-400' : 'bg-red-100 text-red-400'}`}>
+                                            <span className={`w-fit px-4 rounded-full py-1 ${course.status === 'active' ? 'bg-green-100 text-green-400' : 'bg-red-100 text-orange-400'}`}>
                                                 {course.status === 'active' ? 'Published' : 'Draft'}
                                             </span>
                                         </td>
@@ -158,7 +158,7 @@ function CoursesTable({ data }: any) {
                                             <button
                                                 className="flex items-center gap-2 px-3 py-1 bg-gray-500 hover:opacity-90 rounded whitespace-nowrap  text-white"
                                                 onClick={() => {
-                                                    router.push({ pathname: `/admin/quiz/create` }, `/admin/quiz/create?course=${course?.id}`)
+                                                    router.push({ pathname: `/admin/quiz/create/${course?.id}` }, `/admin/quiz/create/${course?.id}`)
                                                 }}
                                             >
 
@@ -167,11 +167,11 @@ function CoursesTable({ data }: any) {
                                             <button
                                                 className="flex items-center gap-2 px-3 py-1 bg-gray-500 hover:opacity-90 rounded whitespace-nowrap  text-white"
                                                 onClick={() => {
-                                                    router.push({ pathname: `/admin/assessment/create` }, `/admin/assessment/create?course=${course?.id}`)
+                                                    router.push({ pathname: `/admin/assessment/create/${course.id}` }, `/admin/assessment/create/${course?.id}`)
                                                 }}
                                             >
 
-                                                <span>Assessment </span>
+                                                <span>Assessment</span>
                                             </button>
                                             <button
                                                 className="flex items-center gap-2 px-3 py-1 bg-red-500 hover:bg-red-600 rounded whitespace-nowrap  text-white"

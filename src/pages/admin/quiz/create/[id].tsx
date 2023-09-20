@@ -6,14 +6,15 @@ import http from '@/lib/http'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { IoAddCircle, IoClose } from 'react-icons/io5'
-import { QuizTypes } from '../../../../types/types'
+import { QuizTypes } from '../../../../../types/types'
 import CustomInput from '@/components/CustomInput'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store'
 import Spinner from '@/components/Spinner'
 import notify from '@/components/Notification'
 import { ToastContainer } from 'react-toastify'
-import { TbEdit, TbTrash, TbWriting } from 'react-icons/tb'
+import { TbEdit, TbEye, TbTrash, TbWriting } from 'react-icons/tb'
+import BackChevronButton from '@/components/BackChevronButton'
 
 function DynamicInput({ label, index, setCorrectAnswer, answer }: { label: string, index: number, answer: number, setCorrectAnswer: (e: any) => void }) {
     return (
@@ -170,6 +171,7 @@ function Create({ course, quizzes }: { course: any, quizzes: any }) {
     return (
         <Layout>
             <div className="p-4 mt-8">
+                <BackChevronButton />
                 <h2 className="text-4xl text-black font-bold mb-2">Create Quiz</h2>
                 <ToastContainer />
 
@@ -204,8 +206,14 @@ function Create({ course, quizzes }: { course: any, quizzes: any }) {
                                                                     <span className='absolute -top-4 border text-sm rounded-full px-4 bg-white'>Quiz</span>
 
                                                                     Question: {quiz.question}
-
-                                                                    <div className='flex gap-4'>
+                                                               
+                                                                    <div className='flex gap-4 items-center'>
+                                                                        <span>
+                                                                            <button 
+                                                                            className='bg-orange-400 text-white px-4 rounded text-sm py-1' 
+                                                                            onClick={() => router.push(`/admin/quiz/preview/${quiz.id}`)}
+                                                                            >Preview</button>
+                                                                        </span>
                                                                         <span>
                                                                             <TbEdit
                                                                                 size={20}
@@ -360,11 +368,10 @@ function Create({ course, quizzes }: { course: any, quizzes: any }) {
 
 export default Create
 
-export async function getServerSideProps({ req, res }: any) {
-    const paramsArr = req.url.split("=");
-    const courseId = paramsArr[1]
+export async function getServerSideProps(ctx) {
+    const { id } = ctx.query;
 
-    const response = await http.get(`/get-course-by-id?id=${courseId}`);
+    const response = await http.get(`/get-course-by-id?id=${id}`);
     const quizzes = await http.get("/get-quizzes")
 
     return {

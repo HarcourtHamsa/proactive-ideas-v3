@@ -6,6 +6,7 @@ import blogReducer from "./features/blog/blogSlice";
 import subSectionReducer from "./features/sub-section/subSectionSlice";
 import generalInfoReducer from "./features/general-info/generalInfoSlice";
 import geoDataReducer from "./features/geo/geoSlice";
+import assessmentReducer from "./features/assessment/assessmentSlice";
 import {
   persistReducer,
   persistStore,
@@ -32,6 +33,7 @@ const persistedBlogReducer = persistReducer(persistConfig, blogReducer);
 const persistedSubSectionReducer = persistReducer(persistConfig, subSectionReducer);
 const persistedGeneralInfoReducer = persistReducer(persistConfig, generalInfoReducer);
 const persistedGeoDataReducer = persistReducer(persistConfig, geoDataReducer);
+const persistedAssessmentReducer = persistReducer(persistConfig, assessmentReducer);
 
 
 
@@ -44,6 +46,7 @@ export const store = configureStore({
     geo: persistedGeoDataReducer,
     blog: persistedBlogReducer,
     subSection: persistedSubSectionReducer,
+    assessment: persistedAssessmentReducer,
     [apiSlice.reducerPath]: apiSlice.reducer
   },
   devTools: process.env.NODE_ENV !== "production",

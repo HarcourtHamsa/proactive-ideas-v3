@@ -5,7 +5,7 @@ import http from '@/lib/http'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { IoAddCircle, IoClose, IoTrashBin } from 'react-icons/io5'
-import { QuizTypes } from '../../../../types/types'
+import { QuizTypes } from '../../../../../types/types'
 import CustomInput from '@/components/CustomInput'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store'
@@ -13,6 +13,11 @@ import Spinner from '@/components/Spinner'
 import notify from '@/components/Notification'
 import { ToastContainer } from 'react-toastify'
 import { TbEdit, TbTrash } from 'react-icons/tb'
+import BackChevronButton from '@/components/BackChevronButton'
+import { NextApiRequest, NextApiResponse } from 'next'
+import axios from 'axios'
+import { useDispatch } from 'react-redux'
+import { addQuestion, resetQuestions } from '@/features/assessment/assessmentSlice'
 
 function DynamicInput({ label, index, setCorrectAnswer, answer }: { label: string, index: number, answer: number, setCorrectAnswer: (e: any) => void }) {
     return (
@@ -27,7 +32,10 @@ function DynamicInput({ label, index, setCorrectAnswer, answer }: { label: strin
 
 
 function Create({ course, assessments }: { course: any, assessments: any }) {
-    const { "0": createAssessment, "1": createAccessmentStatus } = useCreateAssessmentMutation();
+    const { "0": createAssessment } = useCreateAssessmentMutation();
+    const [isLoading, setIsLoading] = useState(false)
+    const assessmentState = useSelector((state: RootState) => state.assessment)
+    const dispatch = useDispatch();
     const [modalIsOpen, setModalIsOpen] = useState(false)
     const [questionType, setQuestionType] = useState('');
     const [question, setQuestion] = useState('');
@@ -35,18 +43,16 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
     const [options, setOptions] = useState<any>([]);
     const [inputController, setInputController] = useState('')
     const [referenceID, setRefenceID] = useState('');
-    const [title, setTitle] = useState(assessments[0]?.title || '');
+    const initialTitle = assessments && assessments.length > 0 ? assessments[0]?.title || '' : '';
+    const [title, setTitle] = useState(initialTitle);
     const [currentItem, setCurrentItem] = useState('');
     const authState = useSelector((state: RootState) => state.auth);
-    const [questions, setQuestions] = useState<any[]>([])
+    const [questions, setQuestions] = useState<any[]>(assessmentState.questions || assessments[0]?.questions)
     const [feedback, setFeedback] = useState({
         correct: '',
         incorrect: ''
     });
     const router = useRouter()
-
-
-
 
     const handleQuestionChange = (e: any) => {
         setQuestion(e.target.value);
@@ -138,33 +144,46 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
         setOptions([]);
         setRefenceID('');
         setInputController('');
+        setModalIsOpen(false)
     }
 
     const handleCreateAssessment = async () => {
+        setIsLoading(true)
+
         const data = {
             questions,
             course: course?.id,
             title: title
         }
 
+        dispatch(resetQuestions())
 
 
-        try {
-            createAssessment({ data, token: authState.auth.user.accessToken }).then((res) => {
-
-                notify({ msg: 'New accessment created!', type: 'success' });
-                setTimeout(() => {
-                    // setModalIsOpen(!modalIsOpen);
-                    router.push("/admin/assessment")
-                }, 1000 * 2);
-            }).catch((err) => {
-
+        if (assessments[0]?.title) {
+            try {
+                await http.patch(`/update-assessment?id=${assessments[0]?.id}`, data)
+            } catch (error) {
+                throw error
+            }
+        } else {
+            try {
+                createAssessment({ data, token: authState.auth.user.accessToken }).then(() => {
+                    notify({ msg: 'Accessment created!', type: 'success' });
+                    setTimeout(() => {
+                        router.push("/admin/courses")
+                    }, 1000 * 1);
+                })
+            } catch (error) {
                 notify({ msg: 'Oops! an error occured', type: 'error' });
-            })
-        } catch (error) {
-            notify({ msg: 'Oops! an error occured', type: 'error' });
 
-        }
+            }
+        } 
+
+        setIsLoading(false)
+
+
+
+
     }
 
     const handleClose = () => {
@@ -179,9 +198,13 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
     }
 
 
+
     return (
         <Layout>
             <div className="p-4 mt-8">
+                <span onClick={() => dispatch(resetQuestions())}>
+                    <BackChevronButton />
+                </span>
                 <h2 className="text-4xl text-black font-bold mb-2">Create Assessment</h2>
                 <ToastContainer />
 
@@ -213,7 +236,7 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
                             <IoAddCircle size={30} className='cursor-pointer' onClick={() => setModalIsOpen(true)} />
                         </div>
 
-                        <div className='space-y-2 mt-4'>
+                        {/* <div className='space-y-2 mt-4'>
                             {assessments?.map((assessment: any) => {
 
                                 return (
@@ -243,13 +266,14 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
                                 )
 
                             })}
-                        </div>
+                        </div> */}
 
                         <div className='space-y-2 mt-4'>
-                            {questions.map((quiz: any) => {
+                            {questions?.map((quiz: any) => {
                                 return (
                                     <div key={Math.random()} className='border flex justify-between py-3 px-4 rounded-md relative bg-white'>
                                         {quiz.question}
+
 
                                         <span
                                             className=' cursor-pointer'
@@ -282,8 +306,19 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
 
                         </div>
 
-                        <div>
-                            <button className='py-2 px-4 border rounded mt-8 hover:opacity-25' onClick={handleCreateAssessment}>Create Assessment</button>
+                        <div className='flex gap-4'>
+                            <button
+                                className='py-2 bg-[#F08354]/20 text-[#F08354] px-4 rounded mt-8 hover:opacity-80'
+                                onClick={() => {
+                                    dispatch(addQuestion({ questions }))
+
+                                    router.push({
+                                        pathname: "/admin/assessment/preview",
+                                        query: JSON.stringify(questions)
+                                    }, "/admin/assessment/preview")
+                                }}
+                            >Preview</button>
+                            <button className='py-2 bg-[#F08354] text-white px-4 rounded mt-8 hover:opacity-80' onClick={handleCreateAssessment}>Create Assessment</button>
                         </div>
 
                     </div>
@@ -321,15 +356,6 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
                                     {questionType !== "" && generateDynamicInputs(questionType)}
                                 </div>
 
-                                <div className="mb-8 disabled opacity-40" aria-disabled>
-                                    <CustomInput
-                                        label="Reference ID"
-                                        type="text"
-                                        value={currentItem}
-
-                                        onChange={((e: any) => setRefenceID(e.target.value))}
-                                    />
-                                </div>
 
                                 <div className=' space-y-4 mb-4'>
                                     <div>
@@ -379,12 +405,12 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
                                 </div>
 
                                 <div className="mt-6 flex gap-2">
+                                    <button className=" text-[#F08354] py-2 flex bg-orange-400/30 justify-center items-center w-full text-center rounded" onClick={handleClose}>Close</button>
                                     <button
-                                        className=" border py-2  flex justify-center items-center w-full text-center rounded" onClick={handleCreateQuiz}>
-                                        {createAccessmentStatus.isLoading && <Spinner />}
-                                        Create Quiz
+                                        className="py-2 bg-[#F08354] text-white  flex justify-center items-center w-full text-center rounded" onClick={handleCreateQuiz}>
+                                        {isLoading && <Spinner />}
+                                        Create Question
                                     </button>
-                                    <button className=" border py-2 flex justify-center items-center w-full text-center rounded" onClick={handleClose}>Close</button>
                                 </div>
                             </div>
                         </div>
@@ -397,20 +423,11 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
 
 export default Create
 
-export async function getServerSideProps({ req, res }: any) {
-    const paramsArr = req.url.split("=");
-    const courseId = paramsArr[1]
+export async function getServerSideProps(ctx) {
+    const { id } = ctx.query;
 
-    console.log({ req: req.url  });
-
-
-    console.log({ courseId });
-
-
-    const response = await http.get(`/get-course-by-id?id=${courseId}`);
-    const assessments = await http.get(`/get-assessments?course=${courseId}`)
-
-    console.log({ assessments: response.data.data });
+    const response = await http.get(`/get-course-by-id?id=${id}`);
+    const assessments = await http.get(`/get-assessments?course=${id}`)
 
 
     return {
