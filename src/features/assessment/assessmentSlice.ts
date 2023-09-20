@@ -12,7 +12,7 @@ const assessmentSlice = createSlice({
   name: "assessment",
   initialState,
   reducers: {
-    addQuestion: (state, action: PayloadAction<{ questions: any[] }>) => {
+    addQuestion: (state, action: PayloadAction<{ questions: [] }>) => {
       state.questions = state.questions
         ? [...state.questions, ...action.payload.questions]
         : [...action.payload.questions];
