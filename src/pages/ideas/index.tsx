@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import { useFetchIdeasPostsQuery } from "@/features/apiSlice";
 import client from "@/lib/sanity";
 import SkeletonLoader from "@/components/SkeletonLoader";
+import IdeaCard from "@/components/IdeaCard";
 
 
 
@@ -23,7 +24,7 @@ function Index({ content }: any) {
             <div className="grid grid-cols-1 lg:grid-cols-3 justify-between gap-3 pb-10">
               {ideas?.data.filter((post: any) => post.status !== "inactive").slice(0).map((blog: any) => (
                 <div className="lg:col-span-1 rounded-xl w-full" key={Math.random()}>
-                  <BlogCard data={blog} />
+                  <IdeaCard data={blog} />
                 </div>
               ))}
             </div>
