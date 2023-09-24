@@ -1,6 +1,12 @@
 @font-face {
-  font-family: 'GT-America';
+  font-family: 'Larsseit';
   src: url('../assets/fonts/Mabry\ Pro\ Regular.otf');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SlackCircular';
+  src: url('../assets/fonts/Mabry\ Pro\ Medium.otf');
   font-display: swap;
 }
 
@@ -33,9 +39,9 @@
   box-sizing: border-box;
   padding: 0;
   margin: 0;
-  font-family: 'GT-America' !important;
+  font-family: 'SlackCircular' !important;
   font-weight: 500;
-  /* font-size: 16px !important; */
+  font-size: 16px !important;
   line-height: 1.6;
   scroll-behavior: smooth;
 }
@@ -46,7 +52,7 @@ h1,
 h2,
 h3 {
   line-height: 1.4 !important;
-  font-family: 'GT-America' !important;
+  font-family: 'Larsseit' !important;
   font-display: swap;
   /* font-weight: bolder !important; */
 }

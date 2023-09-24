@@ -20,12 +20,13 @@ const CustomEditorHeader = dynamic(() => import("../../../components/admin/Custo
 
 import BackChevronButton from '@/components/BackChevronButton';
 import dynamic from 'next/dynamic';
+import useCookie from '@/hooks/useCookie';
 
 
 
 function CustomEditor() {
     const router = useRouter();
-    const authState = useSelector((state: RootState) => state.auth);
+    const cookie = useCookie()
     const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
 
 
@@ -59,7 +60,7 @@ function CustomEditor() {
         setModalIsOpen(true);
 
 
-        updateSubSection({ token: authState.auth.user.accessToken, id: sub_sections.id, sub_sections }).then((res) => {
+        updateSubSection({ token: cookie?.user.accessToken, id: sub_sections.id, sub_sections }).then((res) => {
             console.log(res)
             notify({ msg: 'Content updated!', type: 'success' });
         }).catch(err => {

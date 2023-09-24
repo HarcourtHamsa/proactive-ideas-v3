@@ -15,6 +15,7 @@ import notify from '@/components/Notification'
 import { ToastContainer } from 'react-toastify'
 import { TbEdit, TbEye, TbTrash, TbWriting } from 'react-icons/tb'
 import BackChevronButton from '@/components/BackChevronButton'
+import useCookie from '@/hooks/useCookie'
 
 function DynamicInput({ label, index, setCorrectAnswer, answer }: { label: string, index: number, answer: number, setCorrectAnswer: (e: any) => void }) {
     return (
@@ -44,7 +45,7 @@ function Create({ course, quizzes }: { course: any, quizzes: any }) {
     const [referenceID, setRefenceID] = useState('');
     const [currentItem, setCurrentItem] = useState('');
     const [isUpdateOperation, setIsUpdateOperation] = useState<null | boolean>(null)
-    const authState = useSelector((state: RootState) => state.auth);
+    const cookie = useCookie()
     const router = useRouter()
 
     const handleQuestionChange = (e: any) => {
@@ -118,7 +119,7 @@ function Create({ course, quizzes }: { course: any, quizzes: any }) {
 
         try {
             if (existingQuiz) {
-                updateQuiz({ quiz, id: currentItem, token: authState.auth.user.accessToken })
+                updateQuiz({ quiz, id: currentItem, token: cookie?.user.accessToken })
                     .then(() => {
                         notify({ msg: 'Quiz updated!', type: 'success' });
                         setTimeout(() => {
@@ -128,7 +129,7 @@ function Create({ course, quizzes }: { course: any, quizzes: any }) {
                         throw err
                     })
             } else {
-                createQuiz({ quiz, id: referenceID, token: authState.auth.user.accessToken }).then((res) => {
+                createQuiz({ quiz, id: referenceID, token: cookie?.user.accessToken }).then((res) => {
                     console.log(res);
                     notify({ msg: 'New quiz created!', type: 'success' });
                     setTimeout(() => {

@@ -29,6 +29,7 @@ import useRole from "@/hooks/useRole";
 import { Role } from "../../../../types/types";
 import Image from "next/image";
 import { IoClose, IoRepeat } from "react-icons/io5";
+import useCookie from "@/hooks/useCookie";
 
 const parser = new edjsParser();
 
@@ -51,7 +52,7 @@ function Compose() {
   const [filesSelected, setFilesSelected] = useState<any>({});
   const [inputTagFile, setInputTagFile] = useState();
   const role = useRole();
-  const authState = useSelector((state: RootState) => state.auth)
+  const cookie = useCookie()
   const blogData = useSelector((state: RootState) => state.blog)
   const dispatch = useDispatch();
 
@@ -158,7 +159,7 @@ function Compose() {
         category: 'category',
         summary: description,
       },
-      token: authState?.auth?.user.accessToken,
+      token: cookie?.user?.accessToken,
     })
       .then((res: any) => {
 

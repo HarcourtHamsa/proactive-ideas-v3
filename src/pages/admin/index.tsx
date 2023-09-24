@@ -13,12 +13,11 @@ import BlogCard from '@/components/BlogCard';
 import useCookie from '@/hooks/useCookie';
 
 function Index() {
-    const authState = useSelector((state: RootState) => state.auth)
+    const cookie = useCookie()
     const { data: blogPosts } = useFetchBlogPostsQuery("")
     const { data: courses } = useFetchCoursesQuery("")
-    const { data: users } = useFetchUsersQuery({ token: authState?.auth?.user?.accessToken })
-    const { data: ideas } = useFetchIdeasPostDraftsQuery({ token: authState?.auth?.user?.accessToken })
-    const cookie = useCookie()
+    const { data: users } = useFetchUsersQuery({ token: cookie?.user?.accessToken })
+    const { data: ideas } = useFetchIdeasPostDraftsQuery({ token: cookie?.user?.accessToken })
 
     function fnc() {
         const hourOfTheDay = new Date().getHours();

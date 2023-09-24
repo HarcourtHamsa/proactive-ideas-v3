@@ -16,6 +16,7 @@ import { RootState } from "@/store";
 import Search from "../SVGs/Search";
 import { TbPlus } from "react-icons/tb";
 import DeleteModalCard from "./DeleteModalCard";
+import useCookie from "@/hooks/useCookie";
 
 function Table({ categories }: { categories: string[] }) {
   const [seachQry, setSearchQry] = useState("");
@@ -30,7 +31,8 @@ function Table({ categories }: { categories: string[] }) {
   const [currentCategory, setCurrentCategory] = useState<any>({});
   const { "0": createCategory } = useCreateCategoryMutation()
   const { "0": deleteCategory } = useDeleteCategoryMutation()
-  const authState = useSelector((state: RootState) => state.auth);
+  const cookie = useCookie()
+
 
   const handleSearchQryChange = (e: any) => {
     const value = e.target.value;
@@ -62,7 +64,7 @@ function Table({ categories }: { categories: string[] }) {
 
 
     await createCategory({
-      token: authState?.auth?.user.accessToken,
+      token: cookie?.user.accessToken,
       name: categoryName,
       group: categoryGroup
     })
@@ -87,7 +89,7 @@ function Table({ categories }: { categories: string[] }) {
     setShowDeleteLoader(true);
     await deleteCategory({
       id: currentCategory?.id,
-      token: authState?.auth?.user.accessToken,
+      token: cookie?.user.accessToken,
     })
       .then((res: any) => {
         console.log(res);

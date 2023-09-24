@@ -21,6 +21,7 @@ import { useDispatch } from 'react-redux';
 import Image from 'next/image';
 import { IoClose } from 'react-icons/io5';
 import { useSearchParams } from 'next/navigation'
+import useCookie from '@/hooks/useCookie';
 
 
 const ReactQuillEditor = dynamic(() => import("@/components/admin/Editor"), { ssr: false });
@@ -31,7 +32,7 @@ function EditBlog() {
   const role = useRole();
   const auth = useAuth();
   const inputRef = useRef<any>();
-  const authState = useSelector((state: RootState) => state.auth)
+  const cookie = useCookie()
   const dispatch = useDispatch();
   const blogData = useSelector((state: RootState) => state?.blog);
 
@@ -213,7 +214,7 @@ function EditBlog() {
         headerImage: cloudinaryURL,
         tags: tags,
       },
-      token: authState?.auth?.user.accessToken,
+      token: cookie?.user.accessToken,
     })
       .then((res: any) => {
         notify({ msg: "Content updated", type: "success" });

@@ -21,6 +21,7 @@ import { Role } from "../../../../types/types";
 import useRole from "@/hooks/useRole";
 import Image from "next/image";
 import { IoClose } from "react-icons/io5";
+import useCookie from "@/hooks/useCookie";
 
 
 const ReactQuillEditor = dynamic(() => import("../../../components/admin/Editor"), { ssr: false });
@@ -43,7 +44,7 @@ function Compose() {
 
     const [filesSelected, setFilesSelected] = useState<any>([]);
     const [inputTagFile, setInputTagFile] = useState();
-    const authState = useSelector((state: RootState) => state.auth)
+    const cookie = useCookie()
     const dispatch = useDispatch();
     const blogData = useSelector((state: RootState) => state.blog)
 
@@ -149,7 +150,7 @@ function Compose() {
                 category: 'category',
                 summary: description,
             },
-            token: authState?.auth?.user.accessToken,
+            token: cookie?.user.accessToken,
         })
             .then((res: any) => {
                 console.log("RES", res?.data);

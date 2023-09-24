@@ -18,6 +18,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import axios from 'axios'
 import { useDispatch } from 'react-redux'
 import { addQuestion, resetQuestions } from '@/features/assessment/assessmentSlice'
+import useCookie from '@/hooks/useCookie'
 
 function DynamicInput({ label, index, setCorrectAnswer, answer }: { label: string, index: number, answer: number, setCorrectAnswer: (e: any) => void }) {
     return (
@@ -46,12 +47,12 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
     const initialTitle = assessments && assessments.length > 0 ? assessments[0]?.title || '' : '';
     const [title, setTitle] = useState(initialTitle);
     const [currentItem, setCurrentItem] = useState('');
-    const authState = useSelector((state: RootState) => state.auth);
+    const cookie = useCookie()
     const [questions, setQuestions] = useState<any[]>(assessmentState.questions || assessments[0]?.questions)
 
-    console.log({questions});
-    
-    
+    console.log({ questions });
+
+
     const [feedback, setFeedback] = useState({
         correct: '',
         incorrect: ''
@@ -114,7 +115,7 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
 
 
     const deleteQuestion = (question: any) => {
-        const filteredQuestions = questions.filter((q: any) => q.question === question.question)
+        const filteredQuestions = questions.filter((q: any) => q.question !== question.question)
         setQuestions(filteredQuestions)
         notify({ msg: 'Question deleted!', type: 'success' });
 
@@ -164,14 +165,19 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
 
 
         if (assessments[0]?.title) {
+
             try {
                 await http.patch(`/update-assessment?id=${assessments[0]?.id}`, data)
+                setTimeout(() => {
+                    notify({ msg: "Assessment updated", type: 'success' })
+                }, 1000 * 1);
             } catch (error) {
+                notify({ msg: "Oops! an error occured", type: 'error' })
                 throw error
             }
         } else {
             try {
-                createAssessment({ data, token: authState.auth.user.accessToken }).then(() => {
+                createAssessment({ data, token: cookie?.user?.accessToken }).then(() => {
                     notify({ msg: 'Accessment created!', type: 'success' });
                     setTimeout(() => {
                         router.push("/admin/courses")
@@ -179,9 +185,9 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
                 })
             } catch (error) {
                 notify({ msg: 'Oops! an error occured', type: 'error' });
-
+                throw error
             }
-        } 
+        }
 
         setIsLoading(false)
 
@@ -322,7 +328,10 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
                                     }, "/admin/assessment/preview")
                                 }}
                             >Preview</button>
-                            <button className='py-2 bg-[#F08354] text-white px-4 rounded mt-8 hover:opacity-80' onClick={handleCreateAssessment}>Create Assessment</button>
+                            <button className='py-2 bg-[#F08354] flex text-white px-4 rounded mt-8 hover:opacity-80' onClick={handleCreateAssessment}>
+                                {isLoading && <Spinner />}
+                                Create Assessment
+                            </button>
                         </div>
 
                     </div>

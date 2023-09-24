@@ -11,11 +11,15 @@ import { calculateReadingTime, fetchBlogPostByID, fetchIdeaPostByID, modifyHTMLS
 import { useFetchBlogPostsQuery } from '@/features/apiSlice';
 import Loader from '@/components/Loader';
 import BlogCard from '@/components/BlogCard';
-import { IoClose } from 'react-icons/io5';
+import { IoClose, IoHeart, IoThumbsUp } from 'react-icons/io5';
 import ProgressBar from '@/components/ProgressBar';
 import { GetServerSideProps } from 'next';
 import ShareButton from '@/components/ShareButton';
 import TableOfContents from '@/components/TableOfContent';
+import { TbThumbUp } from 'react-icons/tb';
+import http from '@/lib/http';
+import notify from '@/components/Notification';
+import { ToastContainer } from 'react-toastify';
 
 function Title({ blogDetails }: any) {
     const { data: blogs } = useFetchBlogPostsQuery("");
@@ -27,12 +31,25 @@ function Title({ blogDetails }: any) {
     const sidebarRef = useRef<HTMLDivElement>(null);
     const mainRef = useRef<HTMLDivElement>(null);
     const [modifiedHtmlString, setModifiedString] = useState('')
+    const [likes, setLikes] = useState<number>(blogDetails?.likes)
 
     useEffect(() => {
         var newHtmlString = modifyHTMLString(blogDetails?.content)
         setModifiedString(newHtmlString)
 
     }, [blogDetails?.content])
+
+
+    const like = async () => {
+        try {
+            await http.post(`/like-idea-post?id=${blogDetails.id}`)
+            setLikes(likes + 1)
+        } catch (error) {
+            notify({ msg: 'An error occured', type: 'error' })
+            console.log({ error });
+
+        }
+    }
 
 
 
@@ -46,7 +63,7 @@ function Title({ blogDetails }: any) {
                 article: {
                     tags: [`${blogDetails.tags}`],
                 },
-                
+
                 site_name: 'Proactive Ideas'
             }}
         />
@@ -124,6 +141,13 @@ function Title({ blogDetails }: any) {
                                 </main>
                                 <div className='mt-8'>
 
+                                    <div
+                                        className='border px-4 py-2 bg-white w-fit flex items-center rounded-full gap-4 mb-8 cursor-pointer'
+                                        onClick={like}>
+                                        <IoHeart size={20} />
+                                        <p>{likes}</p>
+                                    </div>
+
                                     <ShareButton url={baseUrl + currentRoute} />
                                 </div>
                             </div>
@@ -158,7 +182,7 @@ function Title({ blogDetails }: any) {
         </div>
 
 
-
+        <ToastContainer />
         <Footer />
     </div>
 }
@@ -173,7 +197,7 @@ export const getServerSideProps: GetServerSideProps<any> = async (context) => {
 
     // Extract the query parameter
     const queryParam = query.id as string;
-    
+
     // Fetch data from external API
     const res = await fetchIdeaPostByID(queryParam)
     const data = res?.data

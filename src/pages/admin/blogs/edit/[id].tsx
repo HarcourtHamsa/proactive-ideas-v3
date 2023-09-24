@@ -26,6 +26,7 @@ import usePreviousRoute from '@/hooks/usePreviousPath';
 
 // IMPORT 
 import { useSearchParams } from 'next/navigation'
+import useCookie from '@/hooks/useCookie';
 
 
 const ReactQuillEditor = dynamic(() => import("@/components/admin/Editor"), { ssr: false });
@@ -37,7 +38,7 @@ function EditBlog() {
 
 
   const inputRef = useRef<any>();
-  const authState = useSelector((state: RootState) => state.auth)
+  const cookie = useCookie()
   const auth = useAuth();
   const role = useRole();
   const dispatch = useDispatch();
@@ -203,7 +204,7 @@ function EditBlog() {
             headerImage: cloudinaryURL,
             tags: tags,
           },
-          token: authState?.auth?.user.accessToken,
+          token: cookie?.user.accessToken,
         }).then((res: any) => {
 
           notify({ msg: "Blog draft updated", type: "success" });

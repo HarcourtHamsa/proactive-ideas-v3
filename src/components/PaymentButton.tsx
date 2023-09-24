@@ -7,10 +7,11 @@ import Spinner from './Spinner';
 import { useRouter } from 'next/router';
 import flutterwaveLogo from "@/assets/flutterwave.png"
 import Image from 'next/image';
+import useCookie from '@/hooks/useCookie';
 
 export default function PaymentButton({ amount, courseId, currency }: { amount: string, courseId: string, currency: string }) {
     const { "0": enroll, "1": enrollStatus } = useEnrollToCourseMutation();
-    const authState = useSelector((state: RootState) => state.auth)
+    const cookie = useCookie()
     const router = useRouter();
 
 
@@ -69,7 +70,7 @@ export default function PaymentButton({ amount, courseId, currency }: { amount: 
                         handleCreateTx({
                             amount: response?.amount as any,
                             transaction_id: response?.transaction_id,
-                            user: authState?.auth?.user.id,
+                            user: cookie?.user.id,
                             is_paid_course: true,
                             currency: response?.currency as string,
                             course: courseId

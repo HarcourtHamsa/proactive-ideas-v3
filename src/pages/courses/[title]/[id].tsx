@@ -21,6 +21,8 @@ import teamSuccessPNG from '@/assets/team-success.png'
 import Image from 'next/image';
 import { RootState } from '@/store';
 import { useSelector } from 'react-redux';
+import useCookie from '@/hooks/useCookie';
+import axios from 'axios';
 
 
 function SingleCourse({ course, lessons, subscriber }: any) {
@@ -29,9 +31,8 @@ function SingleCourse({ course, lessons, subscriber }: any) {
     const [showSubscribeScreen, setShowSubscribeScreen] = useState(false)
     const [currentLesson, setCurrentLesson] = useState("")
     const [quiz, setQuiz] = useState([]);
-    const [count, setCount] = useState(0);
     const router = useRouter();
-    const auth = useAuth();
+    const cookie = useCookie();
     const [feedback, setFeedback] = useState<null | string>(null)
     const [currentOption, setCurrentOption] = useState<number | null>(null)
     const [isCorrect, setIsCorrect] = useState(false)
@@ -42,11 +43,13 @@ function SingleCourse({ course, lessons, subscriber }: any) {
 
     const { data: quizzes, isLoading: isFetchingQuizzes } = useFetchQuizzesQuery("");
     const { data: assessment, isLoading: isFetchingAssessment } = useFetchAssessmenmtsQuery({ course: course?.id });
-    const { data: enrollment, isLoading: isFetchingEnrollment } = useFetchCourseEnrollmentQuery({ course: course?.id, user: auth?.id })
+    const { data: enrollment, isLoading: isFetchingEnrollment } = useFetchCourseEnrollmentQuery({ course: course?.id, user: cookie?.user?.id })
 
+    const parsedSubscriber = JSON.parse(subscriber)
 
-    const isSubscriber = JSON.parse(subscriber)
-    const [progress, setProgress] = useState(0)
+    const [progress, setProgress] = useState(Math.ceil(parsedSubscriber?.progress) || 0)
+    const [count, setCount] = useState(Math.floor((progress / 100) * contents.length));
+
 
 
 
@@ -54,7 +57,10 @@ function SingleCourse({ course, lessons, subscriber }: any) {
         return <Loader />
     }
 
+
     const generateBody = (arr: any) => {
+        console.log({arr});
+        
         return arr[count]?.content
     }
 
@@ -83,7 +89,7 @@ function SingleCourse({ course, lessons, subscriber }: any) {
             return;
         }
 
-        if (!isSubscriber) {
+        if (!parsedSubscriber) {
             if (count >= 1) {
                 setShowSubscribeScreen(true)
                 return
@@ -100,7 +106,7 @@ function SingleCourse({ course, lessons, subscriber }: any) {
 
 
         // call DB progress increment
-        await http.patch(`/update-progress?course=${course?.id}&user=${auth?.id}`, { progress: currentProgress })
+        await http.patch(`/update-progress?course=${course?.id}&user=${cookie.user?.id}`, { progress: currentProgress })
 
     }
 
@@ -206,25 +212,24 @@ function SingleCourse({ course, lessons, subscriber }: any) {
 
     }
 
-
     return (
         <div>
-            {auth?.email ?
+            {cookie?.user.email ?
 
-                showSubscribeScreen ? 
-                <PayWall
-                    amount={
-                        getPriceBasedOnLocation({
+                showSubscribeScreen ?
+                    <PayWall
+                        amount={
+                            getPriceBasedOnLocation({
+                                country: geo.country,
+                                prices: course?.prices
+                            })[0]
+                        }
+                        courseId={course?.id}
+                        currency={getPriceBasedOnLocation({
                             country: geo.country,
                             prices: course?.prices
-                        })[0]
-                    }
-                    courseId={course?.id}
-                    currency={getPriceBasedOnLocation({
-                        country: geo.country,
-                        prices: course?.prices
-                    })[1]}
-                /> :
+                        })[1]}
+                    /> :
                     <div className='bg-[#FAF7ED] flex'>
 
                         <div className='w-[80%] lg:w-[25%] border-r bg-[#11393C] h-screen fixed left-0 top-0 bottom-0 hidden  xl:block' style={{ display: showSidebar ? 'block' : '' }}>
@@ -243,7 +248,7 @@ function SingleCourse({ course, lessons, subscriber }: any) {
                                         {course?.sections?.map((section: any, index: number) => {
                                             return (
                                                 <span key={Math.random()}>
-                                                    <li className='py-2 mt-0 bg-gray-200 px-4 list-none flex justify-between uppercase tracking-wider text-sm line-clamp-1'>
+                                                    <li className='py-2 mt-0 bg-gray-200 px-4 list-none flex justify-between uppercase tracking-wider text-sm line-clamp-0'>
                                                         {section.title}
 
 
@@ -301,6 +306,7 @@ function SingleCourse({ course, lessons, subscriber }: any) {
                             <div className='h-20 w-full px-4 flex items-center justify-between border-b-2'>
                                 <BackChevronButton />
 
+                              
                                 <span onClick={() => setShowSidebar(!showSidebar)} className='flex items-center'>
                                     <Menu />
                                 </span>
@@ -398,7 +404,8 @@ function SingleCourse({ course, lessons, subscriber }: any) {
 
                                 </ReactPortal>}
                         </div>
-                    </div> : <Restricted path={router.asPath} />}
+                    </div> :
+                <Restricted path={router.asPath} />}
 
         </div>
     )
@@ -411,15 +418,25 @@ export const getServerSideProps = async ({ req, res }: { req: NextApiRequest, re
 
     // Extract the query parameter
     const courseIDSplit = req.url?.split('/') as string[];
-    const courseId = courseIDSplit[courseIDSplit?.length - 1]
+    // const courseId = courseIDSplit[courseIDSplit?.length - 1].split('.')
+    const courseId = courseIDSplit[courseIDSplit?.length - 1].split('.')[0]
 
- 
+
+    // console.log({ courseId });
 
 
 
     // Fetch data from external API
     const apiResponse = await fetchCourseById(courseId)
-    const data = apiResponse.data
+
+
+    // console.log({ apiResponse });
+
+
+    const data = apiResponse?.data
+
+    // console.log({ data });
+
 
     const courseLessons = new Set();
 
@@ -433,6 +450,11 @@ export const getServerSideProps = async ({ req, res }: { req: NextApiRequest, re
     const cookie = decryptData(encryptedTkn)
     const userId = cookie?.user.id
 
+    // const enrollmentResponse = await http.get(`get-enrollment?course=${courseId}&user=${userId}`)
+    // const enrollment = enrollmentResponse
+
+    // get-enrollment?course=${course}&user=${user}
+
     // // Fetch data from external API
     const enrollmentApiResponse = await fetchCourseEnrollment(courseId, userId)
     const subscriber = enrollmentApiResponse?.data
@@ -443,7 +465,8 @@ export const getServerSideProps = async ({ req, res }: { req: NextApiRequest, re
         props: {
             course: data || {},
             lessons: Array.from(courseLessons) || [],
-            subscriber: JSON.stringify(subscriber) || null
+            subscriber: JSON.stringify(subscriber) || null,
+
         }
     }
 }

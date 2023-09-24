@@ -21,35 +21,12 @@ function Profile({ enrollments }) {
         <div className='bg-[#FAF7ED]'>
             <Navbar />
             <div className='h-fit py-20 w-[85%] mx-auto '>
-                {/* <div className='lg:h-[300px] h-[200px] flex items-center'>
-                    <div className='container w-[85%] mx-auto flex justify-between'>
-                        <div>
-                            <h3 className='lg:text-3xl font-semibold text-3xl mb-10'>My Profile</h3>
-                            <div className='flex gap-4 lg:gap-8'>
-                                <div className=' w-[80px] lg:w-[100px] lg:h-[100px] h-[80px] relative rounded-xl bg-[#404eed] flex items-center justify-center'>
-                                    <div className='w-6 h-6 border-4 rounded-full absolute border-[#FAF7ED] bg-[#22BB22] -bottom-2 -right-2 '></div>
-                                    <h3 className='scale-150 text-white'>HH</h3>
-                                </div>
-
-                                <div>
-                                    <p>Hamsa Harcourt</p>
-                                    <p>hamsaharcourt@gmail.com</p>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div> */}
-
-
-
-
                 <div className=''>
                     <Tabs>
                         <TabList>
                             <Tab>About Me</Tab>
-                            <Tab>Learning Resources</Tab>
-                            <Tab>Settings</Tab>
+                            <Tab>Learning Activity</Tab>
+                            <Tab disabled>Settings</Tab>
                         </TabList>
 
                         <TabPanel className={'mb-10'}>
@@ -57,14 +34,32 @@ function Profile({ enrollments }) {
                                 {/* <p className='text-2xl pb-2'>My Profile</p> */}
 
                                 <div className='flex items-center gap-4'>
-                                    <div className='w-[100px] h-[100px] bg-red-400 flex items-center justify-center rounded-full'>
+                                    <div className='w-[100px] h-[100px] bg-[rgb(64,78,237)] text-white flex items-center justify-center rounded-full'>
                                         <p className='text-3xl'>{cookie?.user.name.split(' ')[0][0]} {cookie?.user.name.split(' ')[1][0]}</p>
                                     </div>
 
-                                    <div>
-                                        <p>Email: {cookie?.user.email}</p>
-                                        <p>Full Name: {cookie?.user.name}</p>
-                                        <p>Role: {cookie?.user.role}</p>
+
+                                </div>
+
+                                <div className='space-y-2 mt-4'>
+                                    <div className='py-3 px-4 border rounded bg-white shadow cursor-pointer'>
+                                        <span>First Name: </span>
+                                        <span>{cookie?.user.name.split(' ')[0]}</span>
+                                    </div>
+
+                                    <div className='py-3 px-4 border rounded bg-white shadow cursor-pointer'>
+                                        <span>Last Name: </span>
+                                        <span>{cookie?.user.name.split(' ')[1]}</span>
+                                    </div>
+
+                                    <div className='py-3 px-4 border rounded bg-white shadow cursor-pointer'>
+                                        <span>Email: </span>
+                                        <span>{cookie?.user.email}</span>
+                                    </div>
+
+                                    <div className='py-3 px-4 border rounded bg-white shadow cursor-pointer'>
+                                        <span>Role: </span>
+                                        <span>{cookie?.user.role}</span>
                                     </div>
                                 </div>
 

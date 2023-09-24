@@ -3,12 +3,13 @@ import AssessmentTable from '@/components/admin/AssessmentTable';
 import Layout from '@/components/admin/Layout'
 import { useFetchAssessmenmtsQuery } from '@/features/apiSlice'
 import useAuth from '@/hooks/useAuth';
+import useCookie from '@/hooks/useCookie';
 import React from 'react'
 
 function Quiz() {
-  const authState = useAuth()
+  const cookie = useCookie()
 
-  const { data, isLoading } = useFetchAssessmenmtsQuery({ token: authState?.accessToken });
+  const { data, isLoading } = useFetchAssessmenmtsQuery({ token: cookie?.user?.accessToken });
 
 
   if (isLoading) {

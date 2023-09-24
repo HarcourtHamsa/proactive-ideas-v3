@@ -5,7 +5,7 @@ import Loader from '@/components/Loader';
 import Layout from '@/components/admin/Layout'
 import { useDeleteSectionMutation, useDeleteSubSectionMutation, useFetchCategoriesQuery, useFetchSingleCourseQuery, useUpdateCourseDraftMutation, useUpdateCourseMutation } from '@/features/apiSlice'
 import { useRouter } from 'next/router'
-import { IoAddCircle, IoChevronBack, IoCloseCircleOutline, IoTrash, IoWarning } from 'react-icons/io5';
+import { IoAddCircle, IoChevronBack, IoClose, IoCloseCircleOutline, IoTrash, IoWarning } from 'react-icons/io5';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import { extractListItems, getSingleCourse, seperateBlogDataIntoComponents } from '@/helper';
@@ -25,6 +25,9 @@ import { MdOutlineDragIndicator } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
 import { setSection } from '@/features/sections/sectionsSlice'
 import DynamicPricingInput from '@/components/admin/DynamicPricingInput';
+import useCookie from '@/hooks/useCookie';
+import Image from 'next/image';
+import axios from 'axios';
 
 
 const parser = new edjsParser();
@@ -40,10 +43,11 @@ function EditSingleCourse({ course }: any) {
     const [deleteSubSectionModalIsOpen, setDeleteSubSectionModalIsOpen] = useState(false);
     const [editModalIsOpen, setEditModalIsOpen] = useState(false)
     const [filesSelected, setFilesSelected] = useState<any>([]);
-    const authState = useSelector((state: RootState) => state.auth);
-    const token = authState?.auth?.user.accessToken;
+    const cookie = useCookie()
 
     const courseId = router.query.id;
+    const headerImageInputRef = useRef<any>();
+    const [headerImageFile, setHeaderImageFile] = useState();
 
 
     const { data: categories, isLoading: isFetchingCategories } = useFetchCategoriesQuery({ group: 'course' });
@@ -55,7 +59,8 @@ function EditSingleCourse({ course }: any) {
     const { "0": deleteSubSectionFromDB, "1": deleteSubSectionMutationStatus } = useDeleteSubSectionMutation();
     const [activeSection, setActiveSection] = useState<any>({})
     const [editSectionModalIsOpen, setEditSectionModalIsOpen] = useState(false)
-
+    const [cloudinaryURL, setCloudinaryURL] = useState("");
+    const [removeHeaderImage, setRemoveHeaderImage] = useState(false)
     const inputRef = useRef<any>();
     const [inputTagFile, setInputTagFile] = useState();
     const dispatch = useDispatch()
@@ -64,6 +69,8 @@ function EditSingleCourse({ course }: any) {
         content: '',
         id: ''
     })
+    const [fileSelectedForHeaderImage, setFileSelectedForHeaderImage] = useState<any>([]);
+    const [isUploadingImage, setIsUploadingImage] = useState(false)
     const [courseInfoData, setCourseInfoData] = useState(course.sections);
     const [currentSection, setCurrentSection] = useState<any>({});
     const [currentSubSection, setCurrentSubSection] = useState<any>({});
@@ -73,6 +80,7 @@ function EditSingleCourse({ course }: any) {
     const [generalInfoData, setGeneralInfoData] = useState({
         title: course?.title,
         author: course?.author,
+        header_image: course?.header_image,
         // prices: course?.prices,
         tags: '',
         category: course?.category,
@@ -88,9 +96,88 @@ function EditSingleCourse({ course }: any) {
         dragItemRef.current = item
     }
 
+    function handleHeaderImageInputChange(e: any) {
+        setIsUploadingImage(true);
+
+        const file = headerImageInputRef.current.files[0];
+        const reader = new FileReader();
+
+
+        reader.readAsText(file);
+
+        reader.onloadend = async (e: any) => {
+            //Here the content has been read successfuly
+            setFileSelectedForHeaderImage((prevState: any) => [...prevState, file]);
+
+            await imageUpload(file).then((res) => {
+                setGeneralInfoData((prevState) => ({
+                    ...prevState,
+                    header_image: res
+                }))
+
+                setRemoveHeaderImage(false)
+
+            }).catch((err) => {
+                console.log(err);
+            }).finally(() => {
+                setIsUploadingImage(false)
+            })
+
+        };
+    }
+
 
     const handleDragOver = (e: any, item: any) => {
         dragItemOverRef.current = item
+    }
+
+    function dropHandler(e: any) {
+        // Prevent default behavior (Prevent file from being opened)
+        e.preventDefault();
+
+        if (e.dataTransfer.items) {
+            // Use DataTransferItemList interface to access the file(s)
+            [...e.dataTransfer.items].forEach((item, i) => {
+                // If dropped items aren't files, reject them
+                if (item.kind === "file") {
+                    const file = item.getAsFile();
+
+                    setFilesSelected((prevState: any) => [...prevState, file]);
+                }
+            });
+        } else {
+            // Use DataTransfer interface to access the file(s)
+            [...e.dataTransfer.files].forEach((file, i) => {
+
+                setFilesSelected((prevState: any) => [...prevState, file]);
+            });
+        }
+    }
+
+    function dragOverHandler(e: React.FormEvent) {
+        e.preventDefault();
+    }
+
+    const imageUpload = async (img: any) => {
+
+
+        var url = ""
+        const formData = new FormData()
+        formData.append("file", img)
+        formData.append("upload_preset", "hqdnnphw");
+
+        await axios.post("https://api.cloudinary.com/v1_1/dgn6edv1k/image/upload", formData)
+            .then((response: any) => {
+                url = response.data.secure_url
+                setCloudinaryURL(response.data.secure_url)
+            }).catch((err: any) => {
+
+            })
+            .finally(() => {
+
+            })
+
+        return url
     }
 
     const handleDrop = () => {
@@ -255,7 +342,7 @@ function EditSingleCourse({ course }: any) {
         courseObj.objectives = parsedObjectives
 
         setIsUpdatingGeneralInfo(true)
-        await updateCourse({ token: token, id: courseId, data: courseObj }).then((res) => {
+        await updateCourse({ token: cookie?.user?.accessToken, id: courseId, data: courseObj }).then((res) => {
             console.log("res", res)
             notify({ msg: "Course updated", type: 'success' });
         }).catch((error: any) => {
@@ -278,7 +365,7 @@ function EditSingleCourse({ course }: any) {
         const courseShallowCopy = Object.assign({}, course, { sections: courseInfoData })
 
         try {
-            updateCourseDraft({ token, id: courseId, data: courseShallowCopy })
+            updateCourseDraft({ token: cookie?.user?.accessToken, id: courseId, data: courseShallowCopy })
                 .then((res) => notify({ msg: 'Draft updated ', type: 'success' }))
                 .catch(err => {
                     notify({ msg: 'An error occued!', type: 'error' })
@@ -292,7 +379,7 @@ function EditSingleCourse({ course }: any) {
     }
 
     const deleteSection = () => {
-        deleteSectionFromDB({ token, id: currentSection.id })
+        deleteSectionFromDB({ token: cookie?.user?.accessToken, id: currentSection.id })
             .then(() => {
                 notify({ msg: "Section deleted!", type: 'success' });
             })
@@ -385,10 +472,10 @@ function EditSingleCourse({ course }: any) {
             obj.sub_sections.find((ss: any) => {
 
                 // console.log({ ss: ss._id,  subSectionData: subSectionData.id});
-                console.log({ ss: ss.id,  subSectionData: subSectionData.id});
-                
+                console.log({ ss: ss.id, subSectionData: subSectionData.id });
 
-                if (ss._id === subSectionData.id || ss.id === subSectionData.id ) {
+
+                if (ss._id === subSectionData.id || ss.id === subSectionData.id) {
 
                     const filteredData = obj.sub_sections.filter((ss: any) => ss._id === subSectionData.id || ss.id === subSectionData.id)[0]
 
@@ -406,10 +493,10 @@ function EditSingleCourse({ course }: any) {
                     if (indexToUpdate !== -1) {
 
                         const newObj = Object.assign({}, { ...subSectionData })
-                     
-                        
 
-                    //     // Update the name property of the object at the found index
+
+
+                        //     // Update the name property of the object at the found index
                         obj.sub_sections[indexToUpdate] = newObj;
                         // transformedObj = obj
 
@@ -439,7 +526,7 @@ function EditSingleCourse({ course }: any) {
 
             if (obj._id === currentSection._id) {
                 // Create a *new* object with changes
-                return { ...obj, sub_sections: [...obj.sub_sections, {...subSectionData, id: uuidv4()}] };
+                return { ...obj, sub_sections: [...obj.sub_sections, { ...subSectionData, id: uuidv4() }] };
             } else {
                 // No changes
                 return obj;
@@ -500,6 +587,80 @@ function EditSingleCourse({ course }: any) {
                         </div>
 
                         <div className='px-4 my-8 space-y-3'>
+                            {removeHeaderImage ?
+
+                                <div>
+                                    <p>Upload header image</p>
+                                    <div className="max-w-xl">
+                                        <label
+                                            className="flex justify-center w-full h-32 px-4 transition bg-white border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:border-gray-400 focus:outline-none"
+                                            id="drop-zone"
+                                            onDrop={dropHandler}
+                                            onDragOver={dragOverHandler}
+                                        >
+                                            <span className="flex flex-col justify-center items-center space-x-2">
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    className="w-6 h-6 text-gray-600 "
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                    stroke="currentColor"
+                                                    strokeWidth="2"
+                                                >
+                                                    <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                                                    />
+                                                </svg>
+                                                <p className="font-medium text-[#F08354]">
+                                                    Select a file to upload
+                                                </p>
+                                                <span className="text-gray-600 text-sm">
+                                                    or drag and drop it here
+                                                </span>
+                                            </span>
+                                            <input
+                                                type="file"
+                                                name="file_upload"
+                                                className="hidden"
+                                                ref={headerImageInputRef}
+                                                value={headerImageFile}
+                                                onChange={handleHeaderImageInputChange}
+                                            />
+                                        </label>
+                                    </div>
+                                    {isUploadingImage && <p className='mt-2'>status: uploading image</p>}
+
+                                    {fileSelectedForHeaderImage?.map((f: any) => (
+                                        <div key={Math.random()} className="flex justify-between py-3 items-center px-2">
+                                            <p className="truncate overflow-hidden text-sm border bg-gray-100 p-1 w-fit rounded-md flex gap-8 items-center">{f.name}
+
+                                                <TbTrash className='cursor-pointer' onClick={() => {
+                                                    setCloudinaryURL('')
+                                                    setFileSelectedForHeaderImage([])
+                                                }} />
+
+                                            </p>
+
+
+                                        </div>
+                                    ))}
+                                </div>
+
+                                :
+                                <div className="flex lg:h-[350px] h-[200px] flex-col bg-white rounded overflow-hidden mb-10" onClick={() => setRemoveHeaderImage(true)}>
+                                    <figure className="relative h-0 pb-[56.25%] overflow-hidden">
+                                        <Image className="absolute inset-0 w-full h-full object-cover bg-bottom transform transition duration-700 ease-out" src={generalInfoData.header_image} width="700" height="1000" alt="Course" priority={true} />
+                                    </figure>
+
+                                    <div className='absolute cursor-pointer w-[50px] h-[50px] flex justify-center items-center bg-slate-500/20 right-12 translate-y-5 rounded'>
+                                        <IoClose size={30} />
+                                    </div>
+                                </div>
+                            }
+
+
                             <CustomInput label='Course title' type='text' name='courseTitle' value={generalInfoData.title} onChange={handleChange} />
 
                             <div className='grid grid-cols-2 gap-4'>
@@ -848,7 +1009,7 @@ function EditSingleCourse({ course }: any) {
                         <ReactPortal>
                             <div className="h-screen w-screen bg-black opacity-60 fixed z-50 top-0 flex justify-center items-center transition duration-75 overflow-auto"></div>
                             <div className="h-screen w-screen bg-transparent fixed top-0 z-[100] transition duration-75">
-                            <div className="w-[100%] h-fit sm:w-screen xl:-translate-x-4 sm:h-screen overflow-y-scroll z-[100] bg-[#fff] shadow-md p-4 transition duration-75">
+                                <div className="w-[100%] h-fit sm:w-screen xl:-translate-x-4 sm:h-screen overflow-y-scroll z-[100] bg-[#fff] shadow-md p-4 transition duration-75">
                                     <div className=' w-fit ml-auto space-x-4 px-4'>
                                         <button
                                             className='py-1 px-4 border rounded'

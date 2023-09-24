@@ -39,7 +39,6 @@ const links = [
 
 function Layout({ children }: { children: React.ReactNode }) {
   const { data } = useSession();
-  const authState = useSelector((state: RootState) => state.auth)
   const [mobileNavIsOpen, setMobileNavIsOpen] = useState(false)
   const router = useRouter();
   const role = useRole();

@@ -13,11 +13,12 @@ import { ToastContainer } from "react-toastify";
 import { Role } from "../../../types/types";
 import { AiOutlineClose } from "react-icons/ai";
 import useRole from "@/hooks/useRole";
+import useCookie from "@/hooks/useCookie";
 
 
 function Table({ users }: { users: any }) {
   const role = useRole();
-  const authState = useSelector((state: RootState) => state.auth)
+  const cookie = useCookie()
 
   const { "0": updateRole, "1": updateRoleStatus } = useUpdateUserRoleMutation();
 
@@ -44,7 +45,7 @@ function Table({ users }: { users: any }) {
     // }
 
     await updateRole({
-      token: authState?.auth?.user?.accessToken,
+      token: cookie?.user?.accessToken,
       id: userId,
       data: { role: userRole }
     }).then((res: any) => {

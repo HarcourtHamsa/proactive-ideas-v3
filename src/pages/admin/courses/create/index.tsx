@@ -36,6 +36,7 @@ import BackChevronButton from '@/components/BackChevronButton'
 import useRole from '@/hooks/useRole'
 import { Role } from '../../../../../types/types'
 import DynamicPricingInput from '@/components/admin/DynamicPricingInput'
+import useCookie from '@/hooks/useCookie'
 
 
 function Index() {
@@ -46,8 +47,8 @@ function Index() {
     const { "0": createCourseDraft } = useCreateCourseDraftMutation()
     const formStep = useSelector((state: RootState) => state.step)
     const sectionState = useSelector((state: RootState) => state.section);
-    const authState = useSelector((state: RootState) => state.auth);
     const generalInfo = useSelector((state: RootState) => state.generalInfo);
+    const cookie = useCookie()
 
     const inputRef = useRef<any>();
     const headerImageInputRef = useRef<any>();
@@ -322,7 +323,7 @@ function Index() {
             tags: [generalInfoData.category],
         }
 
-        await createCourseDraft({ token: authState.auth.user?.accessToken, course }).then(() => {
+        await createCourseDraft({ token: cookie.user.accessToken, course }).then(() => {
             notify({ msg: "New draft created", type: 'success' });
 
         }).catch((err: any) => {

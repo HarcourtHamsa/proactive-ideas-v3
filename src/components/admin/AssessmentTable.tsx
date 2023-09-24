@@ -13,6 +13,7 @@ import notify from "../Notification";
 import { ToastContainer } from "react-toastify";
 import Spinner from "../Spinner";
 import { AiOutlineClose } from "react-icons/ai";
+import useCookie from "@/hooks/useCookie";
 
 function DynamicInput({ label, index, setCorrectAnswer, answer }: { label: string, index: number, answer: number, setCorrectAnswer: (e: any) => void }) {
     return (
@@ -27,7 +28,7 @@ function DynamicInput({ label, index, setCorrectAnswer, answer }: { label: strin
 
 
 function AssessmentTable({ quizArr }: { quizArr: any }) {
-    const authState = useSelector((state: RootState) => state.auth);
+    const cookie = useCookie()
     const { "0": createQuiz, "1": createCourseStatus } = useCreateQuizMutation();
     const { "0": deleteQuiz, "1": deleteQuizStatus } = useDeleteQuizMutation();
 
@@ -109,7 +110,7 @@ function AssessmentTable({ quizArr }: { quizArr: any }) {
         
 
         try {
-            createQuiz({ quiz, id: referenceID, token: authState.auth.user.accessToken }).then((res: any) => {
+            createQuiz({ quiz, id: referenceID, token: cookie?.user?.accessToken }).then((res: any) => {
            
                 notify({ msg: 'New quiz created!', type: 'success' });
                 setTimeout(() => {
@@ -144,7 +145,7 @@ function AssessmentTable({ quizArr }: { quizArr: any }) {
     const deleteItem = () => {
 
         try {
-            deleteQuiz({ token: authState?.auth.user.accessToken, id: currentItem }).then((res: any) => {
+            deleteQuiz({ token: cookie?.user?.accessToken, id: currentItem }).then((res: any) => {
              
                 notify({ msg: 'Quiz deleted', type: 'success' });
             }).catch((err: any) => {

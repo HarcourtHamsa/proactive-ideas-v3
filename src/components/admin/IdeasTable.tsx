@@ -21,7 +21,7 @@ import { Role } from "../../../types/types";
 import useCookie from "@/hooks/useCookie";
 
 function Table({ data }: any) {
-    const authState = useSelector((state: RootState) => state.auth);
+    const cookie = useCookie();
     const router = useRouter();
 
 

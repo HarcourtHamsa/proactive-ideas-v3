@@ -24,7 +24,6 @@ function CoursesTable({ data }: any) {
     // const auth = useAuth();
     const cookie = useCookie()
     const role = useRole()
-    // const authState = useSelector((state: RootState) => state.auth)
     const [seachQry, setSearchQry] = useState("");
     const [filteredData, setFilteredData] = useState(data.data);
     const [currentItem, setCurrentItem] = useState("");
