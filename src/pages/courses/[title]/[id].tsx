@@ -283,19 +283,19 @@ function SingleCourse({ course, lessons, subscriber }: any) {
                                     </ul>
                                 </div>
                                 {assessment?.data[0] &&
-                                    <div className='px-8 p-4 h-[38%] bg-[#11393C]'>
+                                    <div className='px-4 p-4 h-[38%] bg-[#11393C]'>
 
-                                        <div className='w-[95%] h-[100%] vibration bg-gray-200  items-center justify-center text-center flex rounded-lg shadow-xl'>
+                                        <div className='w-[100%] h-[100%] vibration bg-gray-200  items-center justify-center text-center flex rounded-lg shadow-xl'>
                                             <div className='px-4 space-y-4'>
                                                 <p>Interactive assessment</p>
 
-                                                <p className='text-[#8C95A4]'>
+                                                <p className='text-[#8C95A4] text-sm'>
 
                                                     This course includes an interactive assessment to reinforce your understanding.
                                                 </p>
 
 
-                                                <button className='w-[80%] mx-auto border text-white bg-orange-400 rounded-full py-3'>
+                                                <button className='w-[80%] mx-auto border text-white bg-orange-400 rounded-full py-2'>
                                                     Start Assessment
                                                 </button>
                                             </div>
