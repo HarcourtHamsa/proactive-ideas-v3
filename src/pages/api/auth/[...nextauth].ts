@@ -21,6 +21,7 @@ export const authOptions: any = {
       }
 
       session.user.role = existingUser?.data?.role || 'user'
+      session.user.id = existingUser?.data?.id || ''
       return session
     }
   },

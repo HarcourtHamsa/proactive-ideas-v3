@@ -23,9 +23,11 @@ import { RootState } from '@/store';
 import { useSelector } from 'react-redux';
 import useCookie from '@/hooks/useCookie';
 import axios from 'axios';
+import { getSession, useSession } from "next-auth/react";
 
 
 function SingleCourse({ course, lessons, subscriber }: any) {
+    const { data: session } = useSession();
     const [contents, setContents] = useState(lessons);
     const [courseIsComplete, setCourseIsComplete] = useState(false)
     const [showSubscribeScreen, setShowSubscribeScreen] = useState(false)
@@ -59,8 +61,8 @@ function SingleCourse({ course, lessons, subscriber }: any) {
 
 
     const generateBody = (arr: any) => {
-        console.log({arr});
-        
+        console.log({ arr });
+
         return arr[count]?.content
     }
 
@@ -306,7 +308,7 @@ function SingleCourse({ course, lessons, subscriber }: any) {
                             <div className='h-20 w-full px-4 flex items-center justify-between border-b-2'>
                                 <BackChevronButton />
 
-                              
+
                                 <span onClick={() => setShowSidebar(!showSidebar)} className='flex items-center'>
                                     <Menu />
                                 </span>
@@ -447,8 +449,16 @@ export const getServerSideProps = async ({ req, res }: { req: NextApiRequest, re
     });
 
     const encryptedTkn = getCookie('tkn', { req, res }) as string
-    const cookie = decryptData(encryptedTkn)
-    const userId = cookie?.user.id
+    const session: any = await getSession({ req })
+    var userId;
+
+    if (encryptedTkn) {
+        const cookie = decryptData(encryptedTkn)
+        userId = cookie.user?.id
+    }
+
+    userId = session?.user?.id
+
 
     // const enrollmentResponse = await http.get(`get-enrollment?course=${courseId}&user=${userId}`)
     // const enrollment = enrollmentResponse
