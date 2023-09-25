@@ -42,6 +42,7 @@ function SingleCourse({ course, lessons, subscriber }: any) {
     const [isQuizSubmitted, setIsQuizSubmitted] = useState(false)
     const [showSidebar, setShowSidebar] = useState(false)
     const geo = useSelector((state: RootState) => state.geo)
+    const [showTableOfContents, setShowTableOfContents] = useState(false)
 
     const { data: quizzes, isLoading: isFetchingQuizzes } = useFetchQuizzesQuery("");
     const { data: assessment, isLoading: isFetchingAssessment } = useFetchAssessmenmtsQuery({ course: course?.id });
@@ -234,8 +235,8 @@ function SingleCourse({ course, lessons, subscriber }: any) {
                     /> :
                     <div className='bg-[#FAF7ED] flex'>
 
-                        <div className='w-[80%] lg:w-[25%] border-r bg-[#11393C] h-screen fixed left-0 top-0 bottom-0 hidden  xl:block' style={{ display: showSidebar ? 'block' : '' }}>
-                            <aside className='h-screen lg:w-[100%] w-[90%] -z-1 bg-[#11393C]  mx-auto lg:col-span-1 mb-10 lg:mb-0 '>
+                        <div className='w-[80%] lg:w-[20%] border-r bg-[#11393C] h-screen fixed left-0 top-0 bottom-0 hidden  xl:block' style={{ display: showSidebar ? 'block' : '' }}>
+                            <aside className='h-screen lg:w-[100%] w-[90%] -z-1 bg-[#11393C] mx-auto lg:col-span-1 mb-10 lg:mb-0 '>
                                 <div className='px-4 py-3 h-[15%] mb-4  items-center bg-[#11393C] gap-2'>
                                     <p className="text-white leading-snug capitalize line-clamp-2 mb-4">{course?.title}</p>
 
@@ -246,7 +247,7 @@ function SingleCourse({ course, lessons, subscriber }: any) {
                                 </div>
 
                                 <div className={`${assessment?.data[0] ? 'h-[46%]' : 'h-[60%]'} overflow-auto`}>
-                                    <ul key={Math.random()} className='px-0 list-decimal'>
+                                    <ul key={Math.random()} className='px-0 list-decimal ul__unset'>
                                         {course?.sections?.map((section: any, index: number) => {
                                             return (
                                                 <span key={Math.random()}>
@@ -255,7 +256,7 @@ function SingleCourse({ course, lessons, subscriber }: any) {
 
 
                                                     </li>
-                                                    <ul className=' list-disc divide-y-[1px] divide-gray-700'>
+                                                    <ul className=' list-disc divide-y-[1px] divide-gray-700 ul__unset'>
                                                         {section?.sub_sections?.map((ss: any, index: number) => {
                                                             const targetTitle = ss.title;
                                                             const foundindex = lessons.findIndex((lesson: any) => lesson.title === targetTitle);
@@ -304,67 +305,104 @@ function SingleCourse({ course, lessons, subscriber }: any) {
                                     </div>}
                             </aside>
                         </div>
-                        <div className='xl:w-[75%] w-[100%] min-h-screen h-fit xl:ml-[25%] transition-opacity'>
-                            <div className='h-20 w-full px-4 flex items-center justify-between border-b-2'>
-                                <BackChevronButton />
+
+                        <div className='xl:w-[80%] grid xl:grid-cols-3 relative grid-cols-1 gap-8 w-[100%] min-h-screen h-fit xl:ml-[20%] transition-opacity'>
+
+                            <div className='xl:col-span-2 col-span-1 relative'>
+
+                                <div className='toc-gradient lg:hidden max-h-[70%] shadow overflow-scroll  z-30 rounded fixed bottom-0 w-full left-0 right-0 p-4' style={{ backgroundColor: showTableOfContents ? 'white' : '' }}>
+                                    <button className='w-full py-2 bg-[#F08354] mb-2 rounded text-white' onClick={() => setShowTableOfContents(!showTableOfContents)}>Course Curriculum</button>
+
+                                    {
+                                        showTableOfContents &&
+
+                                        <div className='w-10 h-10 bg-white fixed top-[20%] shadow flex justify-center items-center rounded-full right-4'
+                                            onClick={() => setShowTableOfContents(!showTableOfContents)}
+                                        >
+                                            <IoClose size={20} />
+                                        </div>
+                                    }
+
+                                    {showTableOfContents &&
+                                        <div>
+                                            {contents.map((content) => {
+                                                return (
+                                                    <div className='py-2 divide-y-2'>{content.title}</div>
+                                                )
+                                            })}
+                                        </div>
+                                    }
+                                </div>
+
+                                <div className='h-20 w-full px-4 flex items-center justify-between'>
+                                    <BackChevronButton />
 
 
-                                <span onClick={() => setShowSidebar(!showSidebar)} className='flex items-center'>
-                                    <Menu />
-                                </span>
+                                    <span onClick={() => setShowSidebar(!showSidebar)} className='flex items-center'>
+                                        <Menu />
+                                    </span>
 
+
+                                </div>
+
+                                <main className='w-[90%] mx-auto mt-6 lg:col-span-3 order-2 transition-opacity'>
+
+                                    <div dangerouslySetInnerHTML={{ __html: generateBody(Array.from(contents)) }} className=''></div>
+
+                                    {quizzes &&
+
+                                        <div className='my-8'>
+                                            {generateQuiz(Array.from(contents)) &&
+                                                <div>
+                                                    <h2 className='lg:text-3xl font-semibold text-2xl mb-6'>Knowledge Check</h2>
+                                                    <div>{generateQuiz(Array.from(contents))}</div>
+
+                                                    {isQuizSubmitted ?
+                                                        <button onClick={() => {
+                                                            setActiveOptions([])
+                                                            setIsQuizSubmitted(false)
+                                                        }} className='w-fit mb-8 bg-white border rounded py-2 px-6 text-center '>
+                                                            Retry Quiz
+                                                        </button>
+                                                        :
+                                                        <button onClick={handleQuiz} className='w-fit mb-8 bg-white border rounded py-2 px-6 text-center '>
+                                                            Submit Answers
+                                                        </button>}
+                                                </div>
+                                            }
+
+
+
+
+
+
+
+                                        </div>
+
+                                    }
+
+
+
+                                    <div className='w-fit ml-auto space-x-4'>
+                                        {count > 0 &&
+                                            <button onClick={previousContent} className='w-fit mb-8 bg-[#F08354]/20 text-[#F08354]  border rounded py-2 px-10 text-center '>
+                                                {"Previous"}
+                                            </button>
+                                        }
+                                        <button onClick={nextContent} className='w-fit mb-8 px-10 bg-[#F08354] text-white rounded py-2  text-center '>
+                                            {count === contents.length ? "Complete this lesson" : "Next"}
+                                        </button>
+                                    </div>
+                                </main>
+                            </div>
+
+
+
+                            <div className='col-span-1 border p-4'>
+                                {/* ADS */}
 
                             </div>
 
-                            <main className='w-[90%] mx-auto mt-6 lg:col-span-3 order-2 transition-opacity'>
-
-                                <div dangerouslySetInnerHTML={{ __html: generateBody(Array.from(contents)) }} className=''></div>
-
-                                {quizzes &&
-
-                                    <div className='my-8'>
-                                        {generateQuiz(Array.from(contents)) &&
-                                            <div>
-                                                <h2 className='lg:text-3xl font-semibold text-2xl mb-6'>Knowledge Check</h2>
-                                                <div>{generateQuiz(Array.from(contents))}</div>
-
-                                                {isQuizSubmitted ?
-                                                    <button onClick={() => {
-                                                        setActiveOptions([])
-                                                        setIsQuizSubmitted(false)
-                                                    }} className='w-fit mb-8 bg-white border rounded py-2 px-6 text-center '>
-                                                        Retry Quiz
-                                                    </button>
-                                                    :
-                                                    <button onClick={handleQuiz} className='w-fit mb-8 bg-white border rounded py-2 px-6 text-center '>
-                                                        Submit Answers
-                                                    </button>}
-                                            </div>
-                                        }
-
-
-
-
-
-
-
-                                    </div>
-
-                                }
-
-
-
-                                <div className='w-fit ml-auto space-x-4'>
-                                    {count > 0 &&
-                                        <button onClick={previousContent} className='w-fit mb-8 bg-[#F08354]/20 text-[#F08354]  border rounded py-2 px-10 text-center '>
-                                            {"Previous"}
-                                        </button>
-                                    }
-                                    <button onClick={nextContent} className='w-fit mb-8 px-10 bg-[#F08354] text-white rounded py-2  text-center '>
-                                        {count === contents.length ? "Complete this lesson" : "Next"}
-                                    </button>
-                                </div>
-                            </main>
 
                             {courseIsComplete &&
                                 <ReactPortal>

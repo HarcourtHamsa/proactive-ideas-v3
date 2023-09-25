@@ -12,7 +12,7 @@ import { RootState } from '@/store'
 import Spinner from '@/components/Spinner'
 import notify from '@/components/Notification'
 import { ToastContainer } from 'react-toastify'
-import { TbEdit, TbTrash } from 'react-icons/tb'
+import { TbEdit, TbPencil, TbTrash } from 'react-icons/tb'
 import BackChevronButton from '@/components/BackChevronButton'
 import { NextApiRequest, NextApiResponse } from 'next'
 import axios from 'axios'
@@ -49,8 +49,6 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
     const [currentItem, setCurrentItem] = useState('');
     const cookie = useCookie()
     const [questions, setQuestions] = useState<any[]>(assessmentState.questions || assessments[0]?.questions)
-
-    console.log({ questions });
 
 
     const [feedback, setFeedback] = useState({
@@ -285,14 +283,17 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
                                         {quiz.question}
 
 
-                                        <span
-                                            className=' cursor-pointer'
-                                            onClick={() => deleteQuestion(quiz)}>
+                                        <div className='flex items-center gap-4'>
 
+                                            <span
+                                                className=' cursor-pointer'
+                                                onClick={() => deleteQuestion(quiz)}>
+                                                <TbTrash size={25} className='cursor-pointer' />
 
+                                            </span>
                                             <div className='flex gap-2 items-center'>
-                                                <TbEdit
-                                                    size={20}
+                                                <TbPencil
+                                                    size={25}
                                                     className='cursor-pointer'
                                                     onClick={() => {
                                                         setModalIsOpen(true)
@@ -304,9 +305,8 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
                                                         setCurrentItem(quiz?.id)
                                                     }}
                                                 />
-                                                <TbTrash size={20} className='cursor-pointer' />
                                             </div>
-                                        </span>
+                                        </div>
                                     </div>
                                 )
                             })}
@@ -338,99 +338,101 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
 
                 </div>
 
-                {modalIsOpen && <ReactPortal>
-                    <div className="h-screen w-screen bg-black opacity-60 fixed z-50 top-0 flex justify-center items-center transition duration-75"></div>
-                    <div className="h-fit w-screen bg-transparent fixed top-[3%] lg:top-[20%] z-[100] flex md:-translate-x-0 items-center justify-center transition duration-75 overflow-hidden">
-                        <div className="w-[90%] min-h-[400px] sm:h-[400px] sm:w-[40%]  z-[200] bg-[#fff] rounded shadow-md p-4 transition duration-75 overflow-x-hidden">
+                {
+                    modalIsOpen && <ReactPortal>
+                        <div className="h-screen w-screen bg-black opacity-60 fixed z-50 top-0 flex justify-center items-center transition duration-75"></div>
+                        <div className="h-fit w-screen bg-transparent fixed top-[3%] lg:top-[20%] z-[100] flex md:-translate-x-0 items-center justify-center transition duration-75 overflow-hidden">
+                            <div className="w-[90%] min-h-[400px] sm:h-[400px] sm:w-[40%]  z-[200] bg-[#fff] rounded shadow-md p-4 transition duration-75 overflow-x-hidden">
 
-                            <div className="flex items-center mb-4">
-                                <IoClose size={25} className="cursor-pointer text-gray-600" onClick={handleClose} />
-                                <p>Create Question</p>
-                            </div>
-
-                            <div>
-
-                                <label htmlFor="message" className="block font-medium text-gray-900">Enter Question</label>
-                                <textarea id="message" rows={4} className="block p-2.5 w-full text-gray-900 bg-gray-50 rounded border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Write your question here..." value={question} onChange={handleQuestionChange}></textarea>
-
-
-
-                                <div className="my-8">
-                                    <label htmlFor="countries" className="block font-medium text-gray-900">Select a Question Type</label>
-                                    <select id="countries" className="bg-gray-50 border border-gray-300 text-gray-900 rounded focus:ring-blue-500 focus:border-blue-500 block w-full py-3 px-4" onChange={handleQuestionTypeChange}>
-                                        <option selected>Choose a type</option>
-                                        <option value={QuizTypes.trueOrFalse}>True or False</option>
-                                        <option value={QuizTypes.multipleOptions}>Multiple Choice</option>
-                                    </select>
+                                <div className="flex items-center mb-4">
+                                    <IoClose size={25} className="cursor-pointer text-gray-600" onClick={handleClose} />
+                                    <p>Create Question</p>
                                 </div>
 
-                                <div className="mb-8">
-                                    <p>Options</p>
-                                    {questionType !== "" && generateDynamicInputs(questionType)}
-                                </div>
+                                <div>
+
+                                    <label htmlFor="message" className="block font-medium text-gray-900">Enter Question</label>
+                                    <textarea id="message" rows={4} className="block p-2.5 w-full text-gray-900 bg-gray-50 rounded border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Write your question here..." value={question} onChange={handleQuestionChange}></textarea>
 
 
-                                <div className=' space-y-4 mb-4'>
-                                    <div>
-                                        <p>Feedback (correct)</p>
-                                        <textarea
-                                            id="message"
-                                            rows={4}
-                                            className="block p-2.5 w-full text-gray-900 bg-gray-50 rounded border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                                            placeholder="Write your feedback here..."
-                                            name="correct_feedback"
-                                            value={feedback?.correct}
-                                            onChange={((e: any) => {
-                                                if (e.target.name === "correct_feedback") {
-                                                    setFeedback(prevState => ({
-                                                        ...prevState,
-                                                        correct: e.target.value
-                                                    }))
-                                                }
-                                            })}
-                                        >
 
-                                        </textarea>
+                                    <div className="my-8">
+                                        <label htmlFor="countries" className="block font-medium text-gray-900">Select a Question Type</label>
+                                        <select id="countries" className="bg-gray-50 border border-gray-300 text-gray-900 rounded focus:ring-blue-500 focus:border-blue-500 block w-full py-3 px-4" onChange={handleQuestionTypeChange}>
+                                            <option selected>Choose a type</option>
+                                            <option value={QuizTypes.trueOrFalse}>True or False</option>
+                                            <option value={QuizTypes.multipleOptions}>Multiple Choice</option>
+                                        </select>
                                     </div>
 
-                                    <div>
-                                        <p>Feedback (incorrect)</p>
-                                        <textarea
-                                            id="message"
-                                            rows={4}
-                                            className="block p-2.5 w-full text-gray-900 bg-gray-50 rounded border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                                            placeholder="Write your feedback here..."
-                                            name="incorrect_feedback"
-                                            value={feedback?.incorrect}
-                                            onChange={((e: any) => {
-                                                if (e.target.name === "incorrect_feedback") {
-                                                    setFeedback(prevState => ({
-                                                        ...prevState,
-                                                        incorrect: e.target.value
-                                                    }))
-                                                }
-                                            })}
-                                        >
-
-                                        </textarea>
-
+                                    <div className="mb-8">
+                                        <p>Options</p>
+                                        {questionType !== "" && generateDynamicInputs(questionType)}
                                     </div>
-                                </div>
 
-                                <div className="mt-6 flex gap-2">
-                                    <button className=" text-[#F08354] py-2 flex bg-orange-400/30 justify-center items-center w-full text-center rounded" onClick={handleClose}>Close</button>
-                                    <button
-                                        className="py-2 bg-[#F08354] text-white  flex justify-center items-center w-full text-center rounded" onClick={handleCreateQuiz}>
-                                        {isLoading && <Spinner />}
-                                        Create Question
-                                    </button>
+
+                                    <div className=' space-y-4 mb-4'>
+                                        <div>
+                                            <p>Feedback (correct)</p>
+                                            <textarea
+                                                id="message"
+                                                rows={4}
+                                                className="block p-2.5 w-full text-gray-900 bg-gray-50 rounded border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                                                placeholder="Write your feedback here..."
+                                                name="correct_feedback"
+                                                value={feedback?.correct}
+                                                onChange={((e: any) => {
+                                                    if (e.target.name === "correct_feedback") {
+                                                        setFeedback(prevState => ({
+                                                            ...prevState,
+                                                            correct: e.target.value
+                                                        }))
+                                                    }
+                                                })}
+                                            >
+
+                                            </textarea>
+                                        </div>
+
+                                        <div>
+                                            <p>Feedback (incorrect)</p>
+                                            <textarea
+                                                id="message"
+                                                rows={4}
+                                                className="block p-2.5 w-full text-gray-900 bg-gray-50 rounded border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                                                placeholder="Write your feedback here..."
+                                                name="incorrect_feedback"
+                                                value={feedback?.incorrect}
+                                                onChange={((e: any) => {
+                                                    if (e.target.name === "incorrect_feedback") {
+                                                        setFeedback(prevState => ({
+                                                            ...prevState,
+                                                            incorrect: e.target.value
+                                                        }))
+                                                    }
+                                                })}
+                                            >
+
+                                            </textarea>
+
+                                        </div>
+                                    </div>
+
+                                    <div className="mt-6 flex gap-2">
+                                        <button className=" text-[#F08354] py-2 flex bg-orange-400/30 justify-center items-center w-full text-center rounded" onClick={handleClose}>Close</button>
+                                        <button
+                                            className="py-2 bg-[#F08354] text-white  flex justify-center items-center w-full text-center rounded" onClick={handleCreateQuiz}>
+                                            {isLoading && <Spinner />}
+                                            Create Question
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </ReactPortal>}
-            </div>
-        </Layout>
+                    </ReactPortal>
+                }
+            </div >
+        </Layout >
     )
 }
 
