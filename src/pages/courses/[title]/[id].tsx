@@ -327,7 +327,7 @@ function SingleCourse({ course, lessons, subscriber }: any) {
                                         <div>
                                             {contents.map((content) => {
                                                 return (
-                                                    <div className='py-2 divide-y-2'>{content.title}</div>
+                                                    <div key={Math.random()} className='py-2 divide-y-2'>{content.title}</div>
                                                 )
                                             })}
                                         </div>
