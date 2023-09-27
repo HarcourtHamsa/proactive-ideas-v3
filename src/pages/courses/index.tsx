@@ -55,11 +55,9 @@ function Index({ content }: any) {
 
     const { data: courses, isLoading: isFetchingCourses }: any = useFetchCoursesQuery("");
     const { data: categories, isLoading: isFetchingCategories }: any = useFetchCategoriesQuery({group: 'course'});
-
+    const [selectedCategory, setSelectedCategory] = useState<null | string>(null)
     const [filteredData, setFilteredData] = useState<any[]>(courses?.data);
     const [searchText, setSearchText] = useState("");
-
-    console.log({ categories });
 
 
     const handleSearch = (e: any) => {
@@ -74,10 +72,7 @@ function Index({ content }: any) {
         setFilteredData(newList);
     }
 
-    // const imageProps: any = useNextSanityImage(client, content[0]?.bannerImage);
-    // console.log(imageProps);
-
-
+    
     return (
         <div className="h-fit bg-[#FAF7ED]">
             {filterIsOpen && (
@@ -96,18 +91,27 @@ function Index({ content }: any) {
                         </div>
                         <hr className="my-4" />
 
-                        <ul className="">
-                            {new Array(5).fill(0).map(() => (
-                                <li key={Math.random()} className="px-2 py-2 rounded duration-200 cursor-pointer text-black space-x-2">
-                                    <input id="default-radio-1" type="radio" value="" name="default-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2 " />
+                        <ul className="ul__unset">
+                            {categories?.data?.map((category) => (
+                                <li 
+                                key={Math.random()} 
+                                className="px-2 py-2 rounded duration-200 cursor-pointer text-black space-x-2">
+                                    <input 
+                                    id={category.name} 
+                                    type="radio" 
+                                    value={category.name}
+                                    name="default-radio" 
+                                    onChange={() => setSelectedCategory(category.name)}
+                                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2 " />
                                     <span>
-                                        Web Development
+                                        {category.name}
                                     </span>
                                 </li>
                             ))}
                         </ul>
 
-                        <button className="px-6 bg-blue-600 py-2 rounded text-white shadow-md mt-6 ml-auto">Apply filter</button>
+                        <button className="px-6 bg-[#11393C]/20 py-2 rounded text-[#11393C] border mr-2 mt-6 ml-auto" onClick={() => setSelectedCategory(null)}>Reset filter</button>
+                        <button className="px-6 bg-[#11393C] py-2 rounded text-white mt-6 ml-auto" onClick={() => setFilterIsOpen(false)}>Apply filter</button>
                     </Modal>
                 </ReactPortal>
             )}
@@ -121,6 +125,7 @@ function Index({ content }: any) {
                 <div className="absolute inset-0 bg-gray-900 bg-opacity-50"></div>
                 <div className="flex h-full text-left items-center justify-center relative">
                     <div className="w-[90%] mx-auto text-center">
+                       
                         <h1 className="mb-0 text-3xl text-white  mt-10 font-medium leading-snug lg:font-extrabold lg:text-5xl lg:leading-none  lg:mb-4">{content[0].header}</h1>
                         {/* <h1 className="mb-4 text-2xl font-bold text-white leading-snug lg:font-extrabold lg:text-6xl lg:leading-none lg:mb-0">{content[0]?.header}</h1> */}
                         <p className="text-white">{content[0]?.subHeader}</p>
@@ -146,7 +151,7 @@ function Index({ content }: any) {
                             <p className="text-white mt-4 bg-[#11393C] px-4 py-3 rounded">
                                 All Courses
                             </p>
-                            <ul className="">
+                            <ul className="ul__unset">
                                 {categories?.data.map((category: any) => {
 
                                     if (category.group === 'course') {
@@ -164,8 +169,8 @@ function Index({ content }: any) {
                         {courses ?
 
                             <div className="col-span-3 md:col-span-3 md:ml-8">
-                                <div className="grid grid-cols-1 xl:grid-cols-2 gap-10 mb-10">
-                                    {courses?.data.filter((post: any) => post.status !== 'inactive').map((course: any) => (
+                                <div className="grid grid-cols-1 xl:grid-cols-3 gap-2 mb-10">
+                                    {courses?.data.filter((post: any) => post.status !== 'inactive' && selectedCategory ? post.category === selectedCategory : true).map((course: any) => (
                                         <Card key={Math.random()} data={course} />
                                     ))}
                                 </div>

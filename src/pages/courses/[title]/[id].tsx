@@ -242,28 +242,28 @@ function SingleCourse({ course, lessons, subscriber }: any) {
                     /> :
                     <div className='bg-[#FAF7ED] flex'>
 
-                        <div className='w-[80%] lg:w-[20%] border-r bg-[#11393C] h-screen fixed left-0 top-0 bottom-0 hidden  xl:block' style={{ display: showSidebar ? 'block' : '' }}>
-                            <aside className='h-screen lg:w-[100%] w-[90%] -z-1 bg-[#11393C] mx-auto lg:col-span-1 mb-10 lg:mb-0 '>
-                                <div className='px-4 py-3 h-[15%] mb-4  items-center bg-[#11393C] gap-2'>
-                                    <p className="text-white leading-snug capitalize line-clamp-2 mb-4">{course?.title}</p>
+                        <div className='w-[80%] lg:w-[20%] border-r bg-[#11393C]  h-screen fixed left-0 top-0 bottom-0 hidden  xl:block' style={{ display: showSidebar ? 'block' : '' }}>
+                            <aside className='h-screen lg:w-[100%] w-[90%] -z-1 bg-[#FAF7ED] mx-auto lg:col-span-1 mb-10 lg:mb-0 '>
+                                <div className='px-4 py-3 h-[15%] mb-14  items-center bg-[#FAF7ED] gap-2'>
+                                    <p className=" leading-snug capitalize line-clamp-2 mb-4">{course?.title}</p>
 
-                                    <p className='text-white'>Progress: {progress}%</p>
-                                    <div className="w-full bg-gray-200 rounded-full h-1.5 mb-4">
-                                        <div className="bg-orange-400 h-1.5 rounded-full" style={{ width: `${progress}%` }}></div>
+                                    <p className=''>Progress: {progress}%</p>
+                                    <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
+                                        <div className="bg-orange-400 h-2 rounded-full" style={{ width: `${progress}%` }}></div>
                                     </div>
                                 </div>
 
-                                <div className={`${assessment?.data[0] ? 'h-[46%]' : 'h-[60%]'} overflow-auto`}>
+                                <div className={`h-full overflow-auto`}>
                                     <ul key={Math.random()} className='px-0 list-decimal ul__unset'>
                                         {course?.sections?.map((section: any, index: number) => {
                                             return (
                                                 <span key={Math.random()}>
                                                     <li className='py-2 mt-0 bg-gray-200 px-4 list-none flex justify-between uppercase tracking-wider text-sm line-clamp-0'>
-                                                        {section.title}
+                                                        {(index + 1).toString().padStart(2, "0")}. {section.title}
 
 
                                                     </li>
-                                                    <ul className=' list-disc divide-y-[1px] divide-gray-700 ul__unset'>
+                                                    <ul className=' list-disc divide-y-[1px] divide-gray-200 ul__unset'>
                                                         {section?.sub_sections?.map((ss: any, index: number) => {
                                                             const targetTitle = ss.title;
                                                             const foundindex = lessons.findIndex((lesson: any) => lesson.title === targetTitle);
@@ -271,7 +271,7 @@ function SingleCourse({ course, lessons, subscriber }: any) {
                                                                 <li
                                                                     key={Math.random()}
                                                                     // onClick={() => selectContent(ss)} 
-                                                                    className={`list-none  px-2 py-2  text-sm cursor-pointer flex text-gray-200 ${foundindex === count ? 'text-orange-400' : ''}`}>
+                                                                    className={`list-none  px-2 py-2  text-sm cursor-pointer flex ${foundindex === count ? 'text-orange-400 bg-[#11393C]' : ''}`}>
 
                                                                     {/* <IoDocumentText size={15} scale={10} /> */}
 
@@ -289,27 +289,7 @@ function SingleCourse({ course, lessons, subscriber }: any) {
                                         })}
                                     </ul>
                                 </div>
-                                {assessment?.data[0] &&
-                                    <div className='px-4 p-4 h-[38%] bg-[#11393C]'>
 
-                                        <div className='w-[100%] h-[100%] vibration bg-gray-200  items-center justify-center text-center flex rounded-lg shadow-xl'>
-                                            <div className='px-4 space-y-4'>
-                                                <p>Interactive assessment</p>
-
-                                                <p className='text-[#8C95A4] text-sm'>
-
-                                                    This course includes an interactive assessment to reinforce your understanding.
-                                                </p>
-
-
-                                                <button className='w-[80%] mx-auto border text-white bg-orange-400 rounded-full py-2'>
-                                                    Start Assessment
-                                                </button>
-                                            </div>
-
-
-                                        </div>
-                                    </div>}
                             </aside>
                         </div>
 
@@ -508,7 +488,7 @@ export const getServerSideProps = async ({ req, res }: { req: NextApiRequest, re
     }
 
 
-   
+
 
 
 

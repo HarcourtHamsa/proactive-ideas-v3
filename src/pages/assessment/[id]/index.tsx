@@ -20,8 +20,7 @@ function Index({ assessment, id }: any) {
     const [certificateData, setCertificateData] = useState([]);
     const router = useRouter()
 
-    console.log({ lenght: assessment?.questions.length });
-    console.log({ title: assessment?.title });
+
 
 
     const next = () => {
@@ -149,9 +148,7 @@ function Index({ assessment, id }: any) {
                     return (
                         <div key={Math.random()} className='h-screen w-screen bg-[#FAF7ED] relative flex justify-center items-center' style={{ display: `${offset === index + 1 ? 'flex' : 'none'}` }}>
 
-                            <div className='w-[200px] h-[200px] bg-pink-600/20 rounded-full absolute left-0 opaque-box opaque-box-1'></div>
-                            <div className='w-[300px] h-[300px] bg-green-600/20 rounded-full absolute right-20 top-0 opaque-box opaque-box-2'></div>
-                            <div className='w-[200px] h-[200px] bg-red-600/20 rounded-full absolute bottom-0 opaque-box opaque-box-3'></div>
+
                             <div className='container lg:w-[50%]  w-[90%] bg-white z-20 border px-8 mx-auto  rounded-lg box-border py-8'>
                                 <h1>
                                     <span>Question {index + 1}: </span>
@@ -249,6 +246,8 @@ function Index({ assessment, id }: any) {
                                     setIsCorrect(false)
                                     setTotalCorrectAnswers(0)
                                     setOffset(0)
+                                    setActiveBtn(null)
+                                    
                                 }
 
                                 }>

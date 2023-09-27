@@ -255,7 +255,7 @@ function Preview({ subscriber }: any) {
                                                             <p className="text-center text-sm whitespace-nowrap tracking-wider text-gray-800">PAYMENT METHODS</p>
                                                             <hr className=" w-[100%]" />
                                                         </div>
-                                                        <PaymentButton
+                                                        {/* <PaymentButton
                                                             amount={
                                                                 getPriceBasedOnLocation({
                                                                     country: geo.country,
@@ -267,7 +267,7 @@ function Preview({ subscriber }: any) {
                                                                 country: geo.country,
                                                                 prices: course?.data?.prices
                                                             })[1]}
-                                                        />
+                                                        /> */}
                                                         <CustomPaystackButton
                                                             amount={
                                                                 getPriceBasedOnLocation({

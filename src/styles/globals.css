@@ -1,12 +1,12 @@
 @font-face {
   font-family: 'Larsseit';
-  src: url('../assets/fonts/Mabry\ Pro\ Regular.otf');
+  src: url('../assets/fonts/SF-Pro-Display-Medium.woff');
   font-display: swap;
 }
 
 @font-face {
   font-family: 'SlackCircular';
-  src: url('../assets/fonts/Mabry\ Pro\ Medium.otf');
+  src: url('../assets/fonts/SF-Pro-Display-Medium.woff');
   font-display: swap;
 }
 
@@ -41,7 +41,7 @@
   margin: 0;
   font-family: 'SlackCircular' !important;
   font-weight: 500;
-  /* font-size: 16px !important; */
+  font-size: 17px;
   line-height: 1.6;
   scroll-behavior: smooth;
 }
