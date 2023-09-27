@@ -350,6 +350,9 @@ export async function updateIdeaPostDraft({
   id: string | null;
 }) {
 
+  console.log({ body });
+
+
   const options = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -569,7 +572,7 @@ export const handleDeleteCookie = async () => {
 
 export function extractListItems(htmlString: string) {
   if (typeof window === 'undefined') return;
-  
+
   const parser = new DOMParser();
   const doc = parser.parseFromString(htmlString, 'text/html');
 

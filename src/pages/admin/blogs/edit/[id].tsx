@@ -72,8 +72,8 @@ function EditBlog() {
     return tagsArr
   }
 
-  console.log({summary: blogData});
-  
+  console.log({ summary: blogData });
+
 
   const [selectedTags, setSelectedTags] = useState<any[] | null>(generatePeviousTags());
   const [description, setDescription] = useState(blogData.summary || router.query.summary);
@@ -190,118 +190,45 @@ function EditBlog() {
       tags.push(t.value);
     });
 
+    console.log({ cloudinaryURL });
 
 
-    if (role === Role.superAdmin) {
-      if (urlContainsQueryParam) {
-        updateBlogPostDraft({
-          id: router.query.id as string,
-          body: {
-            author: author,
-            title: blogTitle,
-            description: description,
-            content: blogContent,
-            headerImage: cloudinaryURL,
-            tags: tags,
-          },
-          token: cookie?.user.accessToken,
-        }).then((res: any) => {
 
-          notify({ msg: "Blog draft updated", type: "success" });
+    updateBlogPostDraft({
+      id: router.query.id as string,
+      body: {
+        author: author,
+        title: title,
+        description: description,
+        content: blogContent,
+        header_image: cloudinaryURL,
+        tags: tags,
+      },
+      token: auth?.accessToken,
+    })
+      .then((res: any) => {
 
-          setSelectedTags(null)
-          setIsOpen(false)
-          setBlogContent("")
-          setBlogTitle("")
-          setDescription("")
+        notify({ msg: "Draft updated", type: "success" });
 
-          setTimeout(() => {
-            router.push("/admin/drafts")
-          }, 1000);
-
-        })
-          .catch((err: any) => {
-
-            notify({ msg: "Oops! an error occured", type: "error" });
-          })
-          .finally(() => {
-            setIsLoading(false);
-          });
-
-        return;
-      }
+        setSelectedTags(null)
+        setIsOpen(false)
+        setBlogContent("")
+        setBlogTitle("")
+        setDescription("")
 
 
-      updateBlogPost({
-        id: router.query.id as string,
-        body: {
-          author: author,
-          title: title,
-          description: description,
-          content: blogContent,
-          headerImage: cloudinaryURL,
-          tags: tags,
-        },
-        token: auth?.accessToken,
+
+        router.push("/admin/blogs")
+
       })
-        .then((res: any) => {
+      .catch((err: any) => {
 
-          notify({ msg: "Blog post updated", type: "success" });
-
-          setSelectedTags(null)
-          setIsOpen(false)
-          setBlogContent("")
-          setBlogTitle("")
-          setDescription("")
-
-
-
-          router.push("/admin/blogs")
-
-        })
-        .catch((err: any) => {
-
-          notify({ msg: "Oops! an error occured", type: "error" });
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    } else if (role === Role.admin) {
-      updateBlogPostDraft({
-        id: router.query.id as string,
-        body: {
-          author: author,
-          title: title,
-          description: description,
-          content: blogContent,
-          headerImage: cloudinaryURL,
-          tags: tags,
-        },
-        token: auth?.accessToken,
+        notify({ msg: "Oops! an error occured", type: "error" });
       })
-        .then((res: any) => {
+      .finally(() => {
+        setIsLoading(false);
+      });
 
-          notify({ msg: "Draft updated", type: "success" });
-
-          setSelectedTags(null)
-          setIsOpen(false)
-          setBlogContent("")
-          setBlogTitle("")
-          setDescription("")
-
-
-
-          router.push("/admin/blogs")
-
-        })
-        .catch((err: any) => {
-
-          notify({ msg: "Oops! an error occured", type: "error" });
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    }
 
 
   };

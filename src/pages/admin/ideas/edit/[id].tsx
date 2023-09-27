@@ -187,22 +187,6 @@ function EditBlog() {
       tags.push(t.value);
     });
 
-
-
-    console.log({
-      body: {
-        author: author,
-        title: blogTitle,
-        description: description,
-        content: blogContent,
-        headerImage: cloudinaryURL,
-        tags: tags,
-      },
-    });
-
-
-
-
     updateIdeaPostDraft({
       id: router.query.id as string,
       body: {
@@ -211,7 +195,7 @@ function EditBlog() {
         description: description,
         summary: description,
         content: blogContent,
-        headerImage: cloudinaryURL,
+        header_image: cloudinaryURL,
         tags: tags,
       },
       token: cookie?.user.accessToken,

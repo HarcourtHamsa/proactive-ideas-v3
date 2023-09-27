@@ -24,7 +24,7 @@ function Title({ blogDetails }: any) {
     const router = useRouter();
     const currentRoute = router.asPath;
     const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
-
+    const [isIntersecting, setIsIntersecting] = useState(false)
     const [showTableOfContents, setShowTableOfContents] = useState(false);
     const sidebarRef = useRef<HTMLDivElement>(null);
     const mainRef = useRef<HTMLDivElement>(null);
@@ -34,8 +34,25 @@ function Title({ blogDetails }: any) {
     useEffect(() => {
         var newHtmlString = modifyHTMLString(blogDetails?.content)
         setModifiedString(newHtmlString)
-
     }, [blogDetails?.content])
+
+    useEffect(() => {
+        const targetSection = document.querySelectorAll('#more__articles')
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    setIsIntersecting(entry.isIntersecting)
+                } else {
+                    setIsIntersecting(false)
+                }
+            })
+        })
+
+        targetSection.forEach((section) => {
+            observer.observe(section);
+        });
+    }, [])
 
 
     const like = async () => {
@@ -106,17 +123,19 @@ function Title({ blogDetails }: any) {
                                         </div>
                                     }
 
+
+
+
                                     <button className='bg-[#F08354] shadow-xl mb-6 w-full py-3 rounded text-white text-base block'
                                         onClick={() => setShowTableOfContents(!showTableOfContents)}
+                                        style={{ display: isIntersecting ? 'none' : 'block' }}
                                     >Table of contents</button>
 
-                                    {showTableOfContents && <div className='lg:hidden'>
+                                    {showTableOfContents && isIntersecting && <div className='lg:hidden'>
                                         <TableOfContents htmlString={blogDetails?.content} />
                                     </div>}
 
                                 </div>
-
-                                {/* <div className='lg:h-52'></div> */}
                             </div>
 
                             <div className='mx-auto ql-blog'>
@@ -156,13 +175,13 @@ function Title({ blogDetails }: any) {
 
                 </div>
 
-                <div className='my-20'>
+                <div className='my-20' id='more__articles'>
 
                     <h2 className="mb-8 text-2xl font-extrabold leading-snug lg:font-extrabold lg:text-4xl lg:leading-none lg:mb-8">More amazing articles for you</h2>
 
 
                     <div className='grid lg:grid-cols-3 grid-cols-1 gap-3'>
-                        {blogs?.data?.filter((post: any) => post.status !== "deleted" || "inactive").slice(-4).map((blog: any) => (
+                        {blogs?.data?.filter((post: any) => post.status !== "deleted" || "inactive").slice(-3).map((blog: any) => (
                             <BlogCard key={Math.random()} data={blog} />
                         ))}
 

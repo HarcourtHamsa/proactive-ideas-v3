@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import Hero from '@/components/Hero'
 import Card from '@/components/Card'
@@ -24,6 +24,7 @@ import IdeaCard from '@/components/IdeaCard'
 import useLocalStorage from '@/hooks/useLocalStorage'
 import SkeletonLoader from '@/components/SkeletonLoader'
 import Loader from '@/components/Loader'
+import { TbChevronLeft, TbChevronRight } from 'react-icons/tb'
 
 function Index({ heroContent, certContent, newsletterContent }: any) {
   const router = useRouter();
@@ -35,6 +36,7 @@ function Index({ heroContent, certContent, newsletterContent }: any) {
   const { data: blogPosts, isLoading: isFetchingBlogPosts }: any = useFetchBlogPostsQuery("");
   const { data: ideasPosts, isLoading: isFetchingIdeasPosts }: any = useFetchIdeasPostsQuery("");
   const { data: courses, isLoading: isFetchingCourses }: any = useFetchCoursesQuery("");
+  const [offset, setOffset] = useState(0)
 
 
   if (geo) {
@@ -50,12 +52,32 @@ function Index({ heroContent, certContent, newsletterContent }: any) {
       <div className='min-h-[400px] h-fit bg-[#FAF7ED]  flex place-items-center'>
         <div className='container w-[100%] mx-auto'>
           <div className='h-fit pt-5 flex justify-center relative items-center'>
+
+            <div className='absolute w-full justify-between hidden md:flex z-20 text-black'>
+              <div className='w-[50px] cursor-pointer h-[50px] bg-black/20 flex justify-center items-center rounded-full'
+                onClick={() => {
+                  if (offset === 0) return
+                  setOffset(offset + 1)
+                }}
+              >
+                <TbChevronLeft size={25} />
+              </div>
+
+              <div className='w-[50px] cursor-pointer h-[50px] bg-black/20 flex justify-center items-center rounded-full'
+                 onClick={() => {
+                  if (offset === -6) return
+                  setOffset(offset - 1)
+                }}
+              >
+                <TbChevronRight size={25} />
+              </div>
+            </div>
             <div className="container w-[90%] mx-auto pb-10">
               <div className='flex justify-between gap-4 lg:items-center my-10 flex-col lg:flex-row'>
                 <div>
                   <p className='text-[#11393C] uppercase before:w-10 before:h-[2px] before:bg-[#11393C] before:inline-flex before:-translate-y-1 before:mr-4'>courses</p>
                   <h2 className="mb-4 text-3xl font-semibold leading-snug lg:font-extrabold lg:text-4xl lg:leading-none text-[#11393C] lg:mb-7 md:w-[600px]">
-                    Explore inspiring online courses
+                    Explore inspiring online courses 
                   </h2>
                 </div>
 
@@ -72,7 +94,9 @@ function Index({ heroContent, certContent, newsletterContent }: any) {
 
                 {courses ?
 
-                  <div className="flex flex-nowrap lg:grid lg:grid-cols-4  gap-2 flex-shrink-0 flex-grow overflow-auto duration-200 ease-in-out scrollbar-hide">
+                  // CODE GOES HERE
+                  <div className={`flex flex-nowrap lg:grid lg:grid-cols-4 gap-2 flex-shrink-0 flex-grow overflow-auto duration-200 ease-in-out scrollbar-hide`} style={{ transform: `translateX(${offset * 10}%)` }}>
+
                     {courses?.data?.filter((post: any) => post.status !== 'inactive').slice(-4).reverse().map((course: any) => {
                       return (
                         <div className='w-[300px] block' key={Math.random()}>

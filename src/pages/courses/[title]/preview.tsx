@@ -70,9 +70,9 @@ function Preview({ subscriber }: any) {
                             <div className="h-full overflow-hidden">
                                 <div className="flex lg:h-[350px] h-[200px] flex-col bg-white rounded-t-md overflow-hidden">
 
-                                    <a className="block focus:outline-none focus-visible:ring-2 relative">
-                                        <figure className="relative h-0 pb-[56.25%] overflow-hidden">
-                                            <Image className="absolute inset-0 w-full h-full object-cover transform hover:scale-105 transition duration-700 ease-out" src={course?.data?.header_image} width="700" height="1000" alt="Course" priority={true} />
+                                    <a className="block focus:outline-none h-full focus-visible:ring-2 relative">
+                                        <figure className="relative h-full overflow-hidden">
+                                            <Image className=" w-full h-full object-center" src={course?.data?.header_image} width="0" height="0" alt="Course" priority={true} />
                                         </figure>
 
                                         {course?.data?.certificate && <div className="bg-orange-500/50 rounded-l absolute top-4 right-0 px-4 py-1">

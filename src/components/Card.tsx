@@ -28,9 +28,9 @@ function Card({ data }: any) {
     <div className=" w-[100%] h-[450px] cursor-pointer">
       <div className="flex flex-col h-full bg-white border rounded overflow-hidden">
 
-        <a className="block focus:outline-none focus-visible:ring-2 relative h-[50%]">
+        <a className="block focus:outline-none focus-visible:ring-2 relative h-[40%]">
           <figure className="relative h-full overflow-hidden">
-            <Image className="absolute inset-0 w-full h-full object-cover transform hover:scale-105 transition duration-700 ease-out" src={data?.header_image} width="320" height="180" alt="Course" />
+            <Image className="absolute inset-0 m-auto h-full w-full transform object-cover hover:scale-105 transition duration-700 ease-out" src={data?.header_image} width="100" height="100" alt="Course" />
           </figure>
 
           {data?.certificate.isProvided && <div className="bg-orange-500/40 text-white rounded-l absolute top-4 right-0 px-4 py-1">

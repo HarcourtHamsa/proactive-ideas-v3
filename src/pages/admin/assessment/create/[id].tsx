@@ -48,7 +48,9 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
     const [title, setTitle] = useState(initialTitle);
     const [currentItem, setCurrentItem] = useState('');
     const cookie = useCookie()
-    const [questions, setQuestions] = useState<any[]>(assessmentState.questions || assessments[0]?.questions)
+    const [questions, setQuestions] = useState<any[]>(assessmentState.questions || assessments[0]?.questions || [])
+
+    console.log({ assessments });
 
 
     const [feedback, setFeedback] = useState({
@@ -135,11 +137,7 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
             // sub_section: currentItem
         }
 
-
         setQuestions((prevState) => ([...prevState, quiz]))
-
-
-
 
         setQuestionType('');
         setQuestion('');
@@ -147,6 +145,26 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
         setOptions([]);
         setRefenceID('');
         setInputController('');
+        setModalIsOpen(false)
+        setFeedback({ correct: '', incorrect: '' })
+    }
+
+
+    const handleEditQuiz = async () => {
+        const existingQuizIndex = questions.findIndex((quiz) => quiz.question === currentItem)
+
+        const updatedQuiz = {
+            question,
+            type: questionType,
+            feedback,
+            correct_option: correctAnswer
+        }
+
+
+        questions[existingQuizIndex] = updatedQuiz;
+
+        setQuestions(questions)
+
         setModalIsOpen(false)
     }
 
@@ -244,43 +262,14 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
                             <IoAddCircle size={30} className='cursor-pointer' onClick={() => setModalIsOpen(true)} />
                         </div>
 
-                        {/* <div className='space-y-2 mt-4'>
-                            {assessments?.map((assessment: any) => {
-
-                                return (
-                                    assessment.questions.map((quiz: any) => {
-                                        return (
-                                            <div key={Math.random()} className='py-3 flex justify-between px-4 border mb-4 rounded-md '>{quiz.question}
-
-                                                <div className='flex gap-2 items-center'>
-                                                    <TbEdit
-                                                        size={20}
-                                                        className='cursor-pointer'
-                                                        onClick={() => {
-                                                            setModalIsOpen(true)
-                                                            setQuestion(quiz?.question)
-                                                            setQuestionType(quiz?.type)
-                                                            setOptions(quiz?.options)
-                                                            setRefenceID(quiz?.sub_section)
-                                                            setFeedback(quiz?.feedback)
-                                                            setCurrentItem(quiz?.id)
-                                                        }}
-                                                    />
-                                                    <TbTrash size={20} className='cursor-pointer' />
-                                                </div>
-                                            </div>
-                                        )
-                                    })
-                                )
-
-                            })}
-                        </div> */}
-
                         <div className='space-y-2 mt-4'>
                             {questions?.map((quiz: any) => {
+                                console.log({ quiz });
+
                                 return (
                                     <div key={Math.random()} className='border flex justify-between py-3 px-4 rounded-md relative bg-white'>
                                         {quiz.question}
+
 
 
                                         <div className='flex items-center gap-4'>
@@ -302,7 +291,7 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
                                                         setOptions(quiz?.options)
                                                         setRefenceID(quiz?.sub_section)
                                                         setFeedback(quiz?.feedback)
-                                                        setCurrentItem(quiz?.id)
+                                                        setCurrentItem(quiz?.question)
                                                     }}
                                                 />
                                             </div>
@@ -418,13 +407,21 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
                                         </div>
                                     </div>
 
+                                    {/* CURRENT ITEM: {currentItem} */}
+
                                     <div className="mt-6 flex gap-2">
                                         <button className=" text-[#F08354] py-2 flex bg-orange-400/30 justify-center items-center w-full text-center rounded" onClick={handleClose}>Close</button>
-                                        <button
-                                            className="py-2 bg-[#F08354] text-white  flex justify-center items-center w-full text-center rounded" onClick={handleCreateQuiz}>
-                                            {isLoading && <Spinner />}
-                                            Create Question
-                                        </button>
+                                        {currentItem ?
+                                            <button
+                                                className="py-2 bg-[#F08354] text-white  flex justify-center items-center w-full text-center rounded" onClick={handleEditQuiz}>
+                                                {isLoading && <Spinner />}
+                                                Edit Question
+                                            </button> :
+                                            <button
+                                                className="py-2 bg-[#F08354] text-white  flex justify-center items-center w-full text-center rounded" onClick={handleCreateQuiz}>
+                                                {isLoading && <Spinner />}
+                                                Create Question
+                                            </button>}
                                     </div>
                                 </div>
                             </div>

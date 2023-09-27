@@ -50,6 +50,10 @@ function SingleCourse({ course, lessons, subscriber }: any) {
 
     const parsedSubscriber = JSON.parse(subscriber)
 
+    console.log({ subscriber });
+    console.log({ parsedSubscriber });
+
+
     const [progress, setProgress] = useState(Math.ceil(parsedSubscriber?.progress) || 0)
     const [count, setCount] = useState(Math.floor((progress / 100) * contents.length));
 
@@ -91,6 +95,9 @@ function SingleCourse({ course, lessons, subscriber }: any) {
             setCourseIsComplete(true)
             return;
         }
+
+        console.log({ parsedSubscriber });
+
 
         if (!parsedSubscriber) {
             if (count >= 1) {
@@ -308,7 +315,7 @@ function SingleCourse({ course, lessons, subscriber }: any) {
 
                         <div className='xl:w-[80%] grid xl:grid-cols-3 relative grid-cols-1 gap-8 w-[100%] min-h-screen h-fit xl:ml-[20%] transition-opacity'>
 
-                            <div className='xl:col-span-2 col-span-1 relative'>
+                            <div className='xl:col-span-2 col-span-1 relative w-full p-5 overflow-hidden'>
 
                                 <div className='toc-gradient lg:hidden max-h-[70%] shadow overflow-scroll  z-30 rounded fixed bottom-0 w-full left-0 right-0 p-4' style={{ backgroundColor: showTableOfContents ? 'white' : '' }}>
                                     <button className='w-full py-2 bg-[#F08354] mb-2 rounded text-white' onClick={() => setShowTableOfContents(!showTableOfContents)}>Course Curriculum</button>
@@ -398,7 +405,7 @@ function SingleCourse({ course, lessons, subscriber }: any) {
 
 
 
-                            <div className='col-span-1 border p-4'>
+                            <div className='col-span-1 border p-4 block'>
                                 {/* ADS */}
 
                             </div>
@@ -490,12 +497,19 @@ export const getServerSideProps = async ({ req, res }: { req: NextApiRequest, re
     const session: any = await getSession({ req })
     var userId;
 
+    // console.log({encryptedTkn});
+
+
     if (encryptedTkn) {
         const cookie = decryptData(encryptedTkn)
         userId = cookie.user?.id
+    } else {
+        userId = session?.user?.id
     }
 
-    userId = session?.user?.id
+
+   
+
 
 
     // const enrollmentResponse = await http.get(`get-enrollment?course=${courseId}&user=${userId}`)
