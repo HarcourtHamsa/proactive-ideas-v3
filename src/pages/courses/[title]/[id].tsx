@@ -490,13 +490,6 @@ export const getServerSideProps = async ({ req, res }: { req: NextApiRequest, re
         userId = session?.user?.id
     }
 
-
-    console.log({ userId });
-
-
-
-
-
     // const enrollmentResponse = await http.get(`get-enrollment?course=${courseId}&user=${userId}`)
     // const enrollment = enrollmentResponse
 
@@ -505,6 +498,10 @@ export const getServerSideProps = async ({ req, res }: { req: NextApiRequest, re
     // // Fetch data from external API
     const enrollmentApiResponse = await fetchCourseEnrollment(courseId, userId)
     const subscriber = enrollmentApiResponse?.data
+
+
+    // console.log({ subscriber });
+
 
 
     // Pass data to the page via props

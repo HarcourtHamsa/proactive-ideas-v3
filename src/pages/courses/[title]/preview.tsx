@@ -33,6 +33,9 @@ function Preview({ subscriber }: any) {
     var router = useRouter();
     const cookie = useCookie()
 
+    console.log({ subscriber });
+
+
 
 
     const geo = useSelector((state: RootState) => state.geo)
@@ -320,6 +323,9 @@ export const getServerSideProps = async ({ req, res }: { req: NextApiRequest, re
     const courseId = splitCount[splitCount.length - 2]
     var cookie;
     var userId;
+
+    // console.log({ courseId });
+
 
     const encryptedTkn = getCookie('tkn', { req, res }) as string
 
