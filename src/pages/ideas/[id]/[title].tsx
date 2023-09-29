@@ -32,12 +32,32 @@ function Title({ blogDetails }: any) {
     const mainRef = useRef<HTMLDivElement>(null);
     const [modifiedHtmlString, setModifiedString] = useState('')
     const [likes, setLikes] = useState<number>(blogDetails?.likes)
+    const [isIntersecting, setIsIntersecting] = useState(false)
+
 
     useEffect(() => {
         var newHtmlString = modifyHTMLString(blogDetails?.content)
         setModifiedString(newHtmlString)
 
     }, [blogDetails?.content])
+
+    useEffect(() => {
+        const targetSection = document.querySelectorAll('#more__articles')
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    setIsIntersecting(entry.isIntersecting)
+                } else {
+                    setIsIntersecting(false)
+                }
+            })
+        })
+
+        targetSection.forEach((section) => {
+            observer.observe(section);
+        });
+    }, [])
 
 
     const like = async () => {
@@ -111,6 +131,7 @@ function Title({ blogDetails }: any) {
 
                                     <button className='bg-[#F08354] shadow-xl mb-6 w-full py-3 rounded text-white text-base block'
                                         onClick={() => setShowTableOfContents(!showTableOfContents)}
+                                        style={{ display: isIntersecting ? 'none' : 'block' }}
                                     >Table of contents</button>
 
                                     {showTableOfContents && <div className='lg:hidden'>
@@ -160,9 +181,9 @@ function Title({ blogDetails }: any) {
 
                 </div>
 
-                <div className='my-20'>
+                <div className='my-20' id="more__articles">
 
-                    <h2 className="mb-8 text-2xl font-extrabold leading-snug lg:font-extrabold lg:text-4xl lg:leading-none lg:mb-8">More amazing articles for you</h2>
+                    <h3 className="mb-8 text-xl font-extrabold leading-snug lg:font-extrabold lg:text-4xl lg:leading-none lg:mb-8">More amazing articles for you</h3>
 
 
                     <div className='grid lg:grid-cols-3 grid-cols-1 gap-3'>

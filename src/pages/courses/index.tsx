@@ -15,6 +15,7 @@ import { useFetchCoursesQuery, useFetchCategoriesQuery } from "@/features/apiSli
 import Loader from "@/components/Loader";
 import client from "@/lib/sanity";
 import SkeletonLoader from "@/components/SkeletonLoader";
+import { IoClose } from "react-icons/io5";
 
 function Filter({
     label,
@@ -54,7 +55,7 @@ function Index({ content }: any) {
     const [filterIsOpen, setFilterIsOpen] = React.useState<boolean>(false);
 
     const { data: courses, isLoading: isFetchingCourses }: any = useFetchCoursesQuery("");
-    const { data: categories, isLoading: isFetchingCategories }: any = useFetchCategoriesQuery({group: 'course'});
+    const { data: categories, isLoading: isFetchingCategories }: any = useFetchCategoriesQuery({ group: 'course' });
     const [selectedCategory, setSelectedCategory] = useState<null | string>(null)
     const [filteredData, setFilteredData] = useState<any[]>(courses?.data);
     const [searchText, setSearchText] = useState("");
@@ -72,7 +73,7 @@ function Index({ content }: any) {
         setFilteredData(newList);
     }
 
-    
+
     return (
         <div className="h-fit bg-[#FAF7ED]">
             {filterIsOpen && (
@@ -93,16 +94,16 @@ function Index({ content }: any) {
 
                         <ul className="ul__unset">
                             {categories?.data?.map((category) => (
-                                <li 
-                                key={Math.random()} 
-                                className="px-2 py-2 rounded duration-200 cursor-pointer text-black space-x-2">
-                                    <input 
-                                    id={category.name} 
-                                    type="radio" 
-                                    value={category.name}
-                                    name="default-radio" 
-                                    onChange={() => setSelectedCategory(category.name)}
-                                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2 " />
+                                <li
+                                    key={Math.random()}
+                                    className="px-2 py-2 rounded duration-200 cursor-pointer text-black space-x-2">
+                                    <input
+                                        id={category.name}
+                                        type="radio"
+                                        value={category.name}
+                                        name="default-radio"
+                                        onChange={() => setSelectedCategory(category.name)}
+                                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2 " />
                                     <span>
                                         {category.name}
                                     </span>
@@ -116,24 +117,39 @@ function Index({ content }: any) {
                 </ReactPortal>
             )}
             <Navbar />
-            <div className="w-full md:h-[500px] md:pt-20 pt-10 h-[350px] md:mb-20 mb-10 overflow-hidden relative">
+            <div className="w-full md:h-[500px] md:pt-20 pt-10 h-[350px] md:mb-10 mb-10 overflow-hidden relative">
                 <Image
                     className="absolute inset-0 h-full w-full object-cover"
                     src={headerImage} alt=""
                     sizes="(max-width: 800px) 100vw, 800px"
                 />
+
                 <div className="absolute inset-0 bg-gray-900 bg-opacity-50"></div>
                 <div className="flex h-full text-left items-center justify-center relative">
                     <div className="w-[90%] mx-auto text-center">
-                       
-                        <h1 className="mb-0 text-3xl text-white  mt-10 font-medium leading-snug lg:font-extrabold lg:text-5xl lg:leading-none  lg:mb-4">{content[0].header}</h1>
+
+                        <h1 className="mb-0 text-3xl text-white  mt-10 font-medium leading-snug lg:font-extrabold lg:text-6xl lg:leading-none  lg:mb-4">{content[0].header}</h1>
                         {/* <h1 className="mb-4 text-2xl font-bold text-white leading-snug lg:font-extrabold lg:text-6xl lg:leading-none lg:mb-0">{content[0]?.header}</h1> */}
                         <p className="text-white">{content[0]?.subHeader}</p>
                     </div>
                 </div>
             </div>
 
-            <div className="h-fit min-h-[400px] w-full bg-[#FAF7ED] flex items-center mb-40">
+            {/* <div className="w-[300px] h-[80px] bg-red-400 absolute bottom-20 right-10"></div> */}
+
+            {selectedCategory &&
+                <div className="flex items-center gap-2  mx-auto w-[90%] container mb-4">
+                    <p>Filters: </p>
+                    <div className="border px-4 py-2 w-fit  flex items-center justify-between my-4 rounded-full bg-white ">
+                        {selectedCategory}
+
+                        <IoClose className="ml-2 cursor-pointer" onClick={() => setSelectedCategory(null)} />
+                    </div>
+                </div>
+            }
+
+
+            <div className="h-fit min-h-[400px] w-full bg-[#FAF7ED]  flex items-center mb-40">
                 <div className="container mx-auto w-[90%]">
                     <div className="ml-auto flex mb-8 w-fit gap-2  items-center md:hidden ">
                         <SearchBar value={searchText} onChange={handleSearch} />
@@ -145,7 +161,7 @@ function Index({ content }: any) {
                     </div>
 
                     {/* courses */}
-                    <div className="grid xl:grid-cols-4 grid-cols-1 gap-4 relative">
+                    <div className="grid xl:grid-cols-4 grid-cols-1 gap-2 relative">
                         <aside className="sticky top-0 mb overflow-auto h-fit hidden md:block">
                             <SearchBar value={searchText} onChange={handleSearch} />
                             <p className="text-white mt-4 bg-[#11393C] px-4 py-3 rounded">
@@ -156,7 +172,10 @@ function Index({ content }: any) {
 
                                     if (category.group === 'course') {
                                         return (
-                                            <li key={Math.random()} className="px-2 py-3 rounded duration-200 hover:bg-gray-800/10 cursor-pointer text-black">
+                                            <li
+                                                onClick={() => setSelectedCategory(category.name)}
+                                                key={Math.random()}
+                                                className="px-2 py-3 rounded duration-200 hover:bg-gray-800/10 cursor-pointer text-black">
                                                 {category.name}
                                             </li>
                                         )
