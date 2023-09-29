@@ -247,6 +247,7 @@ function SingleCourse({ course, lessons, subscriber }: any) {
                                 <div className='px-4 py-3 h-[15%] mb-14  items-center bg-[#FAF7ED] gap-2'>
                                     <p className=" leading-snug capitalize line-clamp-2 mb-4">{course?.title}</p>
 
+                                    {cookie.user.id}
                                     <p className=''>Progress: {progress}%</p>
                                     <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
                                         <div className="bg-orange-400 h-2 rounded-full" style={{ width: `${progress}%` }}></div>
@@ -480,6 +481,8 @@ export const getServerSideProps = async ({ req, res }: { req: NextApiRequest, re
     // console.log({encryptedTkn});
 
 
+
+
     if (encryptedTkn) {
         const cookie = decryptData(encryptedTkn)
         userId = cookie.user?.id
@@ -487,6 +490,8 @@ export const getServerSideProps = async ({ req, res }: { req: NextApiRequest, re
         userId = session?.user?.id
     }
 
+
+    console.log({ userId });
 
 
 
