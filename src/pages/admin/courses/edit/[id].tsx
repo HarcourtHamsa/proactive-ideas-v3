@@ -33,6 +33,11 @@ import axios from 'axios';
 const parser = new edjsParser();
 const ReactQuillEditor = dynamic(() => import("../../../../components/admin/Editor"), { ssr: false });
 
+interface SubSection {
+    title: string;
+    content: string;
+    _id?: string; // Make it optional with '?'
+}
 
 function EditSingleCourse({ course }: any) {
     const router = useRouter();
@@ -64,10 +69,10 @@ function EditSingleCourse({ course }: any) {
     const inputRef = useRef<any>();
     const [inputTagFile, setInputTagFile] = useState();
     const dispatch = useDispatch()
-    const [activeSubSection, setActiveSubSection] = useState({
+    const [activeSubSection, setActiveSubSection] = useState<SubSection>({
         title: '',
         content: '',
-        id: ''
+        _id: '',
     })
     const [fileSelectedForHeaderImage, setFileSelectedForHeaderImage] = useState<any>([]);
     const [isUploadingImage, setIsUploadingImage] = useState(false)
@@ -228,7 +233,7 @@ function EditSingleCourse({ course }: any) {
     })
 
     const [subSectionData, setSubSectionData] = useState({
-        id: uuidv4(),
+        _id: uuidv4(),
         title: "",
         content: "",
     });
@@ -319,7 +324,7 @@ function EditSingleCourse({ course }: any) {
     }
 
     function arrayToHTMLList(array: any[]) {
-        const listItems = array.map((item: string) => `<li>${item}</li>`).join('');
+        const listItems = array.map((item: string) => `<li key={${Math.random()}}>${item}</li>`).join('');
         return `<ul>${listItems}</ul>`;
     }
 
@@ -467,48 +472,93 @@ function EditSingleCourse({ course }: any) {
         var transformedObj;
 
 
-
         courseInfoData.map((obj: any) => {
-            obj.sub_sections.find((ss: any) => {
-
-                // console.log({ ss: ss._id,  subSectionData: subSectionData.id});
-                console.log({ ss: ss.id, subSectionData: subSectionData.id });
 
 
-                if (ss._id === subSectionData.id || ss.id === subSectionData.id) {
+            // if (obj._id === currentSection._id || obj.id === currentSection.id) {
+            if (obj._id === currentSection._id) {
+                // console.log("yesh");
+                // console.log({ obj });
+                // console.log({ currentSection });
 
-                    const filteredData = obj.sub_sections.filter((ss: any) => ss._id === subSectionData.id || ss.id === subSectionData.id)[0]
+                obj.sub_sections.find((ss: any, index: number) => {
+              
 
-
-                    console.log({ filteredData });
-
-
-                    const indexToUpdate = obj.sub_sections.findIndex((d: any) => d.id === filteredData.id)
-
-                    console.log({ indexToUpdate });
-
-
-
-
-                    if (indexToUpdate !== -1) {
-
-                        const newObj = Object.assign({}, { ...subSectionData })
+                    if (ss.id === activeSubSection._id) {
+                        // console.log({ index });
+                        // console.log({ ss });
+                        // console.log({ activeSubSection });
 
 
+                        // console.log("Yesh");
+                        // console.log({ ss, activeSubSection });
 
-                        //     // Update the name property of the object at the found index
-                        obj.sub_sections[indexToUpdate] = newObj;
-                        // transformedObj = obj
+                        // const filteredData = obj.sub_sections.filter((ss: any) => ss._id === activeSubSection._id)[0]
+                        // // const filteredData = obj.sub_sections.filter((ss: any) => ss._id === activeSubSection.id || ss.id === activeSubSection.id)[0]
+                        // console.log({ filteredData });
 
+
+                        // const indexToUpdate = obj.sub_sections.map((d: any, index) => {
+
+                        //     if (d._id === activeSubSection._id) {
+                        //        return index
+                        //     }
+                        // })
+
+
+
+
+                        // const indexToUpdate = obj.sub_sections.map((sub_section, index) => {
+                        // console.log({ activeSubSection, sub_section });
+
+
+                        //     if (sub_section._id === activeSubSection._id) {
+                        //         console.log({ index });
+
+                        //     }
+                        // });
+
+
+
+                        console.log({ index });
+
+
+                        // if (indexToUpdate !== -1) {
+
+                            const newObj = Object.assign({}, { ...activeSubSection })
+                            obj.sub_sections[index] = newObj;
+
+                        // }
 
                     }
+                    // else if (ss.id === activeSubSection.id) {
+                    //     console.log({ ss, activeSubSection });
 
-                }
-            })
+
+                    //     const filteredData = obj.sub_sections.filter((ss: any) => ss.id === activeSubSection._id)[0]
+                    //     const indexToUpdate = obj.sub_sections.findIndex((d: any) => d.id === filteredData.id)
+
+                    //     if (indexToUpdate !== -1) {
+
+                    //         const newObj = Object.assign({}, { ...activeSubSection })
+                    //         obj.sub_sections[indexToUpdate] = newObj;
+                    //     }
+
+                    // } else {
+                    //     null
+                    // }
+                })
+            }
         })
 
         setModalIsOpen(false)
         setEditModalIsOpen(false)
+        setCurrentSection(null)
+        setActiveSubSection({
+            content: '',
+            title: '',
+            _id: ''
+        })
 
 
     }
@@ -517,17 +567,15 @@ function EditSingleCourse({ course }: any) {
     const handleModalSubmit = (e: any) => {
         e.preventDefault();
 
-
-        // console.log( "subSectionData", {...subSectionData, id: uuidv4()} );
-
-
         setCourseInfoData(courseInfoData.map((obj: any) => {
-
+            console.log({ obj, currentSection });
 
             if (obj._id === currentSection._id) {
                 // Create a *new* object with changes
                 return { ...obj, sub_sections: [...obj.sub_sections, { ...subSectionData, id: uuidv4() }] };
-            } else {
+            }
+
+            else {
                 // No changes
                 return obj;
             }
@@ -537,6 +585,7 @@ function EditSingleCourse({ course }: any) {
 
         setModalIsOpen(false)
         setEditModalIsOpen(false)
+        setCurrentSection(null)
 
     }
 
@@ -773,7 +822,7 @@ function EditSingleCourse({ course }: any) {
 
                         <div className='px-4 my-8 space-y-3'>
                             {courseInfoData.map((section: any, index: number) => (
-                                <div key={section.id}>
+                                <div key={Math.random()}>
                                     <div className='flex items-center gap-1'>
                                         <div className='flex items-center w-full relative border rounded bg-white justify-between px-3'>
                                             <div className='px-4 py-4 rounded'>
@@ -794,8 +843,6 @@ function EditSingleCourse({ course }: any) {
                                                 size={20}
                                                 className='-rotate-180 ml-4 cursor-pointer'
                                                 onClick={() => {
-                                                    console.log({ section });
-
                                                     setCurrentSection(section);
                                                     setModalIsOpen(true);
                                                 }}
@@ -828,18 +875,22 @@ function EditSingleCourse({ course }: any) {
                                                     className='flex items-center mt-4 w-full '
 
                                                 >
+
                                                     <div className='w-[100%] px-4 py-3 flex justify-between relative ml-auto rounded bg-gray-100 my-2 border'>
                                                         <span className='ml-2'>{ss.title}</span>
-                                                        <span className='ml-2'>{ss._id} {ss.id}</span>
+
                                                         <span className='text-sm px-2 py border rounded-full bg-white -top-2 absolute'>Sub-Section</span>
                                                     </div>
                                                     <TbPencil
                                                         size={20}
                                                         className='cursor-pointer ml-3'
                                                         onClick={() => {
-                                                            console.log({ activeSubSection: ss });
-
-                                                            setActiveSubSection(ss);
+                                                            setCurrentSection(section)
+                                                            setActiveSubSection({
+                                                                content: ss.content,
+                                                                title: ss.title,
+                                                                _id: ss.id
+                                                            });
                                                             setEditModalIsOpen(true);
                                                         }}
                                                     />
@@ -971,7 +1022,7 @@ function EditSingleCourse({ course }: any) {
                                         <button className='py-1 px-4 border rounded' onClick={(e) => handleModalSubmit(e)}>Save changes</button>
                                         <button className='py-1 px-4 border rounded' onClick={() => {
                                             setSubSectionData({
-                                                id: uuidv4(),
+                                                _id: uuidv4(),
                                                 title: "",
                                                 content: "",
                                             });
@@ -987,11 +1038,10 @@ function EditSingleCourse({ course }: any) {
                                                 const [title, content] = seperateBlogDataIntoComponents(value as string);
 
                                                 setSubSectionData((prevState: any) => ({
+                                                    ...prevState,
                                                     title: title,
                                                     content: value,
-                                                    id: prevState?.id
                                                 }))
-
                                             }
                                             }
                                         />
@@ -1021,7 +1071,7 @@ function EditSingleCourse({ course }: any) {
                                             })}>Preview</button>
                                         <button className='py-1 px-4 border rounded' onClick={(e) => handleEditSubSection(e)}>Save changes</button>
                                         <button className='py-1 px-4 border rounded' onClick={() => {
-                                            setActiveSubSection({ title: '', content: '', id: '' });
+                                            setActiveSubSection({ title: '', content: '', _id: '' });
                                             setEditModalIsOpen(false);
                                         }}>Close</button>
                                     </div>
@@ -1031,11 +1081,16 @@ function EditSingleCourse({ course }: any) {
                                             value={activeSubSection?.content}
                                             onChange={(value: any) => {
                                                 const [title, content] = seperateBlogDataIntoComponents(value as string);
-                                                setSubSectionData((prevState) => ({
-                                                    title,
+                                                setActiveSubSection((prevState) => ({
+                                                    ...prevState,
+                                                    title: title,
                                                     content: value,
-                                                    id: activeSubSection?.id
+                                                    // _id: activeSubSection?._id as any
                                                 }))
+
+
+                                                console.log({ activeSubSection });
+
                                             }
 
                                             }
@@ -1079,7 +1134,7 @@ function EditSingleCourse({ course }: any) {
                                     <button
                                         className="py-3 w-[100%] bg-[#F08354]/30 text-[#F08354]   px-4 rounded"
                                         onClick={() => {
-                                            setSubSectionData({ title: "", content: "", id: uuidv4() });
+                                            setSubSectionData({ title: "", content: "", _id: uuidv4() });
                                             setNewSectionModalIsOpen(false);
                                         }}
                                     >
@@ -1140,11 +1195,8 @@ export async function getServerSideProps({ req, res }: any) {
 
     var url;
 
-    if (params.includes("admin=true")) {
-        url = `/get-course-by-id?id=${courseId}`
-    } else {
-        url = `/get-course-by-id?id=${courseId}`
-    }
+    url = `/get-course-by-id?id=${courseId}`
+
 
 
     const response = await http.get(url);
