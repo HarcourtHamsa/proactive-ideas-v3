@@ -3,7 +3,7 @@ import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
 import { useFetchAssessmenmtsQuery, useFetchCourseEnrollmentQuery, useFetchQuizzesQuery } from '../../../features/apiSlice';
 import Loader from '@/components/Loader';
-
+import { authOptions } from '../../../pages/api/auth/[...nextauth]'
 import { decryptData, fetchCourseById, fetchCourseEnrollment, getPriceBasedOnLocation } from '@/helper';
 import BackChevronButton from '@/components/BackChevronButton';
 import useAuth from '@/hooks/useAuth';
@@ -16,7 +16,7 @@ import { TbCheck, TbCross, TbDownload } from 'react-icons/tb';
 import { IoCheckmark, IoClose } from 'react-icons/io5';
 import http from '@/lib/http';
 import Menu from '@/components/Menu';
-
+import { getServerSession } from 'next-auth/next'
 import teamSuccessPNG from '@/assets/team-success.png'
 import Image from 'next/image';
 import { RootState } from '@/store';
@@ -442,36 +442,18 @@ function SingleCourse({ course, lessons, subscriber }: any) {
 export default SingleCourse
 
 // This gets called on every request
-export const getServerSideProps = async ({ req, res }: { req: NextApiRequest, res: NextApiResponse }) => {
+export async function getServerSideProps(context) {
 
     // Extract the query parameter
-    const courseIDSplit = req.url?.split('/') as string[];
-
-    console.log({ courseIDSplit });
-
+    const courseIDSplit = context.req.url?.split('/') as string[];
 
     // const courseId = courseIDSplit[courseIDSplit?.length - 1].split('.')
     const courseId = courseIDSplit[courseIDSplit?.length - 1].split('.')[0]
 
-    console.log({ courseId });
-
-
-
-    // console.log({ courseId });
-
-
-
     // Fetch data from external API
     const apiResponse = await fetchCourseById(courseId)
 
-
-    // console.log({ apiResponse });
-
-
     const data = apiResponse?.data
-
-    // console.log({ data });
-
 
     const courseLessons = new Set();
 
@@ -481,12 +463,15 @@ export const getServerSideProps = async ({ req, res }: { req: NextApiRequest, re
         })
     });
 
-    const encryptedTkn = getCookie('tkn', { req, res }) as string
-    const session: any = await getSession({ req })
+    const encryptedTkn = getCookie('tkn', { req: context.req, res: context.res }) as string
+    const session: any = await getServerSession(context.req, context.res, authOptions)
+
+    // console.log({ session });
+
 
     var userId;
 
-    console.log({ encryptedTkn });
+    // console.log({ encryptedTkn });
 
     if (encryptedTkn) {
         const cookie = decryptData(encryptedTkn)
@@ -495,7 +480,7 @@ export const getServerSideProps = async ({ req, res }: { req: NextApiRequest, re
         userId = session?.user?.id
     }
 
-    console.log({ userId });
+  
 
 
     // const enrollmentResponse = await http.get(`get-enrollment?course=${courseId}&user=${userId}`)
