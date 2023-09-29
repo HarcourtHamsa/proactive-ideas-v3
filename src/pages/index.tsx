@@ -97,7 +97,7 @@ function Index({ heroContent, certContent, newsletterContent }: any) {
                   // CODE GOES HERE
                   <div className={`flex flex-nowrap lg:grid lg:grid-cols-4 gap-2 flex-shrink-0 flex-grow overflow-auto duration-200 ease-in-out scrollbar-hide`} style={{ transform: `translateX(${offset * 10}%)` }}>
 
-                    {courses?.data?.filter((post: any) => post.status !== 'inactive').slice(-4).reverse().map((course: any) => {
+                    {courses?.data?.filter((post: any) => post.status !== 'inactive').slice(-6).reverse().map((course: any) => {
                       return (
                         <div className='w-[300px] block' key={Math.random()}>
                           <Card

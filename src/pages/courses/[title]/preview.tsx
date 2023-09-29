@@ -324,7 +324,8 @@ export const getServerSideProps = async ({ req, res }: { req: NextApiRequest, re
     var cookie;
     var userId;
 
-    // console.log({ courseId });
+    console.log({ courseId });
+    console.log({ splitCount })
 
 
     const encryptedTkn = getCookie('tkn', { req, res }) as string

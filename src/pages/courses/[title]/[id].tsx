@@ -446,8 +446,15 @@ export const getServerSideProps = async ({ req, res }: { req: NextApiRequest, re
 
     // Extract the query parameter
     const courseIDSplit = req.url?.split('/') as string[];
+
+    console.log({ courseIDSplit });
+
+
     // const courseId = courseIDSplit[courseIDSplit?.length - 1].split('.')
     const courseId = courseIDSplit[courseIDSplit?.length - 1].split('.')[0]
+
+    console.log({ courseId });
+
 
 
     // console.log({ courseId });
@@ -476,12 +483,10 @@ export const getServerSideProps = async ({ req, res }: { req: NextApiRequest, re
 
     const encryptedTkn = getCookie('tkn', { req, res }) as string
     const session: any = await getSession({ req })
+
     var userId;
 
-    // console.log({encryptedTkn});
-
-
-
+    console.log({ encryptedTkn });
 
     if (encryptedTkn) {
         const cookie = decryptData(encryptedTkn)
@@ -489,6 +494,9 @@ export const getServerSideProps = async ({ req, res }: { req: NextApiRequest, re
     } else {
         userId = session?.user?.id
     }
+
+    console.log({ userId });
+
 
     // const enrollmentResponse = await http.get(`get-enrollment?course=${courseId}&user=${userId}`)
     // const enrollment = enrollmentResponse
