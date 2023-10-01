@@ -360,17 +360,34 @@ function EditSingleCourse({ course }: any) {
     }
 
     const handleCourseUpdate = async () => {
+        setIsUpdatingCourseInfo(true);
+
         console.log('Yeah');
 
-        setIsUpdatingCourseInfo(true);
         const data = {
             sections: courseInfoData
         }
 
         const courseShallowCopy = Object.assign({}, course, { sections: courseInfoData })
 
+        courseShallowCopy._id = courseShallowCopy.id
+        delete courseShallowCopy.id
+
+        courseShallowCopy.sections.map((section) => {
+            delete section._id
+            section.sub_sections.map((sub_section) => {
+                delete sub_section._id
+            })
+        })
+
+        // courseShallowCopy.
+        console.log({ courseShallowCopy });
+        // console.log({ courseId });
+
+
+
         try {
-            updateCourseDraft({ token: cookie?.user?.accessToken, id: courseId, data: courseShallowCopy })
+            updateCourseDraft({ id: courseId, data: courseShallowCopy })
                 .then((res) => notify({ msg: 'Draft updated ', type: 'success' }))
                 .catch(err => {
                     notify({ msg: 'An error occued!', type: 'error' })
@@ -472,19 +489,41 @@ function EditSingleCourse({ course }: any) {
         var transformedObj;
 
 
+
+
+
+
+
         courseInfoData.map((obj: any) => {
+
+            // console.log({ activeSubSection });
+            // console.log({ obj: obj._id });
+            // console.log({ currentSection: currentSection._id });
 
 
             // if (obj._id === currentSection._id || obj.id === currentSection.id) {
             if (obj._id === currentSection._id) {
+
+
                 // console.log("yesh");
                 // console.log({ obj });
                 // console.log({ currentSection });
 
                 obj.sub_sections.find((ss: any, index: number) => {
-              
 
-                    if (ss.id === activeSubSection._id) {
+
+                    // console.log({ ss });
+                    // console.log({ activeSubSection });
+
+
+
+                    if (ss._id === activeSubSection._id) {
+
+                        // console.log("YESSSS");
+
+                        // console.log({ ss });
+                        // console.log({ activeSubSection });
+
                         // console.log({ index });
                         // console.log({ ss });
                         // console.log({ activeSubSection });
@@ -520,13 +559,14 @@ function EditSingleCourse({ course }: any) {
 
 
 
-                        console.log({ index });
+                        // console.log({ index });
 
 
                         // if (indexToUpdate !== -1) {
 
-                            const newObj = Object.assign({}, { ...activeSubSection })
-                            obj.sub_sections[index] = newObj;
+                        // CODE HERE
+                        const newObj = Object.assign({}, { ...activeSubSection })
+                        obj.sub_sections[index] = newObj;
 
                         // }
 
@@ -551,7 +591,7 @@ function EditSingleCourse({ course }: any) {
             }
         })
 
-        setModalIsOpen(false)
+        // setModalIsOpen(false)
         setEditModalIsOpen(false)
         setCurrentSection(null)
         setActiveSubSection({
@@ -878,6 +918,7 @@ function EditSingleCourse({ course }: any) {
 
                                                     <div className='w-[100%] px-4 py-3 flex justify-between relative ml-auto rounded bg-gray-100 my-2 border'>
                                                         <span className='ml-2'>{ss.title}</span>
+                                                        
 
                                                         <span className='text-sm px-2 py border rounded-full bg-white -top-2 absolute'>Sub-Section</span>
                                                     </div>
@@ -886,10 +927,12 @@ function EditSingleCourse({ course }: any) {
                                                         className='cursor-pointer ml-3'
                                                         onClick={() => {
                                                             setCurrentSection(section)
+                                                            console.log({ ss });
+
                                                             setActiveSubSection({
                                                                 content: ss.content,
                                                                 title: ss.title,
-                                                                _id: ss.id
+                                                                _id: ss._id || ss.id
                                                             });
                                                             setEditModalIsOpen(true);
                                                         }}
@@ -915,7 +958,9 @@ function EditSingleCourse({ course }: any) {
                         <div className='border-t px-4 pt-1 pb-4'>
                             <button
                                 className='bg-[#11393C] px-4  rounded text-white mt-2 py-2 flex'
-                                onClick={handleCourseUpdate}>
+                                onClick={handleCourseUpdate}
+                                disabled={isUpdatingCourseInfo}
+                            >
                                 {isUpdatingCourseInfo && <Spinner />} Save Changes
                             </button>
                         </div>
@@ -1089,7 +1134,7 @@ function EditSingleCourse({ course }: any) {
                                                 }))
 
 
-                                                console.log({ activeSubSection });
+                                                // console.log({ activeSubSection });
 
                                             }
 

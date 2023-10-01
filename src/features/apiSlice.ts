@@ -203,13 +203,13 @@ export const apiSlice = createApi({
             }),
         }),
         updateCourseDraft: builder.mutation({
-            query: ({ token, id, ...rest }: any) => ({
+            query: ({id, ...rest }: any) => ({
                 url: `/update-course?id=${id}`,
                 method: 'PATCH',
                 body: rest.data,
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                }
+                // headers: {
+                //     'Authorization': `Bearer ${token}`,
+                // }
             }),
         }),
         updateUserRole: builder.mutation({
