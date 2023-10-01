@@ -72,7 +72,7 @@ function EditBlog() {
     return tagsArr
   }
 
-  console.log({ summary: blogData });
+  // console.log({ blogContent });
 
 
   const [selectedTags, setSelectedTags] = useState<any[] | null>(generatePeviousTags());
@@ -84,6 +84,8 @@ function EditBlog() {
   const handleSelectChange = (selectedOption: any) => {
     setSelectedTags(selectedOption);
   };
+
+
 
 
 
@@ -179,6 +181,11 @@ function EditBlog() {
         break;
     }
   };
+
+  // blogData.content || router.query.content
+  // console.log({ blogContent: blogData.content  });
+  // console.log({ blogContentRouter: router.query.content  });
+
 
 
   const publishBlog = async () => {
@@ -323,7 +330,8 @@ function EditBlog() {
         <ReactQuillEditor
           value={blogContent}
           onChange={(value: any) => {
-            const [title, _] = seperateBlogDataIntoComponents(blogContent as string);
+            const [title, _] = seperateBlogDataIntoComponents(value as string);
+
             setBlogContent(value)
             setBlogTitle(title)
           }

@@ -318,7 +318,7 @@ function EditBlog() {
         <ReactQuillEditor
           value={blogContent}
           onChange={(value: any) => {
-            const [title, _] = seperateBlogDataIntoComponents(blogContent as string);
+            const [title, _] = seperateBlogDataIntoComponents(value as string);
             setBlogContent(value)
             setBlogTitle(title)
           }
