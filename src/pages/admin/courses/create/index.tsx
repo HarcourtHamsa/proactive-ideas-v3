@@ -331,7 +331,7 @@ function Index() {
             notify({ msg: "An error occured!", type: 'error' });
 
         }).finally(() => {
-            // dispatch(resetState());
+            dispatch(resetState());
             setIsLoading(false)
             dispatch(setGeneralInfoCategory({ category: '' }));
             dispatch(setGeneralInfoDescription({ description: '' }));
@@ -496,8 +496,10 @@ function Index() {
             <ToastContainer />
             {formStep.step === 0 &&
                 <div className='px-4 py-10'>
+                    <span onClick={() => dispatch(resetState())}>
 
                     <BackChevronButton />
+                    </span>
 
                     <h1 className='text-2xl md:text-4xl font-semibold'>Create new course</h1>
 

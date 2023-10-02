@@ -242,13 +242,19 @@ function SingleCourse({ course, lessons, subscriber }: any) {
                     /> :
                     <div className='bg-[#FAF7ED] flex'>
 
-                        <div className='w-[80%] lg:w-[20%] border-r bg-[#11393C]  h-screen fixed left-0 top-0 bottom-0 hidden  xl:block' style={{ display: showSidebar ? 'block' : '' }}>
-                            <aside className='h-screen lg:w-[100%] w-[90%] -z-1 bg-[#FAF7ED] mx-auto lg:col-span-1 mb-10 lg:mb-0 '>
-                                <div className='px-4 py-3 h-[15%] mb-14  items-center bg-[#FAF7ED] gap-2'>
-                                    <p className=" leading-snug capitalize line-clamp-2 mb-4">{course?.title}</p>
+                        <div className='w-[90%] lg:w-[20%] border-r bg-white z-50 text-[#FAF7ED] h-screen fixed left-0 top-0 bottom-0 hidden  xl:block' style={{ display: showSidebar ? 'block' : '' }}>
+                            <aside className='h-screen lg:w-[100%] w-[90%] -z-1  mx-auto lg:col-span-1 mb-10 lg:mb-0 '>
+
+                                <div className='w-[30px] h-[30px] flex items-center justify-center shadow bg-gray-200 rounded-full ml-auto mt-4 mb-4 lg:hidden' onClick={() => setShowSidebar(!showSidebar)} >
+                                    <IoClose className='text-[#11393C]' />
+                                </div>
+
+
+                                <div className='px-4 py-3 h-[15%] mb-14  items-center  gap-2'>
+                                    <p className=" leading-snug text-[#11393C] capitalize line-clamp-2 mb-4">{course?.title}</p>
 
                                     {/* {cookie.user.id} */}
-                                    <p className=''>Progress: {progress}%</p>
+                                    <p className='text-[#11393C]'>Progress: {progress}%</p>
                                     <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
                                         <div className="bg-orange-400 h-2 rounded-full" style={{ width: `${progress}%` }}></div>
                                     </div>
@@ -259,7 +265,7 @@ function SingleCourse({ course, lessons, subscriber }: any) {
                                         {course?.sections?.map((section: any, index: number) => {
                                             return (
                                                 <span key={Math.random()}>
-                                                    <li className='py-2 mt-0 bg-gray-200 px-4 list-none flex justify-between uppercase tracking-wider text-sm line-clamp-0'>
+                                                    <li className='py-2 mt-0 bg-gray-200 text-[#11393C] px-4 list-none flex justify-between uppercase tracking-wider text-sm line-clamp-0'>
                                                         {(index + 1).toString().padStart(2, "0")}. {section.title}
 
 
@@ -272,7 +278,7 @@ function SingleCourse({ course, lessons, subscriber }: any) {
                                                                 <li
                                                                     key={Math.random()}
                                                                     // onClick={() => selectContent(ss)} 
-                                                                    className={`list-none  px-2 py-2  text-sm cursor-pointer flex ${foundindex === count ? 'text-orange-400 bg-[#11393C]' : ''}`}>
+                                                                    className={`list-none  px-2 py-2  text-sm cursor-pointer flex ${foundindex === count ? 'text-orange-400 bg-[#11393C]' : 'text-[#11393C]'}`}>
 
                                                                     {/* <IoDocumentText size={15} scale={10} /> */}
 
@@ -298,8 +304,8 @@ function SingleCourse({ course, lessons, subscriber }: any) {
 
                             <div className='xl:col-span-2 col-span-1 relative w-full p-5 overflow-hidden'>
 
-                                <div className='toc-gradient lg:hidden max-h-[70%] shadow overflow-scroll  z-30 rounded fixed bottom-0 w-full left-0 right-0 p-4' style={{ backgroundColor: showTableOfContents ? 'white' : '' }}>
-                                    <button className='w-full py-2 bg-[#F08354] mb-2 rounded text-white' onClick={() => setShowTableOfContents(!showTableOfContents)}>Course Curriculum</button>
+                                {/* <div className='toc-gradient lg:hidden max-h-[70%] shadow overflow-scroll  z-30 rounded fixed bottom-0 w-full left-0 right-0 p-4' style={{ backgroundColor: showTableOfContents ? 'white' : '' }}>
+                                    <button className='w-full py-2 bg-[#F08354] mb-2 rounded text-white' onClick={() => setShowSidebar(!showSidebar)}>Course Curriculum</button>
 
                                     {
                                         showTableOfContents &&
@@ -320,9 +326,9 @@ function SingleCourse({ course, lessons, subscriber }: any) {
                                             })}
                                         </div>
                                     }
-                                </div>
+                                </div> */}
 
-                                <div className='h-20 w-full px-4 flex items-center justify-between'>
+                                <div className='lg:h-20 w-full toc-gradient px-4 flex items-center justify-between fixed md:static bg-[#FAF7ED] h-[18%]  -translate-x-6 lg:-translate-x-0 -translate-y-10 lg:-translate-y-0'>
                                     <BackChevronButton />
 
 
@@ -333,7 +339,7 @@ function SingleCourse({ course, lessons, subscriber }: any) {
 
                                 </div>
 
-                                <main className='w-[90%] mx-auto mt-6 lg:col-span-3 order-2 transition-opacity'>
+                                <main className='w-[90%] mx-auto md:mt-6 lg:col-span-3 order-2 transition-opacity mt-20'>
 
                                     <div dangerouslySetInnerHTML={{ __html: generateBody(Array.from(contents)) }} className=''></div>
 
@@ -480,7 +486,7 @@ export async function getServerSideProps(context) {
         userId = session?.user?.id
     }
 
-  
+
 
 
     // const enrollmentResponse = await http.get(`get-enrollment?course=${courseId}&user=${userId}`)

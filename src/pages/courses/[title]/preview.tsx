@@ -71,11 +71,11 @@ function Preview({ subscriber }: any) {
                         <div className="border bg-white rounded-md overflow-hidden">
                             {/* header image */}
                             <div className="h-full overflow-hidden">
-                                <div className="flex lg:h-[350px] h-[200px] flex-col bg-white rounded-t-md overflow-hidden">
+                                <div className="flex lg:h-[400px] h-[200px] flex-col bg-white rounded-t-md overflow-hidden">
 
                                     <a className="block focus:outline-none h-full focus-visible:ring-2 relative">
                                         <figure className="relative h-full overflow-hidden">
-                                            <Image className=" w-full h-full object-center" src={course?.data?.header_image} width="0" height="0" alt="Course" priority={true} />
+                                            <Image className=" w-full h-full object-center" src={course?.data?.header_image} width="100" height="450" alt="Course" priority={true} />
                                         </figure>
 
                                         {course?.data?.certificate && <div className="bg-orange-500/50 rounded-l absolute top-4 right-0 px-4 py-1">
@@ -193,7 +193,7 @@ function Preview({ subscriber }: any) {
 
 
 
-                                    <ul>
+                                    <ul className="ul__unset">
                                         <li className="justify-between border-t flex py-2">
                                             <span className="flex gap-2">
                                                 <TbFiles size={25} />
@@ -297,7 +297,7 @@ function Preview({ subscriber }: any) {
                             </div>
 
                             {course?.data?.certificate &&
-                                <div className="lg:h-[250px] h-[250px] mt-4 shadow p-4 rounded w-full bg-white">
+                                <div className="lg:h-[300px] h-[250px] mt-4 shadow p-4 rounded w-full bg-white">
                                     <Image src={certificate} alt="" className="w-full h-full" />
                                 </div>
                             }

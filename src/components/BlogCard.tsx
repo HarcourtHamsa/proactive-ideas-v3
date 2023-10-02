@@ -19,30 +19,30 @@ function BlogCard({
         pathname: `/blog/${data.title}`, query: {
           ...data
         }
-      }, `/blog/${data.id}/${data.title.replace(/ /g, "-").toLowerCase()}`)}>
+      }, `/blog/${data.id}/${data.title.replace(/ /g, "-").replace(/\//g, "-").toLowerCase()}`)}>
 
-        <a className="block focus:outline-none h-[40%] focus-visible:ring-2  overflow-hidden">
-          <figure className="relative h-full overflow-hidden">
-            <Image 
-            
-            className="absolute inset-0 w-full h-full object-cover transform hover:scale-105 transition duration-700 ease-out" src={data?.header_image} width="320" height="180" alt="Course" />
+        <a className="block focus:outline-none h-[40%] focus-visible:ring-2">
+          <figure className="relative h-full overflow-hidden ">
+            <Image className="absolute inset-0 w-full h-full object-cover transform hover:scale-105 transition duration-700 ease-out" src={data?.header_image} width="320" height="180" alt="Course" />
           </figure>
         </a>
 
         <div className="flex-grow flex flex-col px-4 pt-3">
+
           <div className="mb-4">
             <p className="bg-orange-100 px-4 py-1 w-fit rounded-full text-[#F08354] text-sm">{extractTags(data.tags)}</p>
           </div>
 
           <div className="flex-grow">
 
-            <header className="mb-3">
-            <a className="block focus:outline-none focus-visible:ring-2">
-            <p className="text-lg font-semibold leading-snug capitalize line-clamp-2">{data?.title}</p>
+
+            <header className="mb-3 min-h-[30px] h-fit">
+              <a className="block focus:outline-none focus-visible:ring-2">
+                <p className="text-lg font-semibold leading-snug capitalize line-clamp-2">{data?.title}</p>
               </a>
             </header>
 
-            <div className="mb-8 line-clamp-2">
+            <div className="mb-4 line-clamp-2">
               <p>{data?.summary}</p>
             </div>
 

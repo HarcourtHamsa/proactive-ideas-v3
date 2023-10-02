@@ -979,4 +979,19 @@ ul, ol {
   }
 }
 
+pre{
+  width: 100% !important;
+  background-color: #dddddd93;
+  overflow: hidden;
+  padding: 12px 25px;
+  border-top: 5px solid #F08354;
+}
+
+
+code {
+  /* background-color: #858080; */
+  width: inherit !important;
+  flex-wrap: wrap;
+  text-wrap: pretty;
+}
 

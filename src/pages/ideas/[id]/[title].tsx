@@ -120,28 +120,29 @@ function Title({ blogDetails }: any) {
                 <div className=' pb-10'>
                     <div className=''>
                         <div className='mt-20 lg:gap-8'>
+                            {!isIntersecting &&
+                                <div className='lg:hidden w-full lg:bg-transparent' >
+                                    <div className='toc-gradient lg:hidden  rounded-t-lg fixed bottom-0 w-full left-0 right-0 p-4' style={{ backgroundColor: showTableOfContents ? 'white' : '' }}>
+                                        {showTableOfContents &&
+                                            <div className='w-10 h-10 bg-white flex justify-center items-center cursor-pointer absolute right-4 -top-12 rounded-full shadow' onClick={() => setShowTableOfContents(!showTableOfContents)}>
+                                                <IoClose size={30} className='' />
+                                            </div>
+                                        }
 
-                            <div className='lg:hidden w-full lg:bg-transparent' >
-                                <div className='toc-gradient lg:hidden  rounded-t-lg fixed bottom-0 w-full left-0 right-0 p-4' style={{ backgroundColor: showTableOfContents ? 'white' : '' }}>
-                                    {showTableOfContents &&
-                                        <div className='w-10 h-10 bg-white flex justify-center items-center cursor-pointer absolute right-4 -top-12 rounded-full shadow' onClick={() => setShowTableOfContents(!showTableOfContents)}>
-                                            <IoClose size={30} className='' />
-                                        </div>
-                                    }
+                                        <button className='bg-[#F08354] shadow-xl mb-6 w-full py-3 rounded text-white text-base block'
+                                            onClick={() => setShowTableOfContents(!showTableOfContents)}
+                                            style={{ display: isIntersecting ? 'none' : 'block' }}
+                                        >Table of contents</button>
 
-                                    <button className='bg-[#F08354] shadow-xl mb-6 w-full py-3 rounded text-white text-base block'
-                                        onClick={() => setShowTableOfContents(!showTableOfContents)}
-                                        style={{ display: isIntersecting ? 'none' : 'block' }}
-                                    >Table of contents</button>
+                                        {showTableOfContents && <div className='lg:hidden'>
+                                            <TableOfContents htmlString={blogDetails?.content} />
+                                        </div>}
 
-                                    {showTableOfContents && <div className='lg:hidden'>
-                                        <TableOfContents htmlString={blogDetails?.content} />
-                                    </div>}
+                                    </div>
 
+                                    {/* <div className='lg:h-52'></div> */}
                                 </div>
-
-                                {/* <div className='lg:h-52'></div> */}
-                            </div>
+                            }
 
                             <div className='mx-auto ql-blog'>
                                 <div ref={sidebarRef} className='overflow-hidden hidden xl:block bg-white border rounded p-4 border-t-8 border-t-[#F08354]'>
