@@ -6,6 +6,8 @@ import React, { useState } from 'react'
 import { IoCheckbox, IoClose, IoDownload } from 'react-icons/io5';
 import { TbCheck, TbCross, TbDownload } from 'react-icons/tb';
 import { PDFDocument, rgb } from 'pdf-lib'
+import { useDispatch } from 'react-redux';
+import { resetQuestions } from '@/features/assessment/assessmentSlice';
 // import certificatePDF from "../../../assets/sample-certificate..pdf"
 
 function Index() {
@@ -16,8 +18,7 @@ function Index() {
     const [assessment, setAssessment] = useState({
         questions: initialQuestions
     });
-
-
+    const dispatch = useDispatch()
     const [offset, setOffset] = useState(0)
     const [option, setOption] = useState<null | number>(null)
     const [totalAssessments, setTotoalAssessments] = useState(assessment.questions.length)
@@ -67,7 +68,10 @@ function Index() {
 
                 <div className='flex items-center gap-4'>
                     <p className='tracking-widest uppercase text-sm text-white'>Assessment Preview</p>
-                    <button className='bg-white text-[#F08354] px-8 rounded' onClick={() => router.back()}>Close</button>
+                    <button className='bg-white text-[#F08354] px-8 rounded' onClick={() => {
+                        // dispatch(resetQuestions())
+                        router.back()
+                    }}>Close</button>
                 </div>
             </div>
 
@@ -187,7 +191,10 @@ function Index() {
 
                         <div className='flex w-fit mx-auto gap-2'>
                             {passedCutoffMark() &&
-                                <button className='px-8 bg-[#F08354] text-white py-2 flex items-center gap-2 mx-auto mt-4 rounded hover:opacity-75' onClick={() => router.back()}>
+                                <button className='px-8 bg-[#F08354] text-white py-2 flex items-center gap-2 mx-auto mt-4 rounded hover:opacity-75' onClick={() => {
+                                    // dispatch(resetQuestions())
+                                    router.back()
+                                }}>
                                     Continue
                                 </button>
                             }

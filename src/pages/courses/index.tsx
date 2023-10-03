@@ -80,7 +80,7 @@ function Index({ content }: any) {
                 <ReactPortal>
                     <Modal>
                         <div className="flex justify-between">
-                            <h3 className="font-normal">Filters</h3>
+                            <p className="font-normal text-lg">Filters</p>
 
                             <div
                                 className="w-6 h-6 border rounded-full flex items-center justify-center cursor-pointer"
@@ -90,7 +90,7 @@ function Index({ content }: any) {
                             </div>
 
                         </div>
-                        <hr className="my-4" />
+                        <hr className="mb-4 mt-2" />
 
                         <ul className="ul__unset">
                             {categories?.data?.map((category) => (
@@ -101,6 +101,7 @@ function Index({ content }: any) {
                                         id={category.name}
                                         type="radio"
                                         value={category.name}
+                                        checked={selectedCategory === category.name}
                                         name="default-radio"
                                         onChange={() => setSelectedCategory(category.name)}
                                         className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2 " />
@@ -140,7 +141,7 @@ function Index({ content }: any) {
             {selectedCategory &&
                 <div className="flex items-center gap-2  mx-auto w-[90%] container mb-4">
                     <p>Filters: </p>
-                    <div className="border px-4 py-2 w-fit  flex items-center justify-between my-4 rounded-full bg-white ">
+                    <div className="border px-4 py-2 w-fit  flex items-center justify-between my-4 whitespace-nowrap rounded-full bg-white ">
                         {selectedCategory}
 
                         <IoClose className="ml-2 cursor-pointer" onClick={() => setSelectedCategory(null)} />
@@ -175,7 +176,7 @@ function Index({ content }: any) {
                                             <li
                                                 onClick={() => setSelectedCategory(category.name)}
                                                 key={Math.random()}
-                                                className="px-2 py-3 rounded duration-200 hover:bg-gray-800/10 cursor-pointer text-black">
+                                                className={`px-2 py-3 rounded duration-200 hover:bg-gray-800/10 cursor-pointer text-black ${selectedCategory === category.name && 'bg-white border'}`}>
                                                 {category.name}
                                             </li>
                                         )

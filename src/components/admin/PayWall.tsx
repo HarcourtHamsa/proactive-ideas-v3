@@ -27,11 +27,11 @@ function PayWall({ amount, courseId, currency }: any) {
                         <p className="text-center text-sm whitespace-nowrap tracking-wider text-gray-400">PAYMENT METHODS</p>
                         <hr className=" w-[100%]" />
                     </div>
-                    <PaymentButton
+                    {/* <PaymentButton
                         amount={amount}
                         courseId={courseId}
                         currency={currency}
-                    />
+                    /> */}
                     <CustomPaystackButton
                         amount={amount}
                         courseId={courseId}

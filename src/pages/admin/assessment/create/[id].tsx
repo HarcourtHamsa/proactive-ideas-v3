@@ -4,7 +4,7 @@ import { useCreateAssessmentMutation, useCreateQuizMutation, useFetchCoursesQuer
 import http from '@/lib/http'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { IoAddCircle, IoClose, IoTrashBin } from 'react-icons/io5'
+import { IoAddCircle, IoClose, IoRemove, IoRemoveCircle, IoRemoveCircleOutline, IoTrashBin } from 'react-icons/io5'
 import { QuizTypes } from '../../../../../types/types'
 import CustomInput from '@/components/CustomInput'
 import { useSelector } from 'react-redux'
@@ -12,7 +12,7 @@ import { RootState } from '@/store'
 import Spinner from '@/components/Spinner'
 import notify from '@/components/Notification'
 import { ToastContainer } from 'react-toastify'
-import { TbEdit, TbPencil, TbTrash } from 'react-icons/tb'
+import { TbEdit, TbMinus, TbPencil, TbTrash } from 'react-icons/tb'
 import BackChevronButton from '@/components/BackChevronButton'
 import { NextApiRequest, NextApiResponse } from 'next'
 import axios from 'axios'
@@ -50,7 +50,9 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
     const cookie = useCookie()
     const [questions, setQuestions] = useState<any[]>(assessmentState.questions || assessments[0]?.questions || [])
 
-    console.log({ assessments });
+    // console.log({ assessments });
+    console.log({ questions });
+    console.log({ assessmentState });
 
 
     const [feedback, setFeedback] = useState({
@@ -119,6 +121,8 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
         setQuestions(filteredQuestions)
         notify({ msg: 'Question deleted!', type: 'success' });
 
+
+
     }
 
 
@@ -139,6 +143,15 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
 
         setQuestions((prevState) => ([...prevState, quiz]))
 
+        const allQuestions = [
+            ...questions,
+            quiz
+        ]
+
+
+        dispatch(addQuestion({ questions: allQuestions }))
+
+
         setQuestionType('');
         setQuestion('');
         setCorrectAnswer(0);
@@ -147,6 +160,8 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
         setInputController('');
         setModalIsOpen(false)
         setFeedback({ correct: '', incorrect: '' })
+
+
     }
 
 
@@ -264,20 +279,15 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
 
                         <div className='space-y-2 mt-4'>
                             {questions?.map((quiz: any) => {
-                                console.log({ quiz });
-
                                 return (
                                     <div key={Math.random()} className='border flex justify-between py-3 px-4 rounded-md relative bg-white'>
                                         {quiz.question}
-
-
-
                                         <div className='flex items-center gap-4'>
 
                                             <span
                                                 className=' cursor-pointer'
                                                 onClick={() => deleteQuestion(quiz)}>
-                                                <TbTrash size={25} className='cursor-pointer' />
+                                                <IoRemove size={25} className='cursor-pointer' />
 
                                             </span>
                                             <div className='flex gap-2 items-center'>
@@ -309,7 +319,7 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
                             <button
                                 className='py-2 bg-[#F08354]/20 text-[#F08354] px-4 rounded mt-8 hover:opacity-80'
                                 onClick={() => {
-                                    dispatch(addQuestion({ questions }))
+                                    // dispatch(addQuestion({ questions }))
 
                                     router.push({
                                         pathname: "/admin/assessment/preview",
@@ -317,9 +327,10 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
                                     }, "/admin/assessment/preview")
                                 }}
                             >Preview</button>
-                            <button className='py-2 bg-[#F08354] flex text-white px-4 rounded mt-8 hover:opacity-80' onClick={handleCreateAssessment}>
+                            <button className='py-2 bg-[#F08354] flex whitespace-nowrap text-white px-4 rounded mt-8 hover:opacity-80' onClick={handleCreateAssessment}>
                                 {isLoading && <Spinner />}
-                                Create Assessment
+                                {assessments[0]?.title ? "Update Assessment" : "Create Assessment"}
+
                             </button>
                         </div>
 

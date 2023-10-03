@@ -159,7 +159,7 @@ function Navbar() {
                 <span className="block text-gray-900">{cookie?.user?.name}</span>
                 <span className="block font-medium text-gray-500 truncate">{cookie?.user?.email}</span>
               </div>
-              <ul className="py-2" aria-labelledby="user-menu-button">
+              <ul className="py-2 ul__unset" aria-labelledby="user-menu-button">
                 {role !== Role.user &&
                   <li>
                     <Link href="/admin" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 list-none">Dashboard</Link>
@@ -202,7 +202,7 @@ function Navbar() {
         {
           navIsOpen &&
           <div className='w-[90%] mx-auto h-fit py-4 lg:hidden rounded border bg-white shadow-2xl absolute top-20'>
-            <ul className='space-y-4 pt-4'>
+            <ul className='space-y-4 pt-4 ul__unset'>
               <li>
                 <Link href="/" className="border-b px-4 pb-4 w-[100%] block list-none" aria-current="page">Home</Link>
               </li>
@@ -220,7 +220,7 @@ function Navbar() {
                 <Link href="/certification" className="border-b pb-4 px-4 w-[100%] block list-none" aria-current="page">Certification</Link>
               </li>
             </ul>
-            <button onClick={() => router.push("/auth/login")} className='px-4 py-2 bg-[#11393C] rounded text-white hover:opacity-80 ml-4 mt-4'>Sign In</button>
+            <button onClick={() => router.push("/auth/login")} className='py-2 bg-[#11393C] w-[90%] rounded text-white hover:opacity-80 mt-4 mx-auto translate-x-4'>Sign In</button>
           </div>
         }
 
