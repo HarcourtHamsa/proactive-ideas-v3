@@ -362,8 +362,6 @@ function EditSingleCourse({ course }: any) {
     const handleCourseUpdate = async () => {
         setIsUpdatingCourseInfo(true);
 
-        console.log('Yeah');
-
         const data = {
             sections: courseInfoData
         }
@@ -381,7 +379,7 @@ function EditSingleCourse({ course }: any) {
         })
 
         // courseShallowCopy.
-        console.log({ courseShallowCopy });
+
         // console.log({ courseId });
 
 
@@ -397,6 +395,7 @@ function EditSingleCourse({ course }: any) {
         } finally {
             setIsUpdatingGeneralInfo(false)
             setIsUpdatingCourseInfo(false)
+            window.location.reload()
         }
     }
 
@@ -607,18 +606,41 @@ function EditSingleCourse({ course }: any) {
     const handleModalSubmit = (e: any) => {
         e.preventDefault();
 
-        setCourseInfoData(courseInfoData.map((obj: any) => {
-            console.log({ obj, currentSection });
 
-            if (obj._id === currentSection._id) {
+
+
+
+        setCourseInfoData(courseInfoData.map((obj: any) => {
+            const shallowCopy = Object.assign({}, obj)
+            const shallowCopyOfCurrentSection = Object.assign({}, currentSection)
+
+            if (shallowCopy.id) {
+                shallowCopy._id = shallowCopy.id
+                delete shallowCopy.id
+            }
+
+            if (shallowCopyOfCurrentSection.id) {
+                shallowCopyOfCurrentSection._id = shallowCopyOfCurrentSection.id
+                delete shallowCopyOfCurrentSection.id
+            }
+
+
+            // console.log({ shallowCopy, currentSection });
+
+
+            if (shallowCopy._id === shallowCopyOfCurrentSection._id) {
+                // console.log("Yesh ");
+
+                // console.log({ obj, currentSection });
                 // Create a *new* object with changes
-                return { ...obj, sub_sections: [...obj.sub_sections, { ...subSectionData, id: uuidv4() }] };
+                return { ...shallowCopy, sub_sections: [...shallowCopy.sub_sections, { ...subSectionData, _id: uuidv4() }] };
             }
 
             else {
                 // No changes
-                return obj;
+                return shallowCopy;
             }
+
         }));
 
 
@@ -865,8 +887,9 @@ function EditSingleCourse({ course }: any) {
                                 <div key={Math.random()}>
                                     <div className='flex items-center gap-1'>
                                         <div className='flex items-center w-full relative border rounded bg-white justify-between px-3'>
-                                            <div className='px-4 py-4 rounded'>
+                                            <div className='px-4 py-4 rounded flex justify-between gap-4'>
                                                 <p className=''>{section.title}</p>
+                                                {/* <p className=''>{section.id}</p> */}
                                             </div>
                                             <span className='text-sm px-2 py border rounded-full bg-gray-50 -top-2 absolute'>Section</span>
                                         </div>
@@ -883,6 +906,7 @@ function EditSingleCourse({ course }: any) {
                                                 size={20}
                                                 className='-rotate-180 ml-4 cursor-pointer'
                                                 onClick={() => {
+                                                    // alert('Yesh')
                                                     setCurrentSection(section);
                                                     setModalIsOpen(true);
                                                 }}
@@ -918,7 +942,8 @@ function EditSingleCourse({ course }: any) {
 
                                                     <div className='w-[100%] px-4 py-3 flex justify-between relative ml-auto rounded bg-gray-100 my-2 border'>
                                                         <span className='ml-2'>{ss.title}</span>
-                                                        
+                                                        <span className='ml-2'>{ss._id}</span>
+
 
                                                         <span className='text-sm px-2 py border rounded-full bg-white -top-2 absolute'>Sub-Section</span>
                                                     </div>
