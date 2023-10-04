@@ -331,6 +331,7 @@ function EditSingleCourse({ course }: any) {
 
     const handleSubmit = async () => {
 
+
         const courseObj = Object.assign({}, course, generalInfoData);
 
 
@@ -346,7 +347,16 @@ function EditSingleCourse({ course }: any) {
 
         courseObj.objectives = parsedObjectives
 
+
+        courseObj.sections.map((section) => {
+            section.sub_sections.map((sub_section) => {
+                delete sub_section._id
+            })
+        })
+
         setIsUpdatingGeneralInfo(true)
+        setIsUpdatingCourseInfo(true)
+
         await updateCourse({ token: cookie?.user?.accessToken, id: courseId, data: courseObj }).then((res) => {
             console.log("res", res)
             notify({ msg: "Course updated", type: 'success' });
@@ -356,6 +366,7 @@ function EditSingleCourse({ course }: any) {
 
         }).finally(() => {
             setIsUpdatingGeneralInfo(false)
+            setIsUpdatingCourseInfo(false)
         })
     }
 
@@ -377,12 +388,6 @@ function EditSingleCourse({ course }: any) {
                 delete sub_section._id
             })
         })
-
-        // courseShallowCopy.
-
-        // console.log({ courseId });
-
-
 
         try {
             updateCourseDraft({ id: courseId, data: courseShallowCopy })
@@ -484,84 +489,15 @@ function EditSingleCourse({ course }: any) {
     }
 
 
-    const handleEditSubSection = (e: any) => {
+    // CODE GOES HERE 
+    const handleEditSubSection = async (e: any) => {
         var transformedObj;
 
-
-
-
-
-
-
         courseInfoData.map((obj: any) => {
-
-            // console.log({ activeSubSection });
-            // console.log({ obj: obj._id });
-            // console.log({ currentSection: currentSection._id });
-
-
-            // if (obj._id === currentSection._id || obj.id === currentSection.id) {
             if (obj._id === currentSection._id) {
 
-
-                // console.log("yesh");
-                // console.log({ obj });
-                // console.log({ currentSection });
-
                 obj.sub_sections.find((ss: any, index: number) => {
-
-
-                    // console.log({ ss });
-                    // console.log({ activeSubSection });
-
-
-
                     if (ss._id === activeSubSection._id) {
-
-                        // console.log("YESSSS");
-
-                        // console.log({ ss });
-                        // console.log({ activeSubSection });
-
-                        // console.log({ index });
-                        // console.log({ ss });
-                        // console.log({ activeSubSection });
-
-
-                        // console.log("Yesh");
-                        // console.log({ ss, activeSubSection });
-
-                        // const filteredData = obj.sub_sections.filter((ss: any) => ss._id === activeSubSection._id)[0]
-                        // // const filteredData = obj.sub_sections.filter((ss: any) => ss._id === activeSubSection.id || ss.id === activeSubSection.id)[0]
-                        // console.log({ filteredData });
-
-
-                        // const indexToUpdate = obj.sub_sections.map((d: any, index) => {
-
-                        //     if (d._id === activeSubSection._id) {
-                        //        return index
-                        //     }
-                        // })
-
-
-
-
-                        // const indexToUpdate = obj.sub_sections.map((sub_section, index) => {
-                        // console.log({ activeSubSection, sub_section });
-
-
-                        //     if (sub_section._id === activeSubSection._id) {
-                        //         console.log({ index });
-
-                        //     }
-                        // });
-
-
-
-                        // console.log({ index });
-
-
-                        // if (indexToUpdate !== -1) {
 
                         // CODE HERE
                         const newObj = Object.assign({}, { ...activeSubSection })
@@ -570,25 +506,13 @@ function EditSingleCourse({ course }: any) {
                         // }
 
                     }
-                    // else if (ss.id === activeSubSection.id) {
-                    //     console.log({ ss, activeSubSection });
-
-
-                    //     const filteredData = obj.sub_sections.filter((ss: any) => ss.id === activeSubSection._id)[0]
-                    //     const indexToUpdate = obj.sub_sections.findIndex((d: any) => d.id === filteredData.id)
-
-                    //     if (indexToUpdate !== -1) {
-
-                    //         const newObj = Object.assign({}, { ...activeSubSection })
-                    //         obj.sub_sections[indexToUpdate] = newObj;
-                    //     }
-
-                    // } else {
-                    //     null
-                    // }
                 })
             }
         })
+        course.sections = courseInfoData
+
+
+        await handleSubmit()
 
         // setModalIsOpen(false)
         setEditModalIsOpen(false)
@@ -603,8 +527,10 @@ function EditSingleCourse({ course }: any) {
     }
 
 
-    const handleModalSubmit = (e: any) => {
+    // CODE COMES HERE
+    const handleModalSubmit = async (e: any) => {
         e.preventDefault();
+        var newObj;
 
 
 
@@ -629,11 +555,15 @@ function EditSingleCourse({ course }: any) {
 
 
             if (shallowCopy._id === shallowCopyOfCurrentSection._id) {
-                // console.log("Yesh ");
+                console.log("Yesh ");
+                newObj = {
+                    ...shallowCopy, sub_sections: [...shallowCopy.sub_sections, { ...subSectionData, _id: uuidv4() }]
+                };
+
 
                 // console.log({ obj, currentSection });
                 // Create a *new* object with changes
-                return { ...shallowCopy, sub_sections: [...shallowCopy.sub_sections, { ...subSectionData, _id: uuidv4() }] };
+                return newObj
             }
 
             else {
@@ -644,10 +574,17 @@ function EditSingleCourse({ course }: any) {
         }));
 
 
+        course.sections.map((section, index) => {
+            if (section._id === newObj._id) {
+                course.sections[index] = newObj
+            }
+        })
 
         setModalIsOpen(false)
         setEditModalIsOpen(false)
         setCurrentSection(null)
+
+        await handleSubmit()
 
     }
 
@@ -860,18 +797,18 @@ function EditSingleCourse({ course }: any) {
 
 
                         </div>
-                        <div className='border-t px-4 pb-4'>
+                        {/* <div className='border-t px-4 pb-4'>
                             <button
                                 className='bg-[#11393C] px-4 py-2 rounded text-white mt-4 flex'
                                 onClick={handleSubmit}>
-                                {isUpdatingGeneralInfo && <Spinner />} Save Changes
+                                {isUpdatingGeneralInfo && <Spinner />} Save Changes (general info)
                             </button>
 
-                        </div>
+                        </div> */}
                     </div>
 
 
-                    <div className=' h-fit bg-white rounded border mt-10'>
+                    <div className=' h-fit bg-white rounded border mt-3'>
                         <div className='px-4 py-2 border-b flex justify-between items-center'>
                             <p >Course Information</p>
 
@@ -1130,7 +1067,7 @@ function EditSingleCourse({ course }: any) {
                             <div className="h-screen w-screen bg-black opacity-60 fixed z-50 top-0 flex justify-center items-center transition duration-75 overflow-auto"></div>
                             <div className="h-screen w-screen bg-transparent fixed top-0 z-[100] transition duration-75">
                                 <div className="w-[100%] h-fit sm:w-screen xl:-translate-x-4 sm:h-screen overflow-y-scroll z-[100] bg-[#fff] shadow-md p-4 transition duration-75">
-                                    <div className=' w-fit ml-auto space-x-4 px-4'>
+                                    <div className=' w-fit ml-auto space-x-4 flex px-4'>
                                         <button
                                             className='py-1 px-4 border rounded'
                                             onClick={() => router.push({
@@ -1139,7 +1076,7 @@ function EditSingleCourse({ course }: any) {
                                                     content: activeSubSection?.content
                                                 }
                                             })}>Preview</button>
-                                        <button className='py-1 px-4 border rounded' onClick={(e) => handleEditSubSection(e)}>Save changes</button>
+                                        <button className='py-1 px-4 border rounded flex items-center gap-2' onClick={(e) => handleEditSubSection(e)}>{isUpdatingCourseInfo && <Spinner /> }Save changes</button>
                                         <button className='py-1 px-4 border rounded' onClick={() => {
                                             setActiveSubSection({ title: '', content: '', _id: '' });
                                             setEditModalIsOpen(false);
