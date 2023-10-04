@@ -100,7 +100,7 @@ function SingleCourse({ course, lessons, subscriber }: any) {
 
 
         if (!parsedSubscriber) {
-            if (count >= 1) {
+            if (count >= 4) {
                 setShowSubscribeScreen(true)
                 return
             }
@@ -328,7 +328,7 @@ function SingleCourse({ course, lessons, subscriber }: any) {
                                     }
                                 </div> */}
 
-                                <div className='lg:h-20 w-full toc-gradient px-4 flex items-center justify-between fixed md:static bg-[#FAF7ED] h-[18%]  -translate-x-6 lg:-translate-x-0 -translate-y-10 lg:-translate-y-0'>
+                                <div className='lg:h-20 w-full toc-gradient px-4 flex items-center justify-between fixed md:static bg-[#FAF7ED] h-[10%] border-b  -translate-x-6 lg:-translate-x-0 -translate-y-6 lg:-translate-y-0'>
                                     <BackChevronButton />
 
 
@@ -377,13 +377,13 @@ function SingleCourse({ course, lessons, subscriber }: any) {
 
 
 
-                                    <div className='w-fit ml-auto space-x-4'>
+                                    <div className='w-full mt-10 flex ml-auto space-x-4'>
                                         {count > 0 &&
-                                            <button onClick={previousContent} className='w-fit mb-8 bg-[#F08354]/20 text-[#F08354]  border rounded py-2 px-10 text-center '>
+                                            <button onClick={previousContent} className='w-full mb-8 bg-[#F08354]/20 text-[#F08354]  rounded py-2 px-10 text-center '>
                                                 {"Previous"}
                                             </button>
                                         }
-                                        <button onClick={nextContent} className='w-fit mb-8 px-10 bg-[#F08354] text-white rounded py-2  text-center '>
+                                        <button onClick={nextContent} className='w-full mb-8 px-10 bg-[#F08354] text-white rounded py-2  text-center '>
                                             {count === contents.length ? "Complete this lesson" : "Next"}
                                         </button>
                                     </div>

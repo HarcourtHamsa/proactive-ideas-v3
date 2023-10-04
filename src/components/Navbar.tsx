@@ -220,7 +220,18 @@ function Navbar() {
                 <Link href="/certification" className="border-b pb-4 px-4 w-[100%] block list-none" aria-current="page">Certification</Link>
               </li>
             </ul>
-            <button onClick={() => router.push("/auth/login")} className='py-2 bg-[#11393C] w-[90%] rounded text-white hover:opacity-80 mt-4 mx-auto translate-x-4'>Sign In</button>
+            {cookie?.user ?
+              <button
+                onClick={logout}
+                className='py-2 bg-[#11393C] w-[90%] rounded text-white hover:opacity-80 mt-4 mx-auto translate-x-4'>
+                Sign Out
+              </button> :
+              <button
+                onClick={() => router.push("/auth/login")}
+                className='py-2 bg-[#11393C] w-[90%] rounded text-white hover:opacity-80 mt-4 mx-auto translate-x-4'>
+                Sign In
+              </button>}
+
           </div>
         }
 

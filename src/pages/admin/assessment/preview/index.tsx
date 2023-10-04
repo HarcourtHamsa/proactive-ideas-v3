@@ -29,6 +29,9 @@ function Index() {
     const [activeBtn, setActiveBtn] = useState<number | null>(null)
     const [certificateData, setCertificateData] = useState([]);
 
+
+    console.log({ assessment });
+
     const next = () => {
         setOffset((prevState: number) => prevState + 1)
     }

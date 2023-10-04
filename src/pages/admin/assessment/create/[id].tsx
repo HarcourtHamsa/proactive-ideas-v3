@@ -22,7 +22,7 @@ import useCookie from '@/hooks/useCookie'
 
 function DynamicInput({ label, index, setCorrectAnswer, answer }: { label: string, index: number, answer: number, setCorrectAnswer: (e: any) => void }) {
     return (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 w-full">
             <p className="bg-gray-50 flex-1 py-2 px-4 border rounded">{label}</p>
             <div className={`${answer === index ? 'border-[#F08354]  text-white' : 'border-gray-500'}  border-4 flex items-center justify-center cursor-pointer w-4 h-4  rounded-full`} tabIndex={0} onClick={() => setCorrectAnswer(index)}>
                 {/* <TbCheck size={20} /> */}
@@ -51,8 +51,7 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
     const [questions, setQuestions] = useState<any[]>(assessmentState.questions || assessments[0]?.questions || [])
 
     // console.log({ assessments });
-    console.log({ questions });
-    console.log({ assessmentState });
+
 
 
     const [feedback, setFeedback] = useState({
@@ -106,7 +105,14 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
                     <div className="mt-4 space-y-2">
                         {options?.map((option: any, index: number) => {
                             return (
-                                <DynamicInput key={Math.random()} label={option.text} index={index} setCorrectAnswer={setCorrectAnswer} answer={correctAnswer} />
+                                <div className='flex gap-4 items-center'>
+                                    <DynamicInput key={Math.random()} label={option.text} index={index} setCorrectAnswer={setCorrectAnswer} answer={correctAnswer} />
+                                    <TbTrash size={20} className='cursor-pointer' onClick={() => {
+                                        const filteredOptions = options.filter((v) => v.text !== option.text)
+                                        setOptions(filteredOptions)
+
+                                    }} />
+                                </div>
                             )
                         })}
                     </div>
@@ -172,9 +178,9 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
             question,
             type: questionType,
             feedback,
-            correct_option: correctAnswer
+            correct_option: correctAnswer,
+            options: questionType == QuizTypes.trueOrFalse ? [{ text: 'false' }, { text: 'true' }] : options
         }
-
 
         questions[existingQuizIndex] = updatedQuiz;
 
@@ -319,6 +325,8 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
                             <button
                                 className='py-2 bg-[#F08354]/20 text-[#F08354] px-4 rounded mt-8 hover:opacity-80'
                                 onClick={() => {
+                                    // console.log({ questions });
+
                                     // dispatch(addQuestion({ questions }))
 
                                     router.push({

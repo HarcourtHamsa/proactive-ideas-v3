@@ -186,8 +186,6 @@ function Index() {
 
 
             case "subSectionData":
-
-
                 setSubSectionData((prevState) => ({
                     ...prevState,
                     title: e.target.value,
@@ -323,6 +321,9 @@ function Index() {
             tags: [generalInfoData.category],
         }
 
+       
+
+
         await createCourseDraft({ token: cookie.user.accessToken, course }).then(() => {
             notify({ msg: "New draft created", type: 'success' });
 
@@ -407,6 +408,11 @@ function Index() {
         ]
 
 
+        setGeneralInfoData((prevState: any) => ({
+            ...prevState,
+            prices: prices
+        }))
+
 
         dispatch(setGeneralInfoCategory({ category: generalInfoData.category }));
         dispatch(setGeneralInfoDescription({ description: generalInfoData.description }));
@@ -421,6 +427,10 @@ function Index() {
 
 
     const handlePriceChange = (e: any) => {
+        console.log("changing price...");
+        console.log(e.target.name);
+        console.log(e.target.value);
+
 
         switch (e.target.name) {
             case "USD":
@@ -498,7 +508,7 @@ function Index() {
                 <div className='px-4 py-10'>
                     <span onClick={() => dispatch(resetState())}>
 
-                    <BackChevronButton />
+                        <BackChevronButton />
                     </span>
 
                     <h1 className='text-2xl md:text-4xl font-semibold'>Create new course</h1>

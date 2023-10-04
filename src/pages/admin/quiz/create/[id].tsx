@@ -93,7 +93,14 @@ function Create({ course, quizzes }: { course: any, quizzes: any }) {
                     <div className="mt-4 space-y-2">
                         {options?.map((option: any, index: number) => {
                             return (
-                                <DynamicInput key={Math.random()} label={option.text} index={index} setCorrectAnswer={setCorrectAnswer} answer={correctAnswer} />
+                                <div className='flex gap-4 items-center'>
+                                    <DynamicInput key={Math.random()} label={option.text} index={index} setCorrectAnswer={setCorrectAnswer} answer={correctAnswer} />
+                                    <TbTrash size={20} className='cursor-pointer' onClick={() => {
+                                        const filteredOptions = options.filter((v) => v.text !== option.text)
+                                        setOptions(filteredOptions)
+
+                                    }} />
+                                </div>
                             )
                         })}
                     </div>

@@ -417,7 +417,7 @@ blockquote {
 
 .showRaw .raw-editor {
   display: block;
-  min-height: 400px;
+  min-height: 300px;
   height: fit-content;
   background-color: whitesmoke;
   padding: 10px 24px;
