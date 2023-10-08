@@ -39,6 +39,8 @@
     "@types/react-dom": "18.0.11",
     "@types/uuid": "^9.0.1",
     "axios": "^1.3.4",
+    "bson": "^6.1.0",
+    "bson-objectid": "^2.0.4",
     "cheerio": "^1.0.0-rc.12",
     "ckeditor5-custom-build": "file:ckeditor5",
     "cloudinary": "^1.36.2",

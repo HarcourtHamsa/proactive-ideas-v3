@@ -5,11 +5,11 @@ export const apiSlice = createApi({
     reducerPath: "apiSlice",
     baseQuery: fetchBaseQuery({
         baseUrl: 'https://shielded-cliffs-15232-110fd52a9c2c.herokuapp.com/api/',
+        // baseUrl: 'http://localhost:8000/api/',
         headers: {
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type'
         },
-        // baseUrl: 'http://localhost:8000/api/',
     }),
     endpoints: (builder) => ({
         fetchBlogPosts: builder.query({

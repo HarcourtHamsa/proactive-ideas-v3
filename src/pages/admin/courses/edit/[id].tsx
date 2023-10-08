@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid';
+import ObjectID from "bson-objectid";
 import CustomInput from '@/components/CustomInput';
 import Loader from '@/components/Loader';
 import Layout from '@/components/admin/Layout'
@@ -54,7 +55,7 @@ function EditSingleCourse({ course }: any) {
     const headerImageInputRef = useRef<any>();
     const [headerImageFile, setHeaderImageFile] = useState();
 
-
+    const [courseCopy, setCourseCopy] = useState({ ...course })
     const { data: categories, isLoading: isFetchingCategories } = useFetchCategoriesQuery({ group: 'course' });
     const [isUpdatingGeneralInfo, setIsUpdatingGeneralInfo] = useState(false);
     const [isUpdatingCourseInfo, setIsUpdatingCourseInfo] = useState(false);
@@ -96,6 +97,7 @@ function EditSingleCourse({ course }: any) {
 
     const dragItemRef = useRef(null)
     const dragItemOverRef = useRef(null);
+    var agg: any[];
 
     const handleDragStart = (e: any, item: any) => {
         dragItemRef.current = item
@@ -225,15 +227,14 @@ function EditSingleCourse({ course }: any) {
     };
 
 
-
     const [newSectionData, setNewSectionData] = useState({
-        id: uuidv4(),
+        id: new ObjectID().toHexString(),
         title: "",
         sub_sections: []
     })
 
     const [subSectionData, setSubSectionData] = useState({
-        _id: uuidv4(),
+        _id: new ObjectID().toHexString(),
         title: "",
         content: "",
     });
@@ -328,15 +329,83 @@ function EditSingleCourse({ course }: any) {
         return `<ul>${listItems}</ul>`;
     }
 
+    // console.log({ course });
 
+
+    interface SubSection {
+        title: string;
+        content: string;
+        _id: string;
+    }
+
+    interface Section {
+        title: string;
+        sub_sections: SubSection[];
+    }
+
+    // function findChangedSections(
+    //     initialSectionsArray: Section[],
+    //     newSectionsArray: Section[]
+    // ): Section[] {
+
+    //     console.log({ initialSectionsArray });
+    //     console.log({ newSectionsArray });
+
+
+    //     const changedSections: Section[] = [];
+
+    //     // Iterate through the initialSectionsArray
+    //     initialSectionsArray.forEach((initialSection, index) => {
+
+    //         const newSection = newSectionsArray[index];
+
+    //         // Check if the titles match
+    //         if (initialSection.title !== newSection.title) {
+    //             changedSections.push(newSection);
+    //         } else {
+
+    //             // console.log("intiial section length", initialSection.sub_sections.length);
+    //             // console.log("new section length", newSection.sub_sections.length);
+    //             // console.log("initial section", initialSection);
+    //             // console.log("new section", newSection);
+
+
+    //             if (initialSection.sub_sections.length !== newSection.sub_sections.length) {
+
+    //                 changedSections.push(newSection);
+    //             } else {
+    //                 // Compare sub_sections individually
+    //                 for (let i = 0; i < initialSection.sub_sections.length; i++) {
+    //                     if (
+    //                         initialSection.sub_sections[i].title !== newSection.sub_sections[i].title ||
+    //                         initialSection.sub_sections[i].content !== newSection.sub_sections[i].content
+    //                     ) {
+    //                         changedSections.push(newSection);
+    //                         break;
+    //                     }
+    //                 }
+    //             }
+
+    //         }
+    //     });
+
+    //     return changedSections;
+    // }
+
+
+
+
+    // HERE TOO
     const handleSubmit = async () => {
 
 
+        // console.log("courseInfoData", courseInfoData);
+        console.log("agg", agg);
+
+
         const courseObj = Object.assign({}, course, generalInfoData);
-
-
-
         courseObj.tags = [courseObj.tags];
+        courseObj.sections = agg
 
 
 
@@ -347,18 +416,17 @@ function EditSingleCourse({ course }: any) {
 
         courseObj.objectives = parsedObjectives
 
-
-        courseObj.sections.map((section) => {
-            section.sub_sections.map((sub_section) => {
-                delete sub_section._id
-            })
-        })
-
         setIsUpdatingGeneralInfo(true)
         setIsUpdatingCourseInfo(true)
 
+
+        // const courseShallowCopy = Object.assign({}, courseObj, { sections: courseInfoData })
+
+
+        console.log({ course_to_update: courseObj });
+
+
         await updateCourse({ token: cookie?.user?.accessToken, id: courseId, data: courseObj }).then((res) => {
-            console.log("res", res)
             notify({ msg: "Course updated", type: 'success' });
         }).catch((error: any) => {
             console.log(error)
@@ -370,6 +438,8 @@ function EditSingleCourse({ course }: any) {
         })
     }
 
+
+    // UPDATE USING THE GREEN BUTTON 
     const handleCourseUpdate = async () => {
         setIsUpdatingCourseInfo(true);
 
@@ -377,17 +447,13 @@ function EditSingleCourse({ course }: any) {
             sections: courseInfoData
         }
 
-        const courseShallowCopy = Object.assign({}, course, { sections: courseInfoData })
+        // console.log({ generalInfoData });
+
+
+        const courseShallowCopy = Object.assign({}, course, { ...generalInfoData }, { sections: courseInfoData })
 
         courseShallowCopy._id = courseShallowCopy.id
         delete courseShallowCopy.id
-
-        courseShallowCopy.sections.map((section) => {
-            delete section._id
-            section.sub_sections.map((sub_section) => {
-                delete sub_section._id
-            })
-        })
 
         try {
             updateCourseDraft({ id: courseId, data: courseShallowCopy })
@@ -509,7 +575,12 @@ function EditSingleCourse({ course }: any) {
                 })
             }
         })
-        course.sections = courseInfoData
+
+        // course.sections = courseInfoData
+        agg = courseInfoData
+
+        // console.log({ courseInfoData });
+
 
 
         await handleSubmit()
@@ -535,7 +606,6 @@ function EditSingleCourse({ course }: any) {
 
 
 
-
         setCourseInfoData(courseInfoData.map((obj: any) => {
             const shallowCopy = Object.assign({}, obj)
             const shallowCopyOfCurrentSection = Object.assign({}, currentSection)
@@ -551,18 +621,35 @@ function EditSingleCourse({ course }: any) {
             }
 
 
-            // console.log({ shallowCopy, currentSection });
+            // console.log({ shallowCopy, shallowCopyOfCurrentSection });
+            // console.log({ courseInfoData });
 
 
             if (shallowCopy._id === shallowCopyOfCurrentSection._id) {
-                console.log("Yesh ");
+                var sectionIndex = 0;
+                courseInfoData.filter((data, index) => {
+                    if (data._id === shallowCopyOfCurrentSection._id) {
+                        sectionIndex = index;
+                    }
+                })
+
+
+                // console.log("The same");
+
                 newObj = {
-                    ...shallowCopy, sub_sections: [...shallowCopy.sub_sections, { ...subSectionData, _id: uuidv4() }]
+                    ...shallowCopy, sub_sections: [...shallowCopy.sub_sections, { ...subSectionData, _id: new ObjectID().toHexString() }]
                 };
+
+                // console.log({ newObj });
+
 
 
                 // console.log({ obj, currentSection });
                 // Create a *new* object with changes
+                // const copyOfCourseInfoData = courseInfoData;
+                // copyOfCourseInfoData[sectionIndex] = newObj
+
+
                 return newObj
             }
 
@@ -573,8 +660,9 @@ function EditSingleCourse({ course }: any) {
 
         }));
 
-
         course.sections.map((section, index) => {
+            console.log({ section });
+
             if (section._id === newObj._id) {
                 course.sections[index] = newObj
             }
@@ -584,6 +672,12 @@ function EditSingleCourse({ course }: any) {
         setEditModalIsOpen(false)
         setCurrentSection(null)
 
+        console.log({ courseInfoData });
+
+        agg = courseInfoData
+
+
+        // UNCOMMENT HERE
         await handleSubmit()
 
     }
@@ -600,14 +694,19 @@ function EditSingleCourse({ course }: any) {
         router.push(`/admin/courses/preview`)
     }
 
-    const addNewSection = () => {
-        setCourseInfoData((prevState: any) => ([
-            ...prevState,
+    const addNewSection = async () => {
+
+        agg = [
+            ...courseInfoData,
             newSectionData
-        ]))
+        ];
+
+        setCourseInfoData(() => ([...agg]));
 
         setNewSectionModalIsOpen(false);
-        setNewSectionData({ id: uuidv4(), title: "", sub_sections: [] });
+        setNewSectionData({ id: new ObjectID().toHexString(), title: "", sub_sections: [] });
+
+        await handleSubmit()
     }
 
 
@@ -1029,7 +1128,7 @@ function EditSingleCourse({ course }: any) {
                                         <button className='py-1 px-4 border rounded' onClick={(e) => handleModalSubmit(e)}>Save changes</button>
                                         <button className='py-1 px-4 border rounded' onClick={() => {
                                             setSubSectionData({
-                                                _id: uuidv4(),
+                                                _id: new ObjectID().toHexString(),
                                                 title: "",
                                                 content: "",
                                             });
@@ -1076,7 +1175,7 @@ function EditSingleCourse({ course }: any) {
                                                     content: activeSubSection?.content
                                                 }
                                             })}>Preview</button>
-                                        <button className='py-1 px-4 border rounded flex items-center gap-2' onClick={(e) => handleEditSubSection(e)}>{isUpdatingCourseInfo && <Spinner /> }Save changes</button>
+                                        <button className='py-1 px-4 border rounded flex items-center gap-2' onClick={(e) => handleEditSubSection(e)}>{isUpdatingCourseInfo && <Spinner />}Save changes</button>
                                         <button className='py-1 px-4 border rounded' onClick={() => {
                                             setActiveSubSection({ title: '', content: '', _id: '' });
                                             setEditModalIsOpen(false);
@@ -1141,7 +1240,7 @@ function EditSingleCourse({ course }: any) {
                                     <button
                                         className="py-3 w-[100%] bg-[#F08354]/30 text-[#F08354]   px-4 rounded"
                                         onClick={() => {
-                                            setSubSectionData({ title: "", content: "", _id: uuidv4() });
+                                            setSubSectionData({ title: "", content: "", _id: new ObjectID().toHexString() });
                                             setNewSectionModalIsOpen(false);
                                         }}
                                     >

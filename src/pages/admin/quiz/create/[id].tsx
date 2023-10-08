@@ -56,7 +56,6 @@ function Create({ course, quizzes }: { course: any, quizzes: any }) {
         setQuestionType(e.target.value);
     }
 
-
     const generateDynamicInputs = (questionType: any) => {
         if (questionType === QuizTypes.trueOrFalse) {
             return (
@@ -93,7 +92,7 @@ function Create({ course, quizzes }: { course: any, quizzes: any }) {
                     <div className="mt-4 space-y-2">
                         {options?.map((option: any, index: number) => {
                             return (
-                                <div className='flex gap-4 items-center'  key={Math.random()}>
+                                <div className='flex gap-4 items-center' key={Math.random()}>
                                     <DynamicInput key={Math.random()} label={option.text} index={index} setCorrectAnswer={setCorrectAnswer} answer={correctAnswer} />
                                     <TbTrash size={20} className='cursor-pointer' onClick={() => {
                                         const filteredOptions = options.filter((v) => v.text !== option.text)
@@ -192,6 +191,8 @@ function Create({ course, quizzes }: { course: any, quizzes: any }) {
                             return (
                                 <div key={Math.random()}>
                                     {section.sub_sections.map((ss: any) => {
+                                      
+
                                         return (
                                             <div key={Math.random()} className='mb-8'>
                                                 <div className='border relative py-3 px-4 bg-white rounded mt-4 mb-2 cursor-pointer hover:opacity-70'>
@@ -203,23 +204,34 @@ function Create({ course, quizzes }: { course: any, quizzes: any }) {
                                                         <IoAddCircle size={30} />
                                                     </span>
 
-                                                    {ss.title}
+                                                    <p className='flex justify-between gap-12'>
+                                                        {ss.title}
+
+                                                        <span className=' mr-16'>
+
+                                                        {ss._id}
+                                                        </span>
+                                                    </p>
+
                                                 </div>
 
                                                 <div>
                                                     {quizzes.map((quiz: any) => {
+
+
+
                                                         if (quiz.sub_section === ss._id) {
                                                             return (
                                                                 <p key={Math.random()} className='py-2.5 flex items-center justify-between px-4 ml-8 relative mt-6 bg-white border rounded'>
                                                                     <span className='absolute -top-4 border text-sm rounded-full px-4 bg-white'>Quiz</span>
 
                                                                     Question: {quiz.question}
-                                                               
+
                                                                     <div className='flex gap-4 items-center'>
                                                                         <span>
-                                                                            <button 
-                                                                            className='bg-orange-400 text-white px-4 rounded text-sm py-1' 
-                                                                            onClick={() => router.push(`/admin/quiz/preview/${quiz.id}`)}
+                                                                            <button
+                                                                                className='bg-orange-400 text-white px-4 rounded text-sm py-1'
+                                                                                onClick={() => router.push(`/admin/quiz/preview/${quiz.id}`)}
                                                                             >Preview</button>
                                                                         </span>
                                                                         <span>
@@ -381,6 +393,7 @@ export async function getServerSideProps(ctx) {
 
     const response = await http.get(`/get-course-by-id?id=${id}`);
     const quizzes = await http.get("/get-quizzes")
+
 
     return {
         props: {
