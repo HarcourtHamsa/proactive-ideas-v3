@@ -528,17 +528,11 @@ function EditSingleCourse({ course }: any) {
      * @param sect section
      * @param subSect sub_sections
      */
-    const deleteSubSection = () => {
+    const deleteSubSection = async () => {
 
         setDeleteSubSectionModalIsOpen(false);
 
-        console.log("current section...", currentSection.sub_sections);
-        console.log("current sub section...", currentSubSection._id);
-
-
         const filteredSection = currentSection.sub_sections.filter((ss: any) => ss._id !== currentSubSection._id);
-
-        // console.log("filteredSection...", filteredSection);
 
         currentSection.sub_sections = filteredSection;
 
@@ -551,7 +545,21 @@ function EditSingleCourse({ course }: any) {
             ];
         })
 
+        agg = courseInfoData
+        var newArr: any[] = [];
 
+        Object.keys(agg).reduce((acc, key) => {
+            if (key !== '-1') {
+
+                newArr.push(agg[key]);
+            }
+            return acc;
+        }, {});
+
+
+        agg = newArr;
+
+        await handleSubmit()
     }
 
 
@@ -896,14 +904,14 @@ function EditSingleCourse({ course }: any) {
 
 
                         </div>
-                        {/* <div className='border-t px-4 pb-4'>
+                        <div className='border-t px-4 pb-4'>
                             <button
                                 className='bg-[#11393C] px-4 py-2 rounded text-white mt-4 flex'
                                 onClick={handleSubmit}>
-                                {isUpdatingGeneralInfo && <Spinner />} Save Changes (general info)
+                                {isUpdatingGeneralInfo && <Spinner />} Update Changes 
                             </button>
 
-                        </div> */}
+                        </div>
                     </div>
 
 
@@ -1016,7 +1024,7 @@ function EditSingleCourse({ course }: any) {
                         </div>
 
 
-                        <div className='border-t px-4 pt-1 pb-4'>
+                        {/* <div className='border-t px-4 pt-1 pb-4'>
                             <button
                                 className='bg-[#11393C] px-4  rounded text-white mt-2 py-2 flex'
                                 onClick={handleCourseUpdate}
@@ -1024,7 +1032,7 @@ function EditSingleCourse({ course }: any) {
                             >
                                 {isUpdatingCourseInfo && <Spinner />} Save Changes
                             </button>
-                        </div>
+                        </div> */}
 
                     </div>
 

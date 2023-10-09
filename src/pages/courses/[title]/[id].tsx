@@ -241,9 +241,9 @@ function SingleCourse({ course, lessons, subscriber }: any) {
                         })[1]}
                     /> :
                     <div className='bg-[#FAF7ED] flex'>
-
-                        <div className='w-[90%] lg:w-[20%] border-r bg-white z-50 text-[#FAF7ED] h-screen fixed left-0 top-0 bottom-0 hidden  xl:block' style={{ display: showSidebar ? 'block' : '' }}>
-                            <aside className='h-screen lg:w-[100%] w-[90%] -z-1  mx-auto lg:col-span-1 mb-10 lg:mb-0 '>
+                        {/* I STOPPED HERE */}
+                        <div className='w-[90%] lg:w-[20%] border-r z-50 text-[#FAF7ED] h-screen fixed left-0 top-0 bottom-0 hidden  xl:block' style={{ display: showSidebar ? 'block' : '' }}>
+                            <aside className='h-[500px] lg:w-[100%] w-[90%] -z-1  mx-auto lg:col-span-1 mb-10 lg:mb-0 '>
 
                                 <div className='w-[30px] h-[30px] flex items-center justify-center shadow bg-gray-200 rounded-full ml-auto mt-4 mb-4 lg:hidden' onClick={() => setShowSidebar(!showSidebar)} >
                                     <IoClose className='text-[#11393C]' />
@@ -263,6 +263,8 @@ function SingleCourse({ course, lessons, subscriber }: any) {
                                 <div className={`h-full overflow-auto`}>
                                     <ul key={Math.random()} className='px-0 list-decimal ul__unset'>
                                         {course?.sections?.map((section: any, index: number) => {
+                                            console.log({ section });
+
                                             return (
                                                 <span key={Math.random()}>
                                                     <li className='py-2 mt-0 bg-gray-200 text-[#11393C] px-4 list-none flex justify-between uppercase tracking-wider text-sm line-clamp-0'>
