@@ -678,10 +678,8 @@ details ul li{
 
 
 .duo-button {
-  /* min-width: 100%; */
-  min-height: 50px;
+  height: 50px;
   display: flex;
-  /* justify-content: center; */
   align-items: center;
   border-radius: 16px;
   border: 2px solid #e5e5e5;
@@ -692,9 +690,7 @@ details ul li{
   padding: 0px 16px;
 }
 
-/* --primary-color: "#11393C";
---secondary-color: "#FAF7ED";
---tetiary-color: "#F08354" */
+
 
 .duo-button:hover, .active {
   background-color: #FAF7ED;

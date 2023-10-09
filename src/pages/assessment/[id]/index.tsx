@@ -5,7 +5,8 @@ import { useRouter } from 'next/router';
 import React, { useState } from 'react'
 import { IoCheckbox, IoClose, IoDownload } from 'react-icons/io5';
 import { TbCheck, TbCross, TbDownload } from 'react-icons/tb';
-import { PDFDocument, rgb } from 'pdf-lib'
+import { PDFDocument, rgb, StandardFonts } from 'pdf-lib'
+import useCookie from '@/hooks/useCookie';
 // import certificatePDF from "../../../assets/sample-certificate..pdf"
 
 function Index({ assessment, id }: any) {
@@ -19,8 +20,7 @@ function Index({ assessment, id }: any) {
     const [activeBtn, setActiveBtn] = useState<number | null>(null)
     const [certificateData, setCertificateData] = useState([]);
     const router = useRouter()
-
-
+    const cookie = useCookie()
 
 
     const next = () => {
@@ -57,25 +57,45 @@ function Index({ assessment, id }: any) {
     }
 
 
-    const writeNameOnCertificate = async (page: any, name: string, pdfDoc: PDFDocument) => {
+    const writeNameOnCertificate = async (page: any, name: string, pdfDoc: PDFDocument, course: any) => {
         const nameText = `${name}`;
-        const fontSize = 200; // Adjust the font size as needed
-        const font = await pdfDoc.embedFont('Helvetica'); // Change to the desired font
-
+        const fontSize = 25; // Adjust the font size as needed
+        const helvetica = StandardFonts.TimesRoman
+        const font = await pdfDoc.embedFont(helvetica); // Change to the desired font
         const textWidth = font.widthOfTextAtSize(nameText, fontSize);
         const centerX = (page.getWidth() - textWidth) / 2;
+        // const centerX = (page.getWidth() - textWidth);
         const textHeight = page.getHeight(); // Adjust the vertical position as needed
 
         page.drawText(nameText, {
             x: centerX,
-            y: 1150,
+            // y: 1150,
+            y: 280,
             size: fontSize,
+            font: font,
+            color: rgb(0, 0, 0),
+        });
+
+        page.drawText(`For Successfully Completing the Course`, {
+            x: (page.getWidth() - textWidth) / 2.5,
+            // y: 1150,
+            y: 230,
+            size: 16,
+            font: font,
+            color: rgb(0, 0, 0),
+            
+        });
+        page.drawText(`${course}`, {
+            x: (page.getWidth() - textWidth) / 2.3,
+            // y: 1150,
+            y: 200,
+            size: 18,
             font: font,
             color: rgb(0, 0, 0),
         });
     };
 
-    const generateAndDownloadCertificate = async (name: string) => {
+    const generateAndDownloadCertificate = async (name: string, course: string) => {
         try {
             // Load the existing certificate PDF
             const existingPdfBytes = await fetch('/certificate_4.pdf').then(res => res.arrayBuffer());
@@ -85,7 +105,7 @@ function Index({ assessment, id }: any) {
             const page = pdfDoc.getPages()[0];
 
             // Write the centered name on the certificate
-            await writeNameOnCertificate(page, name, pdfDoc);
+            await writeNameOnCertificate(page, name, pdfDoc, course);
 
             // Save the modified PDF
             const modifiedPdfBytes = await pdfDoc.save();
@@ -112,11 +132,11 @@ function Index({ assessment, id }: any) {
 
             <div className={`overflow-hidden `}>
                 {offset === 0 &&
-                    <div className='h-screen w-screen bg-[#FAF7ED] relative flex justify-center items-center'
+                    <div className='h-screen w-screen bg-[#FAF7ED] z-[9999999] relative flex justify-center items-center'
                     >
                         <div className='container w-[80%] mx-auto grid lg:grid-cols-2'>
                             <div>
-                                <div className='h-[600px] w-[600px] scale-105 bg-[#F08354] rounded-full absolute -left-20 opacity-0 lg:opacity-100'></div>
+                                <div className='h-[600px] w-[600px] scale-105 bg-[#F08354] rounded-full absolute -left-20 opacity-0 lg:opacity-100 hidden lg:block'></div>
                             </div>
                             <div className='space-y-4'>
                                 <h1 className="mb-4 text-3xl  mt-10 font-semibold leading-snug lg:font-extrabold lg:text-5xl lg:leading-none  lg:mb-4">Assessment Time!</h1>
@@ -139,6 +159,8 @@ function Index({ assessment, id }: any) {
                                 </p>
 
                                 <button className='border h-[50px] flex items-center px-6 rounded duo-button' onClick={next}>Start Assessment</button>
+                                {/* <div className='border h-[50px] flex items-center px-6 rounded' onClick={() => console.log("Done...")}>Start Assessment</div> */}
+
                             </div>
                         </div>
                     </div>
@@ -149,12 +171,12 @@ function Index({ assessment, id }: any) {
                         <div key={Math.random()} className='h-screen w-screen bg-[#FAF7ED] relative flex justify-center items-center' style={{ display: `${offset === index + 1 ? 'flex' : 'none'}` }}>
 
 
-                            <div className='container lg:w-[50%]  w-[90%] bg-white z-20 border px-8 mx-auto  rounded-lg box-border py-8'>
-                                <h1>
-                                    <span>Question {index + 1}: </span>
+                            <div className='container lg:w-[50%]  w-[90%] bg-white border-t-8 border-t-[#11393C] z-20 border lg:px-8 px-4 mx-auto  rounded-lg box-border py-8'>
+                                <p className='text-lg lg:text-2xl'>
+                                    {/* <span>Question {index + 1}: </span> */}
                                     {question?.question}
 
-                                </h1>
+                                </p>
                                 <p className='text-gray-400'>Choose the correct answer</p>
                                 <div className='mt-6'>
                                     {question?.options.map((option: any, i: number) => {
@@ -237,7 +259,7 @@ function Index({ assessment, id }: any) {
                             }
 
                             {passedCutoffMark() ?
-                                <button className='px-4 py-2 border flex items-center gap-2 mx-auto mt-4 rounded hover:opacity-75' onClick={() => generateAndDownloadCertificate("Abas Umoh")}>
+                                <button className='px-4 py-2 border flex items-center gap-2 mx-auto mt-4 rounded hover:opacity-75' onClick={() => generateAndDownloadCertificate(cookie?.user.name, assessment?.course?.title)}>
                                     <TbDownload />
                                     Download Certificate
                                 </button>
@@ -247,7 +269,7 @@ function Index({ assessment, id }: any) {
                                     setTotalCorrectAnswers(0)
                                     setOffset(0)
                                     setActiveBtn(null)
-                                    
+
                                 }
 
                                 }>
