@@ -436,6 +436,8 @@ function EditSingleCourse({ course }: any) {
             setIsUpdatingGeneralInfo(false)
             setIsUpdatingCourseInfo(false)
         })
+
+        window.location.reload()
     }
 
 
