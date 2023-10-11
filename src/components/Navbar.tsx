@@ -111,10 +111,13 @@ function Navbar() {
               <li>
                 <div onClick={() => setResourcesSubMenuIsOpen(!resourcesSubMenuIsOpen)} className=" py-5 cursor-pointer pl-3 hover:text-[#F08354] pr-4 relative flex items-center gap-1 rounded md:bg-transparent md:p-0 text-black" aria-current="page">Resources <IoCaretDownOutline /> </div>
                 {resourcesSubMenuIsOpen && (
-                  <div className='absolute w-[250px] z-30 -bottom-24 -translate-x-4 bg-white rounded shadow-xl overflow-hidden'>
+                  <div className='absolute w-[250px] z-30 -bottom-36 translate-y-6 -translate-x-4 bg-white rounded shadow-xl overflow-hidden'>
                     <ul className='pl-0 ml-0 text-left'>
                       <li className=' py-4 hover:bg-[#F08354] hover:text-white'>
                         <Link href="/certification" className=" px-4 w-[100%] block " aria-current="page">Certification</Link>
+                      </li>
+                      <li className='px-4 py-4 hover:bg-[#F08354] hover:text-white'>
+                        <Link href="/verify" className="block py-5 pl-3 pr-4  rounded md:bg-transparent md:p-0" aria-current="page">Verify</Link>
                       </li>
                       <li className='px-4 py-4 hover:bg-[#F08354] hover:text-white'>
                         <Link href="/contact" className="block py-5 pl-3 pr-4  rounded md:bg-transparent md:p-0" aria-current="page">Contact</Link>

@@ -222,6 +222,17 @@ function SingleCourse({ course, lessons, subscriber }: any) {
 
     }
 
+    async function createCertificate() {
+        const user = cookie.user.id
+        const course = assessment.data[0].course
+
+        try {
+            await http.post('/create-certificate', { user, course })
+        } catch (error) {
+            throw error
+        }
+
+    }
     return (
         <div>
             {cookie?.user.email ?
@@ -428,7 +439,10 @@ function SingleCourse({ course, lessons, subscriber }: any) {
                                                     : <div className='flex gap-2'>
                                                         <button
                                                             className='border py-2 hover:opacity-50 bg-[#F08354]/20 text-[#F08354] w-full whitespace-nowrap rounded px-4'
-                                                            onClick={() => router.push(`/assessment/${assessment?.data[0].id}`)}
+                                                            onClick={async () => {
+                                                                await createCertificate()
+                                                                router.push(`/assessment/${assessment?.data[0].id}`)
+                                                            }}
                                                         >Take Assessment</button>
                                                         <button className='border py-2 w-full hover:opacity-50 text-white rounded px-4 bg-[#F08354]' onClick={() => setCourseIsComplete(false)}>Close</button>
                                                     </div>

@@ -7,6 +7,7 @@ import { IoCheckbox, IoClose, IoDownload } from 'react-icons/io5';
 import { TbCheck, TbCross, TbDownload } from 'react-icons/tb';
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib'
 import useCookie from '@/hooks/useCookie';
+import Spinner from '@/components/Spinner';
 // import certificatePDF from "../../../assets/sample-certificate..pdf"
 
 function Index({ assessment, id }: any) {
@@ -19,9 +20,9 @@ function Index({ assessment, id }: any) {
     const [isOpen, setIsOpen] = useState(false)
     const [activeBtn, setActiveBtn] = useState<number | null>(null)
     const [certificateData, setCertificateData] = useState([]);
+    const [isGeneratingCert, setIsGeneratingCert] = useState(false)
     const router = useRouter()
     const cookie = useCookie()
-
 
     const next = () => {
         setOffset((prevState: number) => prevState + 1)
@@ -67,6 +68,12 @@ function Index({ assessment, id }: any) {
         // const centerX = (page.getWidth() - textWidth);
         const textHeight = page.getHeight(); // Adjust the vertical position as needed
 
+        console.log({ assessment: assessment?.course?.id });
+        console.log({ user: cookie?.user?.id });
+
+        const cert = await http.get(`/get-certificate?course=${assessment?.course?.id}&user=${cookie?.user?.id}`)
+        const certId = cert.data.data[0].id;
+
         page.drawText(nameText, {
             x: centerX,
             // y: 1150,
@@ -83,8 +90,11 @@ function Index({ assessment, id }: any) {
             size: 16,
             font: font,
             color: rgb(0, 0, 0),
-            
+
         });
+
+
+
         page.drawText(`${course}`, {
             x: (page.getWidth() - textWidth) / 2.3,
             // y: 1150,
@@ -93,9 +103,20 @@ function Index({ assessment, id }: any) {
             font: font,
             color: rgb(0, 0, 0),
         });
+
+        page.drawText(`ID: ${certId}`, {
+            x: (page.getWidth() - textWidth) / 2.3,
+            // y: 1150,
+            y: 10,
+            size: 16,
+            font: font,
+            color: rgb(0, 0, 0),
+        });
     };
 
     const generateAndDownloadCertificate = async (name: string, course: string) => {
+        setIsGeneratingCert(true)
+
         try {
             // Load the existing certificate PDF
             const existingPdfBytes = await fetch('/certificate_4.pdf').then(res => res.arrayBuffer());
@@ -124,7 +145,9 @@ function Index({ assessment, id }: any) {
             URL.revokeObjectURL(url);
         } catch (error) {
             console.error('Error generating and downloading certificate:', error);
-        }
+        } 
+
+        setIsGeneratingCert(false)
     };
 
     return (
@@ -260,8 +283,9 @@ function Index({ assessment, id }: any) {
 
                             {passedCutoffMark() ?
                                 <button className='px-4 py-2 border flex items-center gap-2 mx-auto mt-4 rounded hover:opacity-75' onClick={() => generateAndDownloadCertificate(cookie?.user.name, assessment?.course?.title)}>
-                                    <TbDownload />
-                                    Download Certificate
+                                    {/* <TbDownload /> */}
+                                    {isGeneratingCert && <Spinner />}
+                                    Generate Certificate
                                 </button>
                                 : <button className='px-4 py-2 border flex items-center gap-2 mx-auto mt-4 rounded hover:opacity-75' onClick={() => {
                                     setFeedback(null)
