@@ -106,8 +106,15 @@ function Title({ blogDetails }: any) {
                     <p className='text-base'>Written by  - {blogDetails?.author} </p>
 
 
-                    <div className='lg:h-[342px] h-[200px] my-10 mx-auto w-[100%] overflow-hidden' >
-                        <Image alt='' className='object-cover w-full h-full' src={blogDetails?.header_image} width={684} height={342} />
+                    <div className='lg:h-[450px] h-[200px] my-10 mx-auto w-[100%] overflow-hidden'>
+                        <Image
+                            alt=''
+                            className='h-full w-full'
+                            src={blogDetails?.header_image}
+                            layout="responsive" // Set layout to responsive
+                            width={1000}
+                            height={450} // Set the actual height of the image
+                        />
                     </div>
                 </div>
 
@@ -131,7 +138,7 @@ function Title({ blogDetails }: any) {
                                         <button className='bg-[#F08354] shadow-xl mb-6 w-full py-3 rounded text-white text-base block'
                                             onClick={() => setShowTableOfContents(!showTableOfContents)}
                                             style={{ display: isIntersecting ? 'none' : 'block' }}
-                                        >Table of contentssss</button>
+                                        >Table of contents</button>
 
                                         {showTableOfContents && <div className='lg:hidden'>
                                             <TableOfContents htmlString={blogDetails?.content} />

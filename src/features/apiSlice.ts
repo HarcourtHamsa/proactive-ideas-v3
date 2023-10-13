@@ -8,7 +8,8 @@ export const apiSlice = createApi({
         // baseUrl: 'http://localhost:8000/api/',
         headers: {
             'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type'
+            'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type',
+            'Content-Type': 'application/json',
         },
     }),
     endpoints: (builder) => ({
@@ -197,13 +198,13 @@ export const apiSlice = createApi({
                 url: `/update-course?id=${id}`,
                 method: 'PATCH',
                 body: rest.data,
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                }
+                // headers: {
+                //     'Authorization': `Bearer ${token}`,
+                // }
             }),
         }),
         updateCourseDraft: builder.mutation({
-            query: ({id, ...rest }: any) => ({
+            query: ({ id, ...rest }: any) => ({
                 url: `/update-course?id=${id}`,
                 method: 'PATCH',
                 body: rest.data,

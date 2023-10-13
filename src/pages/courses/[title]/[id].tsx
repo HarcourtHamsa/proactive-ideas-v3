@@ -56,6 +56,8 @@ function SingleCourse({ course, lessons, subscriber }: any) {
 
     const [progress, setProgress] = useState(Math.ceil(parsedSubscriber?.progress) || 0)
     const [count, setCount] = useState(Math.floor((progress / 100) * contents.length));
+    const [fakeCount, setFakeCount] = useState(count)
+
 
 
 
@@ -68,7 +70,7 @@ function SingleCourse({ course, lessons, subscriber }: any) {
     const generateBody = (arr: any) => {
         console.log({ arr });
 
-        return arr[count]?.content
+        return arr[fakeCount]?.content
     }
 
 
@@ -100,13 +102,14 @@ function SingleCourse({ course, lessons, subscriber }: any) {
 
 
         if (!parsedSubscriber) {
-            if (count >= 4) {
+            if (count >= 6) {
                 setShowSubscribeScreen(true)
                 return
             }
         }
 
         setCount(count + 1);
+        setFakeCount(count);
 
 
         const currentProgress = calculateProgress(count + 1, contents.length)
@@ -122,9 +125,17 @@ function SingleCourse({ course, lessons, subscriber }: any) {
 
 
     const selectContent = (body: any) => {
-        const lessonIndex = contents.findIndex((lesson: any) => lesson.id === body.id)
-        setCount(lessonIndex);
-        setProgress(lessonIndex)
+        const lessonIndex = contents.findIndex((lesson: any) => lesson._id === body._id)
+
+        if (count > lessonIndex) {
+            setFakeCount(lessonIndex);
+            // setProgress(lessonIndex)
+        }
+
+        console.log({ count });
+        console.log({ lessonIndex });
+
+
     }
 
     const checkAnswer = (correctOption: number, yourOption: number) => {
@@ -274,7 +285,7 @@ function SingleCourse({ course, lessons, subscriber }: any) {
                                 <div className={`h-full overflow-auto`}>
                                     <ul key={Math.random()} className='px-0 list-decimal ul__unset pb-6'>
                                         {course?.sections?.map((section: any, index: number) => {
-                                            console.log({ section });
+
 
                                             return (
                                                 <span key={Math.random()}>
@@ -290,8 +301,8 @@ function SingleCourse({ course, lessons, subscriber }: any) {
                                                             return (
                                                                 <li
                                                                     key={Math.random()}
-                                                                    // onClick={() => selectContent(ss)} 
-                                                                    className={`list-none  px-2 py-2  text-sm cursor-pointer flex ${foundindex === count ? 'text-orange-400 bg-[#11393C]' : 'text-[#11393C]'}`}>
+                                                                    onClick={() => selectContent(ss)}
+                                                                    className={`list-none  px-2 py-2  text-sm cursor-pointer flex ${foundindex === fakeCount ? 'text-orange-400 bg-[#11393C]' : 'text-[#11393C]'}`}>
 
                                                                     {/* <IoDocumentText size={15} scale={10} /> */}
 

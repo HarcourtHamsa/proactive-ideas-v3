@@ -15,15 +15,15 @@ function BlogCard({
 
   return (
     <div className="shadow h-[350px] cursor-pointer">
-      <div className="flex flex-col h-full bg-white border rounded overflow-hidden" onClick={() => router.push({
+      <div className="flex flex-col h-full bg-white border rounded overflow-hidden " onClick={() => router.push({
         pathname: `/blog/${data.title}`, query: {
           ...data
         }
       }, `/blog/${data.id}/${data.title.replace(/ /g, "-").replace(/\//g, "-").toLowerCase()}`)}>
 
-        <a className="block focus:outline-none h-[40%] focus-visible:ring-2">
+        <a className="block focus:outline-none h-[40%] focus-visible:ring-2 bg-red-600">
           <figure className="relative h-full overflow-hidden ">
-            <Image className="absolute inset-0 w-full h-full object-cover transform hover:scale-105 transition duration-700 ease-out" src={data?.header_image} width="320" height="180" alt="Course" />
+            <Image className='object-center' src={data?.header_image} width={500} height={550} alt="Course" />
           </figure>
         </a>
 
@@ -38,7 +38,7 @@ function BlogCard({
 
             <header className="mb-3 min-h-[30px] h-fit">
               <a className="block focus:outline-none focus-visible:ring-2">
-                <p className="text-lg font-semibold leading-snug capitalize line-clamp-2">{data?.title}</p>
+                <p className="text-lg font-semibold leading-snug capitalize line-clamp-1">{data?.title}</p>
               </a>
             </header>
 

@@ -398,11 +398,6 @@ function EditSingleCourse({ course }: any) {
     // HERE TOO
     const handleSubmit = async () => {
 
-
-        // console.log("courseInfoData", courseInfoData);
-        console.log("agg", agg);
-
-
         const courseObj = Object.assign({}, course, generalInfoData);
         courseObj.tags = [courseObj.tags];
         courseObj.sections = agg
@@ -427,9 +422,11 @@ function EditSingleCourse({ course }: any) {
 
 
         await updateCourse({ token: cookie?.user?.accessToken, id: courseId, data: courseObj }).then((res) => {
-            notify({ msg: "Course updated", type: 'success' });
+            console.log({res});
+            
+            notify({ msg: "Course updated", type: 'success' })
         }).catch((error: any) => {
-            console.log(error)
+            console.log({error})
             notify({ msg: "An error occured!", type: 'error' });
 
         }).finally(() => {
@@ -437,7 +434,7 @@ function EditSingleCourse({ course }: any) {
             setIsUpdatingCourseInfo(false)
         })
 
-        window.location.reload()
+        // window.location.reload()
     }
 
 
