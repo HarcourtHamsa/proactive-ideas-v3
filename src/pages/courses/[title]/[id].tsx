@@ -301,7 +301,7 @@ function SingleCourse({ course, lessons, subscriber }: any) {
                                                             return (
                                                                 <li
                                                                     key={Math.random()}
-                                                                    onClick={() => selectContent(ss)}
+                                                                    // onClick={() => selectContent(ss)}
                                                                     className={`list-none  px-2 py-2  text-sm cursor-pointer flex ${foundindex === fakeCount ? 'text-orange-400 bg-[#11393C]' : 'text-[#11393C]'}`}>
 
                                                                     {/* <IoDocumentText size={15} scale={10} /> */}
