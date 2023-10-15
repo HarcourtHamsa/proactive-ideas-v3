@@ -70,7 +70,7 @@ function SingleCourse({ course, lessons, subscriber }: any) {
     const generateBody = (arr: any) => {
         console.log({ arr });
 
-        return arr[fakeCount]?.content
+        return arr[count]?.content
     }
 
 
@@ -109,7 +109,7 @@ function SingleCourse({ course, lessons, subscriber }: any) {
         }
 
         setCount(count + 1);
-        setFakeCount(count);
+        // setFakeCount(count);
 
 
         const currentProgress = calculateProgress(count + 1, contents.length)
@@ -128,7 +128,7 @@ function SingleCourse({ course, lessons, subscriber }: any) {
         const lessonIndex = contents.findIndex((lesson: any) => lesson._id === body._id)
 
         if (count > lessonIndex) {
-            setFakeCount(lessonIndex);
+            setCount(lessonIndex);
             // setProgress(lessonIndex)
         }
 
@@ -302,7 +302,7 @@ function SingleCourse({ course, lessons, subscriber }: any) {
                                                                 <li
                                                                     key={Math.random()}
                                                                     // onClick={() => selectContent(ss)}
-                                                                    className={`list-none  px-2 py-2  text-sm cursor-pointer flex ${foundindex === fakeCount ? 'text-orange-400 bg-[#11393C]' : 'text-[#11393C]'}`}>
+                                                                    className={`list-none  px-2 py-2  text-sm cursor-pointer flex ${foundindex === count ? 'text-orange-400 bg-[#11393C]' : 'text-[#11393C]'}`}>
 
                                                                     {/* <IoDocumentText size={15} scale={10} /> */}
 
