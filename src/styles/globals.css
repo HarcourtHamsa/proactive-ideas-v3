@@ -1,12 +1,12 @@
 @font-face {
   font-family: 'Larsseit';
-  src: url('../assets/fonts/Mabry\ Pro\ Regular.otf');
+  src: url('../assets/fonts/SF-Pro-Display-Medium.woff');
   font-display: swap;
 }
 
 @font-face {
   font-family: 'SlackCircular';
-  src: url('../assets/fonts/Mabry\ Pro\ Regular.otf');
+  src: url('../assets/fonts/SF-Pro-Display-Medium.woff');
   font-display: swap;
 }
 
@@ -41,7 +41,7 @@
   margin: 0;
   font-family: 'SlackCircular' !important;
   font-weight: 500;
-  /* font-size: 17px; */
+  font-size: 15px;
   line-height: 1.6;
   scroll-behavior: smooth;
 }
@@ -678,16 +678,18 @@ details ul li{
 
 
 .duo-button {
-  height: 50px;
+  min-height: 50px;
+  height: fit-content;
   display: flex;
   align-items: center;
   border-radius: 16px;
+  text-align: left;
   border: 2px solid #e5e5e5;
   border-bottom: 6px solid #e5e5e5;
-  margin: 10px;
+  margin: 10px 0px;
   transition: all 0.1s;
   display: inline-flex;
-  padding: 0px 16px;
+  padding: 5px 16px;
 }
 
 

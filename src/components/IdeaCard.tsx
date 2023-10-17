@@ -2,7 +2,7 @@ import React from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 
-function IdeaCard({
+function BlogCard({
   data
 }: any) {
   const router = useRouter();
@@ -14,16 +14,16 @@ function IdeaCard({
 
 
   return (
-    <div className="shadow h-[350px] cursor-pointer">
-      <div className="flex flex-col h-full bg-white border rounded overflow-hidden" onClick={() => router.push({
+    <div className="shadow h-[400px] cursor-pointer">
+      <div className="flex flex-col h-full bg-white border rounded overflow-hidden " onClick={() => router.push({
         pathname: `/ideas/${data.title}`, query: {
           ...data
         }
-      }, `/ideas/${data.id}/${data.title.replace(/ /g, "-").toLowerCase()}`)}>
+      }, `/ideas/${data.id}/${data.title.replace(/ /g, "-").replace(/\//g, "-").toLowerCase()}`)}>
 
-        <a className="block focus:outline-none focus-visible:ring-2 h-[40%]">
+        <a className="block focus:outline-none h-[48%] focus-visible:ring-2">
           <figure className="relative h-full overflow-hidden ">
-            <Image className="absolute inset-0 w-full h-full object-cover transform hover:scale-105 transition duration-700 ease-out" src={data?.header_image} width="320" height="180" alt="Course" />
+            <Image className='object-center' src={data?.header_image} width={500} height={550} alt="Course" />
           </figure>
         </a>
 
@@ -36,13 +36,13 @@ function IdeaCard({
           <div className="flex-grow">
 
 
-            <header className="mb-3">
-            <a className="block focus:outline-none focus-visible:ring-2">
-            <p className="text-lg font-semibold leading-snug capitalize line-clamp-2">{data?.title}</p>
+            <header className="mb-3 min-h-[30px] h-fit">
+              <a className="block focus:outline-none focus-visible:ring-2">
+                <p className="text-lg font-semibold leading-snug capitalize line-clamp-1">{data?.title}</p>
               </a>
             </header>
 
-            <div className="mb-8 line-clamp-2">
+            <div className="mb-4 line-clamp-2">
               <p>{data?.summary}</p>
             </div>
 
@@ -66,4 +66,4 @@ function IdeaCard({
   );
 }
 
-export default IdeaCard;
+export default BlogCard;

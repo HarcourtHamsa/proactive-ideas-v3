@@ -12,9 +12,12 @@ import { resetQuestions } from '@/features/assessment/assessmentSlice';
 
 function Index() {
     const router = useRouter();
-    const query = router.query as unknown as string
-    const parsedAssessment = Object.keys(query)
-    const initialQuestions = parsedAssessment[0] ? JSON.parse(parsedAssessment[0]) : [];
+    const query = router.query.questionz as unknown as string
+    const parsedAssessment = JSON.parse(query)
+
+   
+    
+    const initialQuestions = parsedAssessment.length ? parsedAssessment : [];
     const [assessment, setAssessment] = useState({
         questions: initialQuestions
     });
@@ -120,11 +123,11 @@ function Index() {
                             <div className='w-[300px] h-[300px] bg-green-600/20 rounded-full absolute right-20 top-0 opaque-box opaque-box-2'></div>
                             <div className='w-[200px] h-[200px] bg-red-600/20 rounded-full absolute bottom-0 opaque-box opaque-box-3'></div>
                             <div className='container lg:w-[50%]  w-[90%] bg-white z-20 border px-8 mx-auto  rounded-lg box-border py-8'>
-                                <h1>
-                                    <span>Question {index + 1}: </span>
+                                <p className='mb-2'>
+                                    {/* <span>Question {index + 1}: </span> */}
                                     {question?.question}
 
-                                </h1>
+                                </p>
                                 <p className='text-gray-400'>Choose the correct answer</p>
                                 <div className='mt-6'>
                                     {question?.options.map((option: any, i: number) => {

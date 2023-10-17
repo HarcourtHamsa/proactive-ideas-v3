@@ -8,7 +8,8 @@ import { TbCheck, TbCross, TbDownload } from 'react-icons/tb';
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib'
 import useCookie from '@/hooks/useCookie';
 import Spinner from '@/components/Spinner';
-// import certificatePDF from "../../../assets/sample-certificate..pdf"
+import trophyGif from "../../../assets/trophy.gif"
+import Image from 'next/image';
 
 function Index({ assessment, id }: any) {
     const [offset, setOffset] = useState(0)
@@ -84,7 +85,7 @@ function Index({ assessment, id }: any) {
         });
 
         page.drawText(`For Successfully Completing the Course`, {
-            x: (page.getWidth() - textWidth) / 2.5,
+            x: (page.getWidth() - textWidth) / 2.6,
             // y: 1150,
             y: 230,
             size: 16,
@@ -96,7 +97,7 @@ function Index({ assessment, id }: any) {
 
 
         page.drawText(`${course}`, {
-            x: (page.getWidth() - textWidth) / 2.3,
+            x: (page.getWidth() - textWidth) / 2.4,
             // y: 1150,
             y: 200,
             size: 18,
@@ -195,7 +196,7 @@ function Index({ assessment, id }: any) {
 
 
                             <div className='container lg:w-[50%]  w-[90%] bg-white border-t-8 border-t-[#11393C] z-20 border lg:px-8 px-4 mx-auto  rounded-lg box-border py-8'>
-                                <p className='text-lg lg:text-2xl'>
+                                <p className='text-lg lg:text-xl mb-2'>
                                     {/* <span>Question {index + 1}: </span> */}
                                     {question?.question}
 
@@ -209,7 +210,7 @@ function Index({ assessment, id }: any) {
                                             <button
                                                 key={Math.random()}
                                                 // className={`px-4 py-1 duo-button relative rounded border w-full focus-within::bg-red-500`}
-                                                className={`px-4 py-1 duo-button relative rounded border w-full focus:border-[#F08354] ${feedback ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer'} ${activeBtn === i ? 'active' : ''}`}
+                                                className={` py-1 duo-button  relative rounded border w-full focus:border-[#F08354] ${feedback ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer'} ${activeBtn === i ? 'active' : ''}`}
                                                 disabled={feedback ? true : false}
                                                 tabIndex={0}
                                                 // onClick={() => setOption(i)}
@@ -264,6 +265,7 @@ function Index({ assessment, id }: any) {
 
                 {offset === totalAssessments + 1 && <div className='h-screen w-screen bg-[#FAF7ED] relative flex justify-center items-center'>
                     <div className='text-center'>
+                        <Image alt='' src={trophyGif} className='absolute top-0 -translate-x-12  translate-y-14 lg:translate-y-4'/>
                         <h1 className="mb-4 text-3xl  mt-10 font-semibold leading-snug lg:font-extrabold lg:text-5xl lg:leading-none  lg:mb-4">Assessment Completed</h1>
                         <p>You got {totalCorrectAnswers} answer(s) correctly</p>
 

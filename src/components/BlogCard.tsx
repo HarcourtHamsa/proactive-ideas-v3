@@ -14,14 +14,14 @@ function BlogCard({
 
 
   return (
-    <div className="shadow h-[350px] cursor-pointer">
+    <div className="shadow h-[400px] cursor-pointer">
       <div className="flex flex-col h-full bg-white border rounded overflow-hidden " onClick={() => router.push({
         pathname: `/blog/${data.title}`, query: {
           ...data
         }
       }, `/blog/${data.id}/${data.title.replace(/ /g, "-").replace(/\//g, "-").toLowerCase()}`)}>
 
-        <a className="block focus:outline-none h-[40%] focus-visible:ring-2 bg-red-600">
+        <a className="block focus:outline-none h-[48%] focus-visible:ring-2">
           <figure className="relative h-full overflow-hidden ">
             <Image className='object-center' src={data?.header_image} width={500} height={550} alt="Course" />
           </figure>

@@ -103,18 +103,32 @@ function Title({ blogDetails }: any) {
                         </span>
                     </p>
 
-                    <p className='text-base'>Written by  - {blogDetails?.author} </p>
+                    <p className='text-base mb-10'>Written by  - {blogDetails?.author} </p>
 
 
-                    <div className='lg:h-[450px] h-[200px] my-10 mx-auto w-[100%] overflow-hidden'>
+                    {/* <div className='lg:h-[450px] h-[200px] my-10 mx-auto w-[100%] overflow-hidden'>
                         <Image
                             alt=''
-                            className='h-full w-full'
+                            className='bg-cover'
                             src={blogDetails?.header_image}
                             layout="responsive" // Set layout to responsive
-                            width={1000}
-                            height={450} // Set the actual height of the image
+                            width={10}
+                            height={45} // Set the actual height of the image
                         />
+                    </div> */}
+
+
+                    <div className="block focus:outline-none h-[38%]  focus-visible:ring-2">
+                        <figure className="relative h-full overflow-hidden">
+                            <Image
+                                className='object-cover'
+                                src={blogDetails?.header_image}
+                                alt="Course"
+                                layout="responsive"
+                                width={500} // Specify a default width for optimization (can be any valid number)
+                                height={500} // Specify a default height for optimization (can be any valid number)
+                            />
+                        </figure>
                     </div>
                 </div>
 
@@ -163,7 +177,7 @@ function Title({ blogDetails }: any) {
                                     </div>
                                 </div>
 
-                                <main ref={mainRef} className='text-gray-900 ' dangerouslySetInnerHTML={{ __html: modifiedHtmlString! }}>
+                                <main ref={mainRef} className='text-gray-900 mt-20' dangerouslySetInnerHTML={{ __html: modifiedHtmlString! }}>
                                 </main>
                                 <div className='mt-8'>
                                     <div

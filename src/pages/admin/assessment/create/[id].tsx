@@ -325,13 +325,14 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
                             <button
                                 className='py-2 bg-[#F08354]/20 text-[#F08354] px-4 rounded mt-8 hover:opacity-80'
                                 onClick={() => {
+                                    // dispatch(addQuestion({ questions }))
+
                                     // console.log({ questions });
 
-                                    // dispatch(addQuestion({ questions }))
 
                                     router.push({
                                         pathname: "/admin/assessment/preview",
-                                        query: JSON.stringify(questions)
+                                        query: {questionz: JSON.stringify(questions)}
                                     }, "/admin/assessment/preview")
                                 }}
                             >Preview</button>

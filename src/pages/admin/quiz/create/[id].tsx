@@ -45,6 +45,7 @@ function Create({ course, quizzes }: { course: any, quizzes: any }) {
     const [referenceID, setRefenceID] = useState('');
     const [currentItem, setCurrentItem] = useState('');
     const [isUpdateOperation, setIsUpdateOperation] = useState<null | boolean>(null)
+    const [allQuizzes, setAllQuizzes] = useState(quizzes);
     const cookie = useCookie()
     const router = useRouter()
 
@@ -174,6 +175,17 @@ function Create({ course, quizzes }: { course: any, quizzes: any }) {
     }
 
 
+    const deleteQuiz = async (quiz: any) => {
+        const filteredQuizzes = quizzes.filter((q) => q.id !== quiz.id)
+        setAllQuizzes(filteredQuizzes);
+
+        try {
+            await http.delete(`/delete-quiz?id=${quiz.id}`)
+            notify({ msg: 'Quiz deleted', type: 'success' })
+        } catch (error) {
+            notify({ msg: 'Could not delete quiz', type: 'error' })
+        }
+    }
 
     return (
         <Layout>
@@ -191,8 +203,6 @@ function Create({ course, quizzes }: { course: any, quizzes: any }) {
                             return (
                                 <div key={Math.random()}>
                                     {section.sub_sections.map((ss: any) => {
-                                      
-
                                         return (
                                             <div key={Math.random()} className='mb-8'>
                                                 <div className='border relative py-3 px-4 bg-white rounded mt-4 mb-2 cursor-pointer hover:opacity-70'>
@@ -209,17 +219,14 @@ function Create({ course, quizzes }: { course: any, quizzes: any }) {
 
                                                         <span className=' mr-16'>
 
-                                                        {ss._id}
+                                                            {ss._id}
                                                         </span>
                                                     </p>
 
                                                 </div>
 
                                                 <div>
-                                                    {quizzes.map((quiz: any) => {
-
-
-
+                                                    {allQuizzes.map((quiz: any) => {
                                                         if (quiz.sub_section === ss._id) {
                                                             return (
                                                                 <p key={Math.random()} className='py-2.5 flex items-center justify-between px-4 ml-8 relative mt-6 bg-white border rounded'>
@@ -246,9 +253,6 @@ function Create({ course, quizzes }: { course: any, quizzes: any }) {
                                                                                     setRefenceID(quiz?.sub_section)
                                                                                     setFeedback(quiz?.feedback)
                                                                                     setCurrentItem(quiz?.id)
-
-                                                                                    console.log({ quiz });
-
                                                                                 }}
                                                                             />
                                                                         </span>
@@ -256,7 +260,10 @@ function Create({ course, quizzes }: { course: any, quizzes: any }) {
                                                                             <TbTrash
                                                                                 size={20}
                                                                                 className='cursor-pointer'
-                                                                            // onClick={}
+                                                                                onClick={async () => {
+
+                                                                                    await deleteQuiz(quiz)
+                                                                                }}
                                                                             />
                                                                         </span>
                                                                     </div>

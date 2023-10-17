@@ -8,37 +8,32 @@ import { NextSeo } from 'next-seo';
 import Image from 'next/image';
 import { calculateReadingTime, fetchBlogPostByID, fetchIdeaPostByID, modifyHTMLString } from '@/helper';
 
-import { useFetchBlogPostsQuery } from '@/features/apiSlice';
+import { useFetchBlogPostsQuery, useFetchIdeasPostsQuery } from '@/features/apiSlice';
 import Loader from '@/components/Loader';
 import BlogCard from '@/components/BlogCard';
-import { IoClose, IoHeart, IoThumbsUp } from 'react-icons/io5';
+import { IoClose, IoHeart } from 'react-icons/io5';
 import ProgressBar from '@/components/ProgressBar';
 import { GetServerSideProps } from 'next';
 import ShareButton from '@/components/ShareButton';
 import TableOfContents from '@/components/TableOfContent';
-import { TbThumbUp } from 'react-icons/tb';
-import http from '@/lib/http';
 import notify from '@/components/Notification';
-import { ToastContainer } from 'react-toastify';
+import http from '@/lib/http';
 
 function Title({ blogDetails }: any) {
-    const { data: blogs } = useFetchBlogPostsQuery("");
+    const { data: blogs } = useFetchIdeasPostsQuery("");
     const router = useRouter();
     const currentRoute = router.asPath;
     const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
-
+    const [isIntersecting, setIsIntersecting] = useState(false)
     const [showTableOfContents, setShowTableOfContents] = useState(false);
     const sidebarRef = useRef<HTMLDivElement>(null);
     const mainRef = useRef<HTMLDivElement>(null);
-    const [modifiedHtmlString, setModifiedString] = useState('')
     const [likes, setLikes] = useState<number>(blogDetails?.likes)
-    const [isIntersecting, setIsIntersecting] = useState(false)
-
+    const [modifiedHtmlString, setModifiedString] = useState('')
 
     useEffect(() => {
         var newHtmlString = modifyHTMLString(blogDetails?.content)
         setModifiedString(newHtmlString)
-
     }, [blogDetails?.content])
 
     useEffect(() => {
@@ -62,7 +57,7 @@ function Title({ blogDetails }: any) {
 
     const like = async () => {
         try {
-            await http.post(`/like-idea-post?id=${blogDetails.id}`)
+            await http.post(`/like-blog-post?id=${blogDetails.id}`)
             setLikes(likes + 1)
         } catch (error) {
             notify({ msg: 'An error occured', type: 'error' })
@@ -70,7 +65,6 @@ function Title({ blogDetails }: any) {
 
         }
     }
-
 
 
 
@@ -109,25 +103,51 @@ function Title({ blogDetails }: any) {
                         </span>
                     </p>
 
-                    <p className='text-base'>Written by  - {blogDetails?.author} </p>
+                    <p className='text-base mb-10'>Written by  - {blogDetails?.author} </p>
 
 
-                    <div className='lg:h-[342px] h-[200px] bg-white my-10 mx-auto w-[100%] overflow-hidden' >
-                        <Image alt='' className='object-cover w-full h-full' src={blogDetails?.header_image} width={684} height={342} />
+                    {/* <div className='lg:h-[450px] h-[200px] my-10 mx-auto w-[100%] overflow-hidden'>
+                        <Image
+                            alt=''
+                            className='bg-cover'
+                            src={blogDetails?.header_image}
+                            layout="responsive" // Set layout to responsive
+                            width={10}
+                            height={45} // Set the actual height of the image
+                        />
+                    </div> */}
+
+
+                    <div className="block focus:outline-none h-[38%]  focus-visible:ring-2">
+                        <figure className="relative h-full overflow-hidden">
+                            <Image
+                                className='object-cover'
+                                src={blogDetails?.header_image}
+                                alt="Course"
+                                layout="responsive"
+                                width={500} // Specify a default width for optimization (can be any valid number)
+                                height={500} // Specify a default height for optimization (can be any valid number)
+                            />
+                        </figure>
                     </div>
                 </div>
 
                 <div className=' pb-10'>
                     <div className=''>
                         <div className='mt-20 lg:gap-8'>
+
                             {!isIntersecting &&
+
                                 <div className='lg:hidden w-full lg:bg-transparent' >
-                                    <div className='toc-gradient lg:hidden  rounded-t-lg fixed bottom-0 w-full left-0 right-0 p-4' style={{ backgroundColor: showTableOfContents ? 'white' : '' }}>
+                                    <div className='toc-gradient lg:hidden  z-30 rounded fixed bottom-0 w-full left-0 right-0 p-4' style={{ backgroundColor: showTableOfContents ? 'white' : '' }}>
                                         {showTableOfContents &&
                                             <div className='w-10 h-10 bg-white flex justify-center items-center cursor-pointer absolute right-4 -top-12 rounded-full shadow' onClick={() => setShowTableOfContents(!showTableOfContents)}>
                                                 <IoClose size={30} className='' />
                                             </div>
                                         }
+
+
+
 
                                         <button className='bg-[#F08354] shadow-xl mb-6 w-full py-3 rounded text-white text-base block'
                                             onClick={() => setShowTableOfContents(!showTableOfContents)}
@@ -139,8 +159,6 @@ function Title({ blogDetails }: any) {
                                         </div>}
 
                                     </div>
-
-                                    {/* <div className='lg:h-52'></div> */}
                                 </div>
                             }
 
@@ -159,10 +177,9 @@ function Title({ blogDetails }: any) {
                                     </div>
                                 </div>
 
-                                <main ref={mainRef} className='text-gray-900 ' dangerouslySetInnerHTML={{ __html: modifiedHtmlString! }}>
+                                <main ref={mainRef} className='text-gray-900 mt-20' dangerouslySetInnerHTML={{ __html: modifiedHtmlString! }}>
                                 </main>
                                 <div className='mt-8'>
-
                                     <div
                                         className='border px-4 py-2 bg-white w-fit flex items-center rounded-full gap-4 mb-8 cursor-pointer'
                                         onClick={like}>
@@ -182,13 +199,13 @@ function Title({ blogDetails }: any) {
 
                 </div>
 
-                <div className='my-20' id="more__articles">
+                <div className='my-20' id='more__articles'>
 
-                    <h3 className="mb-8 text-xl font-extrabold leading-snug lg:font-extrabold lg:text-4xl lg:leading-none lg:mb-8">More amazing articles for you</h3>
+                    <h2 className="mb-8 text-2xl font-extrabold leading-snug lg:font-extrabold lg:text-4xl lg:leading-none lg:mb-8">More amazing articles for you</h2>
 
 
                     <div className='grid lg:grid-cols-3 grid-cols-1 gap-3'>
-                        {blogs?.data?.filter((post: any) => post.status !== "deleted" || "inactive").slice(-4).map((blog: any) => (
+                        {blogs?.data?.filter((post: any) => post.status !== "inactive").slice(-3).map((blog: any) => (
                             <BlogCard key={Math.random()} data={blog} />
                         ))}
 
@@ -204,7 +221,7 @@ function Title({ blogDetails }: any) {
         </div>
 
 
-        <ToastContainer />
+
         <Footer />
     </div>
 }
