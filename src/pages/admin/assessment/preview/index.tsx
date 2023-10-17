@@ -1,3 +1,5 @@
+'use client'
+
 import Modal from '@/components/Modal';
 import ReactPortal from '@/components/ReactPortal';
 import http from '@/lib/http';
@@ -15,8 +17,6 @@ function Index() {
     const query = router.query.questionz as unknown as string
     const parsedAssessment = JSON.parse(query)
 
-   
-    
     const initialQuestions = parsedAssessment.length ? parsedAssessment : [];
     const [assessment, setAssessment] = useState({
         questions: initialQuestions
