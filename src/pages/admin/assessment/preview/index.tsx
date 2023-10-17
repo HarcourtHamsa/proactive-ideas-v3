@@ -15,7 +15,7 @@ import { resetQuestions } from '@/features/assessment/assessmentSlice';
 function Index() {
     const router = useRouter();
     const query = router.query.questionz as unknown as string
-    const parsedAssessment = JSON.parse(query)
+    const parsedAssessment = query ? JSON.parse(query) : []
 
     const initialQuestions = parsedAssessment.length ? parsedAssessment : [];
     const [assessment, setAssessment] = useState({
