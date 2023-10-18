@@ -50,13 +50,9 @@ function SingleCourse({ course, lessons, subscriber }: any) {
 
     const parsedSubscriber = JSON.parse(subscriber)
 
-    console.log({ subscriber });
-    console.log({ parsedSubscriber });
-
-
     const [progress, setProgress] = useState(Math.ceil(parsedSubscriber?.progress) || 0)
     const [count, setCount] = useState(Math.floor((progress / 100) * contents.length));
-    const [fakeCount, setFakeCount] = useState(count)
+    const [copyOfCount, setCopyOfCount] = useState(count)
 
 
 
@@ -109,6 +105,7 @@ function SingleCourse({ course, lessons, subscriber }: any) {
         }
 
         setCount(count + 1);
+        setCopyOfCount(count + 1)
         // setFakeCount(count);
 
 
@@ -127,15 +124,26 @@ function SingleCourse({ course, lessons, subscriber }: any) {
     const selectContent = (body: any) => {
         const lessonIndex = contents.findIndex((lesson: any) => lesson._id === body._id)
 
-        if (count > lessonIndex) {
+  
+
+        console.log({copyOfCount});
+        console.log({lessonIndex});
+        
+
+
+        if (copyOfCount >= lessonIndex){
             setCount(lessonIndex);
-            // setProgress(lessonIndex)
+            // setCopyOfCount(lessonIndex);
         }
 
-        console.log({ count });
         console.log({ lessonIndex });
+        console.log({ copyOfCount });
+        
 
-
+        // if (count >= lessonIndex) {
+        // setFakeCount(lessonIndex);
+        // setProgress(lessonIndex)
+        // }
     }
 
     const checkAnswer = (correctOption: number, yourOption: number) => {
@@ -283,10 +291,8 @@ function SingleCourse({ course, lessons, subscriber }: any) {
                                 </div>
 
                                 <div className={`h-full overflow-auto`}>
-                                    <ul key={Math.random()} className='px-0 list-decimal ul__unset pb-6'>
+                                    <ul key={Math.random()} className='px-0 list-decimal ul__unset pb-4'>
                                         {course?.sections?.map((section: any, index: number) => {
-
-
                                             return (
                                                 <span key={Math.random()}>
                                                     <li className='py-2 mt-0 bg-gray-200 text-[#11393C] px-4 list-none flex justify-between uppercase tracking-wider text-sm line-clamp-0'>
@@ -301,13 +307,13 @@ function SingleCourse({ course, lessons, subscriber }: any) {
                                                             return (
                                                                 <li
                                                                     key={Math.random()}
-                                                                    // onClick={() => selectContent(ss)}
+                                                                    onClick={() => {
+
+
+
+                                                                        selectContent(ss)
+                                                                    }}
                                                                     className={`list-none  px-2 py-2  text-sm cursor-pointer flex ${foundindex === count ? 'text-orange-400 bg-[#11393C]' : 'text-[#11393C]'}`}>
-
-                                                                    {/* <IoDocumentText size={15} scale={10} /> */}
-
-                                                                    {/* {index} */}
-
                                                                     <span className='truncate'>
                                                                         {ss.title}
                                                                     </span>
@@ -315,12 +321,21 @@ function SingleCourse({ course, lessons, subscriber }: any) {
                                                             )
                                                         })}
                                                     </ul>
+                                                   
                                                 </span>
                                             )
                                         })}
                                     </ul>
+                                    <div className='px-4 h-[100px] flex justify-center items-center'>
+                                        <div>
+                                            {/* <p className='uppercase text-sm mb-4'>Interactive Assessment</p> */}
+                                        <div className='bg-orange-500/20 border-orange-500 text-orange-500 py-2 px-6 rounded-full text-center'>
+                                            <p>Assessment</p>
+                                        </div>
+                                        </div>
+                                    </div>
                                 </div>
-
+                                   
                             </aside>
                         </div>
 

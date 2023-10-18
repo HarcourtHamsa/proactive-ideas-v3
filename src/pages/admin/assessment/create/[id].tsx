@@ -104,6 +104,7 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
 
                     <div className="mt-4 space-y-2">
                         {options?.map((option: any, index: number) => {
+                            
                             return (
                                 <div className='flex gap-4 items-center' key={Math.random()}>
                                     <DynamicInput key={Math.random()} label={option.text} index={index} setCorrectAnswer={setCorrectAnswer} answer={correctAnswer} />
@@ -301,6 +302,8 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
                                                     size={25}
                                                     className='cursor-pointer'
                                                     onClick={() => {
+                                                        // console.log({quiz});
+                                                        
                                                         setModalIsOpen(true)
                                                         setQuestion(quiz?.question)
                                                         setQuestionType(quiz?.type)
@@ -308,6 +311,7 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
                                                         setRefenceID(quiz?.sub_section)
                                                         setFeedback(quiz?.feedback)
                                                         setCurrentItem(quiz?.question)
+                                                        setCorrectAnswer(quiz.correct_option)
                                                     }}
                                                 />
                                             </div>

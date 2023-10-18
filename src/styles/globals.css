@@ -1,12 +1,12 @@
 @font-face {
   font-family: 'Larsseit';
-  src: url('../assets/fonts/SF-Pro-Display-Medium.woff');
+  src: url('../assets/fonts/CircularStd-Medium.otf');
   font-display: swap;
 }
 
 @font-face {
   font-family: 'SlackCircular';
-  src: url('../assets/fonts/SF-Pro-Display-Medium.woff');
+  src: url('../assets/fonts/CircularStd-Medium.otf');
   font-display: swap;
 }
 

@@ -38,11 +38,13 @@ function Index({ assessment, id }: any) {
         }
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = (question) => {
+        console.log({ question });
+
         if (isCorrect) {
-            setFeedback("You answered correctly")
+            setFeedback(question.feedback.correct)
         } else {
-            setFeedback("Oops! that was wrong")
+            setFeedback(question.feedback.incorrect)
         }
     }
 
@@ -146,7 +148,7 @@ function Index({ assessment, id }: any) {
             URL.revokeObjectURL(url);
         } catch (error) {
             console.error('Error generating and downloading certificate:', error);
-        } 
+        }
 
         setIsGeneratingCert(false)
     };
@@ -235,7 +237,7 @@ function Index({ assessment, id }: any) {
                                         <div className='space-x-3'>
                                             <button
                                                 className='py-2  hover:bg-gray-50 border px-4 rounded-lg mt-6 ml-auto'
-                                                onClick={handleSubmit}
+                                                onClick={() => handleSubmit(question)}
                                                 disabled={feedback ? true : false}
                                             >
                                                 Submit
@@ -246,7 +248,7 @@ function Index({ assessment, id }: any) {
                                         <div className='space-x-3'>
                                             <button
                                                 className='py-2  hover:bg-gray-50 border px-4 rounded-lg mt-6 ml-auto'
-                                                onClick={handleSubmit}
+                                                onClick={() => handleSubmit(question)}
                                                 disabled={feedback ? true : false}
                                             >
                                                 Submit
@@ -265,7 +267,7 @@ function Index({ assessment, id }: any) {
 
                 {offset === totalAssessments + 1 && <div className='h-screen w-screen bg-[#FAF7ED] relative flex justify-center items-center'>
                     <div className='text-center'>
-                        <Image alt='' src={trophyGif} className='absolute top-0 -translate-x-12  translate-y-14 lg:translate-y-4'/>
+                        <Image alt='' src={trophyGif} className='absolute top-0 -translate-x-12  translate-y-14 lg:translate-y-4' />
                         <h1 className="mb-4 text-3xl  mt-10 font-semibold leading-snug lg:font-extrabold lg:text-5xl lg:leading-none  lg:mb-4">Assessment Completed</h1>
                         <p>You got {totalCorrectAnswers} answer(s) correctly</p>
 
