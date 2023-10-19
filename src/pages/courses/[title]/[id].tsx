@@ -250,8 +250,12 @@ function SingleCourse({ course, lessons, subscriber }: any) {
         } catch (error) {
             throw error
         }
-
     }
+
+    useEffect(() => {
+        window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
+      }, [count]);
+
     return (
         <div>
             {cookie?.user.email ?

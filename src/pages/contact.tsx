@@ -85,7 +85,7 @@ function Contact() {
 
                             {/* <hr className="my-4 border-gray-500"/> */}
                             <div className="my-4 space-y-6">
-                                <div className="flex gap-8 items-center">
+                                {/* <div className="flex gap-8 items-center">
                                     <div className="h-14 w-14 bg-slate-300/30 rounded-full items-center justify-center hidden xl:flex">
                                         <TbLocation size={20} />
                                     </div>
@@ -95,7 +95,7 @@ function Contact() {
                                             Plot 11, Road 16, Housing Estate, Woji, Port Harcourt, Nigeria.
                                         </p>
                                     </div>
-                                </div>
+                                </div> */}
                                 <div className="flex gap-8 items-center">
                                     <div className="h-14 w-14 bg-slate-300/30 rounded-full items-center justify-center hidden xl:flex">
                                         <TbMail size={20} />

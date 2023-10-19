@@ -19,7 +19,7 @@ import useCookie from '@/hooks/useCookie'
 
 function DynamicInput({ label, index, setCorrectAnswer, answer }: { label: string, index: number, answer: number, setCorrectAnswer: (e: any) => void }) {
     return (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 w-full">
             <p className="bg-gray-50 flex-1 py-2 px-4 border rounded">{label}</p>
             <div className={`${answer === index ? 'border-[#F08354]  text-white' : 'border-gray-500'}  border-4 flex items-center justify-center cursor-pointer w-4 h-4  rounded-full`} tabIndex={0} onClick={() => setCorrectAnswer(index)}>
                 {/* <TbCheck size={20} /> */}
@@ -253,6 +253,7 @@ function Create({ course, quizzes }: { course: any, quizzes: any }) {
                                                                                     setRefenceID(quiz?.sub_section)
                                                                                     setFeedback(quiz?.feedback)
                                                                                     setCurrentItem(quiz?.id)
+                                                                                    setCorrectAnswer(quiz.correct_option)
                                                                                 }}
                                                                             />
                                                                         </span>

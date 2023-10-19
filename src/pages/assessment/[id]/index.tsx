@@ -167,12 +167,12 @@ function Index({ assessment, id }: any) {
                             <div className='space-y-4'>
                                 <h1 className="mb-4 text-3xl  mt-10 font-semibold leading-snug lg:font-extrabold lg:text-5xl lg:leading-none  lg:mb-4">Assessment Time!</h1>
                                 <p>
-                                    🎯 {assessment?.title}
+                                    {assessment?.title}
                                 </p>
 
                                 <p>
 
-                                    Get ready to showcase your superpowers as we delve into a series of mind-bending questions and activities that will test your understanding, creativity, and problem-solving skills. Remember, this isn&apos;t your typical snooze-worthy exam; we&apos;ve designed it to be fun, engaging, and, dare we say, a bit addictive!
+                                Prepare to demonstrate your expertise as we embark on a journey of thought-provoking questions specially crafted to assess your knowledge, critical thinking, and problem-solving abilities. This isn't your typical dull examination; we've designed it to be engaging, informative, and, if we may say so, rather captivating!
 
                                 </p>
 
@@ -181,7 +181,7 @@ function Index({ assessment, id }: any) {
                                 </p>
 
                                 <p>
-                                    In this assessment, you&apos;ll encounter a mix of multiple-choice questions, brain teasers, and maybe even a surp
+                                In this assessment, you'll encounter a variety of questions, including multiple-choice, true or false, and more. Your goal is to answer all the questions and aim for a score of at least 80% to successfully pass the assessment and receive your digital certificate. It's a learning experience that's as enriching as it is rewarding.
                                 </p>
 
                                 <button className='border h-[50px] flex items-center px-6 rounded duo-button' onClick={next}>Start Assessment</button>

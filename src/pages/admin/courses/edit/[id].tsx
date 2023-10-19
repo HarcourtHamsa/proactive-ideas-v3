@@ -856,7 +856,7 @@ function EditSingleCourse({ course }: any) {
 
                             <div className=''>
                                 <label htmlFor="message" className="block font-medium text-gray-900">Summary</label>
-                                <textarea id="message" rows={4} className="block p-2.5 w-full text-gray-900 bg-white rounded outline-blue-500 focus:ring-blue-500 focus:border-blue-500 border-2" placeholder="Write your thoughts here..." name='description' value={generalInfoData.summary} onChange={handleChange}></textarea>
+                                <textarea id="message" rows={4} className="block p-2.5 w-full text-gray-900 bg-white rounded outline-blue-500 focus:ring-blue-500 focus:border-blue-500 border-2" placeholder="Write your thoughts here..." name='summary' value={generalInfoData.summary} onChange={handleChange}></textarea>
                             </div>
 
                             <div className=''>
