@@ -94,7 +94,7 @@ function SingleCourse({ course, lessons, subscriber }: any) {
             return;
         }
 
-        console.log({ parsedSubscriber });
+       
 
 
         if (!parsedSubscriber) {
@@ -106,6 +106,7 @@ function SingleCourse({ course, lessons, subscriber }: any) {
 
         setCount(count + 1);
         setCopyOfCount(count + 1)
+        window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
         // setFakeCount(count);
 
 
@@ -124,21 +125,11 @@ function SingleCourse({ course, lessons, subscriber }: any) {
     const selectContent = (body: any) => {
         const lessonIndex = contents.findIndex((lesson: any) => lesson._id === body._id)
 
-  
-
-        console.log({copyOfCount});
-        console.log({lessonIndex});
-        
-
-
         if (copyOfCount >= lessonIndex){
             setCount(lessonIndex);
+            window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
             // setCopyOfCount(lessonIndex);
         }
-
-        console.log({ lessonIndex });
-        console.log({ copyOfCount });
-        
 
         // if (count >= lessonIndex) {
         // setFakeCount(lessonIndex);
@@ -252,9 +243,6 @@ function SingleCourse({ course, lessons, subscriber }: any) {
         }
     }
 
-    useEffect(() => {
-        window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
-      }, [count]);
 
     return (
         <div>

@@ -172,7 +172,7 @@ function Index({ assessment, id }: any) {
 
                                 <p>
 
-                                Prepare to demonstrate your expertise as we embark on a journey of thought-provoking questions specially crafted to assess your knowledge, critical thinking, and problem-solving abilities. This isn't your typical dull examination; we've designed it to be engaging, informative, and, if we may say so, rather captivating!
+                                Prepare to demonstrate your expertise as we embark on a journey of thought-provoking questions specially crafted to assess your knowledge, critical thinking, and problem-solving abilities. This isn&apos;t your typical dull examination; we&apos;ve designed it to be engaging, informative, and, if we may say so, rather captivating!
 
                                 </p>
 
@@ -181,7 +181,7 @@ function Index({ assessment, id }: any) {
                                 </p>
 
                                 <p>
-                                In this assessment, you'll encounter a variety of questions, including multiple-choice, true or false, and more. Your goal is to answer all the questions and aim for a score of at least 80% to successfully pass the assessment and receive your digital certificate. It's a learning experience that's as enriching as it is rewarding.
+                                In this assessment, you&apos;ll encounter a variety of questions, including multiple-choice, true or false, and more. Your goal is to answer all the questions and aim for a score of at least 80% to successfully pass the assessment and receive your digital certificate. It&apos;s a learning experience that&apos;s as enriching as it is rewarding.
                                 </p>
 
                                 <button className='border h-[50px] flex items-center px-6 rounded duo-button' onClick={next}>Start Assessment</button>
