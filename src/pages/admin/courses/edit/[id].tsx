@@ -87,7 +87,7 @@ function EditSingleCourse({ course }: any) {
         title: course?.title,
         author: course?.author,
         header_image: course?.header_image,
-        // prices: course?.prices,
+        prices: course?.prices,
         tags: '',
         category: course?.category,
         description: course?.description,
@@ -239,6 +239,103 @@ function EditSingleCourse({ course }: any) {
         content: "",
     });
 
+    function getPriceByCurrency(pricesArray, currency) {
+        const priceObj = pricesArray.find((price) => price.currency === currency);
+        if (priceObj) {
+          return priceObj.price;
+        }
+        return null; // Return null or handle the case when the currency is not found
+      }
+    
+    const [USD, setUSD] = useState({
+        currency: "USD",
+        country_code: "US",
+        price: getPriceByCurrency(generalInfoData.prices, "USD")
+    });
+
+    const [INR, setINR] = useState({
+        currency: "INR",
+        country_code: "IND",
+        price: getPriceByCurrency(generalInfoData.prices, "INR")
+    });
+    const [NGN, setNGN] = useState({
+        currency: "NGN",
+        country_code: "NGA",
+        price: getPriceByCurrency(generalInfoData.prices, "NGN")
+    });
+    const [KES, setKES] = useState({
+        currency: "KES",
+        country_code: "KEN",
+        price: getPriceByCurrency(generalInfoData.prices, "KES")
+    });
+    const [ZAR, setZAR] = useState({
+        currency: "ZAR",
+        country_code: "ZAF",
+        price: getPriceByCurrency(generalInfoData.prices, "ZAR")
+    });
+    const [GHS, setGHS] = useState({
+        currency: "GHS",
+        country_code: "GHA",
+        price: getPriceByCurrency(generalInfoData.prices, "GHS")
+    });
+    const [GBP, setGBP] = useState({
+        currency: "GBP",
+        country_code: "GBR",
+        price: getPriceByCurrency(generalInfoData.prices, "GBP")
+    });
+
+    const handlePriceChange = (e: any) => {
+        switch (e.target.name) {
+            case "USD":
+                setUSD((prevState: any) => ({
+                    ...prevState,
+                    price: e.target.value
+                }))
+                break;
+            case "INR":
+                setINR((prevState: any) => ({
+                    ...prevState,
+                    price: e.target.value
+                }))
+                break;
+            case "NGN":
+                setNGN((prevState: any) => ({
+                    ...prevState,
+                    price: e.target.value
+                }))
+                break;
+            case "KES":
+                setKES((prevState: any) => ({
+                    ...prevState,
+                    price: e.target.value
+                }))
+                break;
+            case "ZAR":
+                setZAR((prevState: any) => ({
+                    ...prevState,
+                    price: e.target.value
+                }))
+                break;
+            case "GHS":
+                setGHS((prevState: any) => ({
+                    ...prevState,
+                    price: e.target.value
+                }))
+                break;
+            case "GBP":
+                setGBP((prevState: any) => ({
+                    ...prevState,
+                    price: e.target.value
+                }))
+                break;
+
+            default:
+                break;
+        }
+
+
+    }
+
 
     const handleChange = (e: any) => {
         switch (e.target.name) {
@@ -254,12 +351,6 @@ function EditSingleCourse({ course }: any) {
                     author: e.target.value
                 }))
                 break;
-            // case 'prices':
-            //     setGeneralInfoData((prevState: any) => ({
-            //         ...prevState,
-            //         prices: e.target.value
-            //     }))
-            //     break;
             case 'tags':
                 setGeneralInfoData((prevState: any) => ({
                     ...prevState,
@@ -398,9 +489,25 @@ function EditSingleCourse({ course }: any) {
     // HERE TOO
     const handleSubmit = async () => {
 
+        console.log({agg});
+        
+
         const courseObj = Object.assign({}, course, generalInfoData);
         courseObj.tags = [courseObj.tags];
-        courseObj.sections = agg
+
+        if (agg){
+            courseObj.sections = agg 
+        }
+
+        var prices = [
+            USD,
+            INR,
+            NGN,
+            GBP,
+            GHS,
+            ZAR,
+            KES
+        ]
 
 
 
@@ -411,8 +518,12 @@ function EditSingleCourse({ course }: any) {
 
         courseObj.objectives = parsedObjectives
 
+        // DO NOT FORGET
         setIsUpdatingGeneralInfo(true)
         setIsUpdatingCourseInfo(true)
+
+        courseObj.prices = prices
+        
 
 
         // const courseShallowCopy = Object.assign({}, courseObj, { sections: courseInfoData })
@@ -434,7 +545,7 @@ function EditSingleCourse({ course }: any) {
             setIsUpdatingCourseInfo(false)
         })
 
-        // window.location.reload()
+        window.location.reload()
     }
 
 
@@ -900,7 +1011,19 @@ function EditSingleCourse({ course }: any) {
                                 </ul>
                             </div>
 
+                            <div className='mt-8'>
+                                <p>Prices</p>
+                                <div className='col-span-2 space-y-2'>
+                                    <DynamicPricingInput price={USD} placeholder="Price in US Dollars" onChange={handlePriceChange} />
+                                    <DynamicPricingInput price={INR} placeholder="Price in Indian Ruppies" onChange={handlePriceChange} />
+                                    <DynamicPricingInput price={NGN} placeholder="Price in Nigerian Naira" onChange={handlePriceChange} />
+                                    <DynamicPricingInput price={GHS} placeholder="Price in Ghanian Cedis" onChange={handlePriceChange} />
+                                    <DynamicPricingInput price={GBP} placeholder="Price in British Pounds" onChange={handlePriceChange} />
+                                    <DynamicPricingInput price={KES} placeholder="Price in Kenyan Shillings" onChange={handlePriceChange} />
+                                    <DynamicPricingInput price={ZAR} placeholder="Price in South African Rands" onChange={handlePriceChange} />
 
+                                </div>
+                            </div>
 
                         </div>
                         <div className='border-t px-4 pb-4'>
