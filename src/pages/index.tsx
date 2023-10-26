@@ -161,8 +161,8 @@ function Index({ heroContent, certContent, newsletterContent }: any) {
           <div className=" overflow-x-scroll scrollbar-none w-max">
 
             {blogPosts ?
-              <div className="flex flex-nowrap lg:grid lg:grid-cols-4  gap-2 flex-shrink-0 flex-grow overflow-auto duration-200 ease-in-out scrollbar-hide">
-                {blogPosts?.data?.filter((post: any) => post.status !== 'inactive').slice(-4).reverse().map((post: any) => {
+              <div className="flex flex-nowrap lg:grid lg:grid-cols-4 2xl:grid-cols-5  gap-2 flex-shrink-0 flex-grow overflow-auto duration-200 ease-in-out scrollbar-hide">
+                {blogPosts?.data?.filter((post: any) => post.status !== 'inactive').slice(-8).reverse().map((post: any) => {
                   return (
                     <div className='w-[300px] block' key={Math.random()}>
                       <BlogCard
@@ -204,8 +204,8 @@ function Index({ heroContent, certContent, newsletterContent }: any) {
           <div className=" overflow-x-scroll scrollbar-none w-max">
 
             {ideasPosts ?
-              <div className="flex flex-nowrap lg:grid lg:grid-cols-4  gap-2 flex-shrink-0 flex-grow overflow-auto duration-200 ease-in-out scrollbar-hide">
-                {ideasPosts?.data?.filter((post: any) => post.status !== 'inactive').slice(-4).reverse().map((post: any) => {
+              <div className="flex flex-nowrap lg:grid lg:grid-cols-4 2xl:grid-cols-5  gap-2 flex-shrink-0 flex-grow overflow-auto duration-200 ease-in-out scrollbar-hide">
+                {ideasPosts?.data?.filter((post: any) => post.status !== 'inactive').slice(-8).reverse().map((post: any) => {
                   return (
                     <div className='w-[300px] block' key={Math.random()}>
                       <IdeaCard

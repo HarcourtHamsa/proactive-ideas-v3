@@ -38,13 +38,9 @@ function Filter({
 }
 
 function SearchBar({ value, onChange }: { value: string, onChange: (e: FormEvent) => void }) {
-    const handleChange = (e: any) => {
-        console.log(e.target.value);
-
-    }
     return (
         <div className="w-full mx-auto block">
-            <input placeholder="Search courses..." className="w-full py-3 border-gray-700/10 text-white relative rounded px-12 bg-black/10 focus:border-blue-500 outline-none focus:border-2"
+            <input placeholder="Search courses..." className="w-full py-3 border-gray-700/10 relative rounded px-12 bg-white focus:border-orange-500 outline-none focus:border-2"
                 name={'search'} value={value} onChange={onChange} />
             <ImSearch size={20} className="text-gray-400 absolute -translate-y-9 translate-x-4" />
         </div>
@@ -69,9 +65,10 @@ function Index({ content }: any) {
         const newList = courses?.data.filter((data: any) => {
             return data.title.toLowerCase().includes(value.toLowerCase())
         })
-
         setFilteredData(newList);
     }
+
+
 
 
     return (
@@ -187,12 +184,15 @@ function Index({ content }: any) {
                         </aside>
 
                         {courses ?
-
                             <div className="col-span-3 md:col-span-3 md:ml-8">
                                 <div className="grid grid-cols-1 xl:grid-cols-3 gap-2 mb-10">
-                                    {courses?.data.filter((post: any) => post.status !== 'inactive' && selectedCategory ? post.category === selectedCategory : true).map((course: any) => (
+                                    {filteredData ? filteredData.filter((post: any) => post.status !== 'inactive' && selectedCategory ? post.category === selectedCategory : true).map((course: any) => (
                                         <Card key={Math.random()} data={course} />
-                                    ))}
+                                    )) :
+
+                                        courses.data?.filter((post: any) => post.status !== 'inactive' && selectedCategory ? post.category === selectedCategory : true).map((course: any) => (
+                                            <Card key={Math.random()} data={course} />
+                                        ))}
                                 </div>
                             </div>
                             : <SkeletonLoader />}

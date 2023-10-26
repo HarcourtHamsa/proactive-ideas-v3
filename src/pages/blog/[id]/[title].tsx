@@ -30,6 +30,8 @@ function Title({ blogDetails }: any) {
     const mainRef = useRef<HTMLDivElement>(null);
     const [likes, setLikes] = useState<number>(blogDetails?.likes)
     const [modifiedHtmlString, setModifiedString] = useState('')
+    const hasTableOfContents = blogDetails?.content?.includes("h2")
+    const [hasLiked, setHasLiked] = useState(false)
 
     useEffect(() => {
         var newHtmlString = modifyHTMLString(blogDetails?.content)
@@ -57,8 +59,9 @@ function Title({ blogDetails }: any) {
 
     const like = async () => {
         try {
-            await http.post(`/like-blog-post?id=${blogDetails.id}`)
+            setHasLiked(true)
             setLikes(likes + 1)
+            await http.post(`/like-blog-post?id=${blogDetails.id}`)
         } catch (error) {
             notify({ msg: 'An error occured', type: 'error' })
             console.log({ error });
@@ -139,50 +142,55 @@ function Title({ blogDetails }: any) {
                             {!isIntersecting &&
 
                                 <div className='lg:hidden w-full lg:bg-transparent' >
-                                    <div className='toc-gradient lg:hidden  z-30 rounded fixed bottom-0 w-full left-0 right-0 p-4' style={{ backgroundColor: showTableOfContents ? 'white' : '' }}>
-                                        {showTableOfContents &&
-                                            <div className='w-10 h-10 bg-white flex justify-center items-center cursor-pointer absolute right-4 -top-12 rounded-full shadow' onClick={() => setShowTableOfContents(!showTableOfContents)}>
-                                                <IoClose size={30} className='' />
-                                            </div>
-                                        }
+                                    {hasTableOfContents &&
+                                        <div className='toc-gradient lg:hidden  z-30 rounded fixed bottom-0 w-full left-0 right-0 p-4' style={{ backgroundColor: showTableOfContents ? 'white' : '' }}>
+                                            {showTableOfContents &&
+                                                <div className='w-10 h-10 bg-white flex justify-center items-center cursor-pointer absolute right-4 -top-12 rounded-full shadow' onClick={() => setShowTableOfContents(!showTableOfContents)}>
+                                                    <IoClose size={30} className='' />
+                                                </div>
+                                            }
 
 
 
 
-                                        <button className='bg-[#F08354] shadow-xl mb-6 w-full py-3 rounded text-white text-base block'
-                                            onClick={() => setShowTableOfContents(!showTableOfContents)}
-                                            style={{ display: isIntersecting ? 'none' : 'block' }}
-                                        >Table of contents</button>
+                                            <button className='bg-[#F08354] shadow-xl mb-6 w-full py-3 rounded text-white text-base block'
+                                                onClick={() => setShowTableOfContents(!showTableOfContents)}
+                                                style={{ display: isIntersecting ? 'none' : 'block' }}
+                                            >Table of contents</button>
 
-                                        {showTableOfContents && <div className='lg:hidden'>
-                                            <TableOfContents htmlString={blogDetails?.content} />
+                                            {showTableOfContents && <div className='lg:hidden'>
+                                                <TableOfContents htmlString={blogDetails?.content} />
+                                            </div>}
+
                                         </div>}
-
-                                    </div>
                                 </div>
                             }
 
                             <div className='mx-auto ql-blog'>
-                                <div ref={sidebarRef} className='overflow-hidden hidden xl:block bg-white border rounded p-4 border-t-8 border-t-[#F08354]'>
+                                {hasTableOfContents &&
+                                    <div ref={sidebarRef} className='overflow-hidden hidden xl:block bg-white border rounded p-4 border-t-8 border-t-[#F08354]'>
 
-                                    <p className='text-lg font-semibold mb-3'>Table of Contents</p>
+                                        <p className='text-lg font-semibold mb-3'>Table of Contents</p>
 
-                                    <div className='overflow-hidden'>
-                                        {
-                                            typeof window !== "undefined" &&
+                                        <div className='overflow-hidden'>
+                                            {
+                                                typeof window !== "undefined" &&
 
-                                            <TableOfContents htmlString={blogDetails?.content} />
-                                        }
+                                                <TableOfContents htmlString={blogDetails?.content} />
+                                            }
+
+                                        </div>
 
                                     </div>
-                                </div>
+                                }
 
                                 <main ref={mainRef} className='text-gray-900 mt-20' dangerouslySetInnerHTML={{ __html: modifiedHtmlString! }}>
                                 </main>
                                 <div className='mt-8'>
                                     <div
                                         className='border px-4 py-2 bg-white w-fit flex items-center rounded-full gap-4 mb-8 cursor-pointer'
-                                        onClick={like}>
+                                        onClick={() => !hasLiked ? like() : console.log('')}
+                                    >
                                         <IoHeart size={20} />
                                         <p>{likes}</p>
                                     </div>

@@ -73,12 +73,29 @@ function Navbar() {
     const currentScrollPos = window.pageYOffset;
     setVisible(prevScrollPos > currentScrollPos);
     setPrevScrollPos(currentScrollPos);
+    setDropDownIsOpen(false)
+    setResourcesSubMenuIsOpen(false)
+  };
+
+  const handleCloseModals = () => {
+    console.log({ dropDownIsOpen });
+    console.log({ resourcesSubMenuIsOpen });
+
+    // if (dropDownIsOpen){
+    //   setDropDownIsOpen(false)
+    // }
+
+    // if (resourcesSubMenuIsOpen){
+    //   setResourcesSubMenuIsOpen(false)
+    // }
   };
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
+    // window.addEventListener('click', handleCloseModals);
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      // window.removeEventListener('click', handleCloseModals);
     };
   }, [prevScrollPos, visible]);
 
@@ -109,7 +126,17 @@ function Navbar() {
               </li>
 
               <li>
-                <div onClick={() => setResourcesSubMenuIsOpen(!resourcesSubMenuIsOpen)} className=" py-5 cursor-pointer pl-3 hover:text-[#F08354] pr-4 relative flex items-center gap-1 rounded md:bg-transparent md:p-0 text-black" aria-current="page">Resources <IoCaretDownOutline /> </div>
+                <div
+                  onClick={() => setResourcesSubMenuIsOpen(!resourcesSubMenuIsOpen)}
+                  className="py-5 cursor-pointer pl-3 hover:text-[#F08354] pr-4 relative flex items-center gap-1 rounded md:bg-transparent md:p-0 text-black"
+                  aria-current="page"
+                  tabIndex={0}
+                  onBlur={() => {
+                    if (resourcesSubMenuIsOpen) {
+                      setResourcesSubMenuIsOpen(false)
+                    }
+                  }}
+                >Resources <IoCaretDownOutline /> </div>
                 {resourcesSubMenuIsOpen && (
                   <div className='absolute w-[250px] z-30 -bottom-36 translate-y-6 -translate-x-4 bg-white rounded shadow-xl overflow-hidden'>
                     <ul className='pl-0 ml-0 text-left'>
@@ -135,7 +162,15 @@ function Navbar() {
         </div>
 
         <div className="flex items-center md:order-2 gap-2">
-          {cookie?.user ? <button type="button" onClick={() => setDropDownIsOpen(!dropDownIsOpen)} className="flex mr-3 bg-gray-800 relative rounded-full md:mr-0 focus:ring-4 focus:ring-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
+          {cookie?.user ? <button
+            type="button"
+            onClick={() => setDropDownIsOpen(!dropDownIsOpen)}
+            onBlur={() => {
+              if (dropDownIsOpen) {
+                setDropDownIsOpen(false)
+              }
+            }}
+            className="flex mr-3 bg-gray-800 relative rounded-full md:mr-0 focus:ring-4 focus:ring-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
             <span className="sr-only">Open user menu</span>
             <div className='w-10 h-10 rounded-full bg-[#404eed] flex justify-center items-center'>
               <p className='text-white'>{generateAVI()}</p>
@@ -171,12 +206,12 @@ function Navbar() {
                 <li>
                   <Link href="/profile" className="block px-4 py-2 text-gray-700 hover:bg-gray-200 list-none">My Profile</Link>
                 </li>
-                <li>
+                {/* <li>
                   <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 list-none ">Settings</a>
                 </li>
                 <li>
                   <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-100  list-none ">Earnings</a>
-                </li>
+                </li> */}
                 <li onClick={logout}>
                   <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 list-none ">Sign out</a>
                 </li>
@@ -221,6 +256,12 @@ function Navbar() {
               </li>
               <li className='hover:text-[#F08354]'>
                 <Link href="/certification" className="border-b pb-4 px-4 w-[100%] block list-none" aria-current="page">Certification</Link>
+              </li>
+              <li className='hover:text-[#F08354]'>
+                <Link href="/verify" className="border-b pb-4  px-4 w-[100%] block list-none" aria-current="page">Verify</Link>
+              </li>
+              <li className='hover:text-[#F08354]'>
+                <Link href="/contact" className="border-b pb-4 px-4 w-[100%] block list-none" aria-current="page">Contact</Link>
               </li>
             </ul>
             {cookie?.user ?

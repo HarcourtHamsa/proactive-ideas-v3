@@ -21,7 +21,7 @@ function generateTableOfContents(htmlString: string): JSX.Element {
         heading.id = id; // Assign the generated ID to the heading
 
         const listItem = (
-            <li key={id}>
+            <li key={id} className='border-t cursor-pointer pt-2'>
                 <a href={`#${id}`}>{heading.textContent}</a>
             </li>
         );
@@ -46,7 +46,7 @@ function generateTableOfContents(htmlString: string): JSX.Element {
         currentLevel = level;
     }
 
-    return <ul>{currentList}</ul>;
+    return <ul className='ul__unset'>{currentList}</ul>;
 }
 
 // Usage
@@ -57,7 +57,9 @@ const TableOfContents = ({ htmlString }: { htmlString: string }) => {
         setToc(generateTableOfContents(htmlString));
     }, [htmlString]); // Add 'htmlString' as a dependency in the array
 
-    return <div className='space-y-5' id='toc'>{toc}</div>;
+    return <div className='space-y-5' id='toc'>
+        {toc}
+        </div> ;
 };
 
 export default TableOfContents;

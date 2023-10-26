@@ -16,6 +16,8 @@ import useAuth from "@/hooks/useAuth";
 import { Role } from "../../../types/types";
 import useRole from "@/hooks/useRole";
 import useCookie from "@/hooks/useCookie";
+import { updateCourse } from "@/helper";
+import DefaultModalCard from "./DefaultModalCard";
 
 function CoursesTable({ data }: any) {
 
@@ -28,11 +30,14 @@ function CoursesTable({ data }: any) {
     const [filteredData, setFilteredData] = useState(data.data);
     const [currentItem, setCurrentItem] = useState("");
     const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
+    const [current, setCurrent] = useState<any>({});
 
     const { "0": deleteCourse, "1": deleteCourseStatus } = useDeleteCourseMutation();
     const { "0": deleteCourseDraft, "1": deleteCourseDraftStatus } = useDeleteCourseDraftMutation();
 
 
+    const [showEditModal, setShowEditModal] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
 
     const handleSearchQryChange = (e: any) => {
         const value = e.target.value;
@@ -67,6 +72,21 @@ function CoursesTable({ data }: any) {
 
     }
 
+    const toggleStatus = async () => {
+        const newStatus = current.status === "active" ? "inactive" : "active";
+        setIsLoading(true)
+        try {
+            await updateCourse({ body: { status: newStatus }, id: current.id, token: '' })
+            notify({ msg: 'Status updated', type: 'success' })
+            window.location.reload()
+        } catch (error) {
+            console.log(error);
+        }
+
+        setShowEditModal(false)
+        setIsLoading(false)
+        setCurrent(null)
+    }
 
 
     return (
@@ -124,6 +144,9 @@ function CoursesTable({ data }: any) {
                                     <th scope="col" className="px-4 py-3 whitespace-nowrap">
                                         Date created
                                     </th>
+                                    <th scope="col" className="px-4 py-3 whitespace-nowrap">
+                                        Date updated
+                                    </th>
                                     <th scope="col" className="px-4 py-3">
                                         <span className="">Actions</span>
                                     </th>
@@ -144,14 +167,24 @@ function CoursesTable({ data }: any) {
                                             <p className="truncate w-[90%]">{course.title}</p>
                                         </td>
 
-                                        <td className={`px-4 py-3 text-black whitespace-nowrap`}>
-                                            <span className={`w-fit px-4 rounded-full py-1 ${course.status === 'active' ? 'bg-green-100 text-green-400' : 'bg-red-100 text-orange-400'}`}>
-                                                {course.status === 'active' ? 'Published' : 'Draft'}
+                                        <td className="px-4 py-3 text-black whitespace-nowrap">
+                                            <span className="flex items-center cursor-pointer"
+                                                onClick={() => {
+                                                    setShowEditModal(!showEditModal)
+                                                    setCurrent(course)
+                                                }}>
+                                                {/* <IoInformationCircleOutline /> */}
+                                                <span className={`px-4 py-1 rounded-full text-sm ${course.status === 'active' ? 'bg-green-500/30 text-green-500' : 'bg-orange-500/30 text-orange-500'}`}>
+                                                    {course.status === 'active' ? 'Published' : 'Draft'}
+                                                </span>
                                             </span>
                                         </td>
 
                                         <td className="px-4 py-3 text-black whitespace-nowrap">
                                             {new Date(course.createdAt).toLocaleDateString()}
+                                        </td>
+                                        <td className="px-4 py-3 text-black whitespace-nowrap">
+                                            {new Date(course.updatedAt).toLocaleDateString()}
                                         </td>
                                         <td className="flex items-center gap-2">
                                             <button
@@ -210,6 +243,23 @@ function CoursesTable({ data }: any) {
                     </nav>
                 </div>
             </div>
+
+            {showEditModal &&
+
+                <ReactPortal>
+                    <Modal>
+                        <DefaultModalCard
+                            label="Are you sure you want to toggle this items's status?"
+                            isLoading={isLoading}
+                            onCancel={() => {
+                                setShowEditModal(false)
+                                setCurrent(null)
+                            }}
+                            onConfirm={() => toggleStatus()}
+                        />
+                    </Modal>
+                </ReactPortal>
+            }
 
             {deleteModalIsOpen && (
                 <ReactPortal>

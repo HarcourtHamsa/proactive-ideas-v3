@@ -37,7 +37,7 @@ function Index() {
     return (
         <Layout>
             <div className='px-4 py-4'>
-                <h1 className="mt-4 text-2xl font-bold leading-snug lg:font-extrabold lg:text-4xl lg:leading-none text-black lg:mb-7 md:w-[600px]">{fnc()}, {cookie?.user?.name?.split(" ")[0]}! 👋</h1>
+                <h1 className="mt-4 text-2xl font-bold leading-snug lg:font-extrabold lg:text-4xl lg:leading-none text-black lg:mb-7 md:w-[600px]">{fnc()}, {cookie?.user?.name?.split(" ")[0]}!</h1>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 pt-4 px-4">
                 <InfoCard
@@ -72,7 +72,7 @@ function Index() {
                 <h2 className="mt-4 text-xl leading-snug lg:font-extrabold lg:text-2xl lg:leading-none text-black lg:mb-0 md:w-[600px]">Recent Posts</h2>
                 <div className="flex overflow-x-scroll scrollbar-none">
                     <div className="grid xl:grid-cols-3 gap-2 duration-200 ease-in-out snap-x scrollbar-hide">
-                        {blogPosts?.data.filter((blog: any) => blog.status !== 'inactive').slice(-2).reverse()?.map((post: any) => {
+                        {blogPosts?.data.filter((blog: any) => blog.status !== 'inactive').slice(-3).reverse()?.map((post: any) => {
                             return (
                                 <div className='' key={Math.random()}>
                                     <BlogCard

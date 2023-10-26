@@ -11,13 +11,15 @@ import notify from "../Notification";
 import { ToastContainer } from "react-toastify";
 import Search from "../SVGs/Search";
 
-import { IoWarning } from "react-icons/io5";
+import { IoInformationCircle, IoInformationCircleOutline, IoWarning } from "react-icons/io5";
 import { AiOutlineClose } from "react-icons/ai";
 
 import useRole from "@/hooks/useRole";
 import { Role } from "../../../types/types";
 import useCookie from "@/hooks/useCookie";
 import { TbPlus } from "react-icons/tb";
+import DefaultModalCard from "./DefaultModalCard";
+import { updateBlogPost } from "@/helper";
 
 
 function Table({ data }: any) {
@@ -29,6 +31,8 @@ function Table({ data }: any) {
   const [current, setCurrent] = useState<any>({});
   const [dModalIsOpen, setDModalIsOpen] = useState(false)
   const [showDeleteLoader, setShowDeleteLoader] = useState(false)
+  const [showEditModal, setShowEditModal] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const { "0": deleteBlog } = useDeleteBlogMutation()
 
@@ -55,6 +59,23 @@ function Table({ data }: any) {
 
 
   };
+
+
+  const toggleStatus = async () => {
+    const newStatus = current.status === "active" ? "inactive" : "active";
+    setIsLoading(true)
+    try {
+      await updateBlogPost({ body: { status: newStatus }, id: current.id, token: '' })
+      notify({ msg: 'Status updated', type: 'success' })
+      window.location.reload()
+    } catch (error) {
+      console.log(error);
+    }
+
+    setShowEditModal(false)
+    setIsLoading(false)
+    setCurrent(null)
+  }
 
   return (
     <section className="">
@@ -109,6 +130,9 @@ function Table({ data }: any) {
                   <th scope="col" className="px-4 py-3 whitespace-nowrap">
                     Date created
                   </th>
+                  <th scope="col" className="px-4 py-3 whitespace-nowrap">
+                    Date Updated
+                  </th>
                   <th scope="col" className="px-4 py-3">
                     <span className="">Actions</span>
                   </th>
@@ -117,7 +141,7 @@ function Table({ data }: any) {
               <tbody className="items-center">
                 {data?.data.filter((blog: any) => blog.status !== 'deleted').map((blog: any) => (
                   <tr
-                    className="border-b border cursor-pointer hover:bg-gray-100/10"
+                    className="border-b border hover:bg-gray-100/10"
                     key={Math.random() * 100}
                   >
                     <td className="px-4 py-3 font-medium whitespace-nowrap text-black">
@@ -130,12 +154,22 @@ function Table({ data }: any) {
                     </td>
 
                     <td className="px-4 py-3 text-black whitespace-nowrap">
-                      <span className={`px-4 py-1 rounded-full text-sm ${blog.status === 'active' ? 'bg-green-500/30 text-green-500' : 'bg-orange-500/30 text-orange-500'}`}>
-                        {blog.status === 'active' ? 'Published' : 'Draft'}
+                      <span className="flex items-center cursor-pointer"
+                        onClick={() => {
+                          setShowEditModal(!showEditModal)
+                          setCurrent(blog)
+                        }}>
+                        {/* <IoInformationCircleOutline /> */}
+                        <span className={`px-4 py-1 rounded-full text-sm ${blog.status === 'active' ? 'bg-green-500/30 text-green-500' : 'bg-orange-500/30 text-orange-500'}`}>
+                          {blog.status === 'active' ? 'Published' : 'Draft'}
+                        </span>
                       </span>
                     </td>
                     <td className="px-4 py-3 text-black whitespace-nowrap">
                       {new Date(blog.createdAt).toLocaleDateString()}
+                    </td>
+                    <td className="px-4 py-3 text-black whitespace-nowrap">
+                      {new Date(blog.updatedAt).toLocaleDateString()}
                     </td>
                     <td className="px-8 py-3 relative flex">
                       <button
@@ -150,6 +184,7 @@ function Table({ data }: any) {
                             }
                           }, `/admin/blogs/edit/${blog.id}`)
                         }}>Edit</button>
+
                       <button className="bg-red-500 px-4 py-1 rounded text-white" onClick={() => {
                         setCurrent(blog)
                         setDModalIsOpen(true)
@@ -173,6 +208,25 @@ function Table({ data }: any) {
           </nav>
         </div>
       </div>
+
+      {showEditModal &&
+
+        <ReactPortal>
+          <Modal>
+            <DefaultModalCard
+              label="Are you sure you want to toggle this items's status?"
+              isLoading={isLoading}
+              onCancel={() => {
+                setShowEditModal(false)
+                setCurrent(null)
+              }}
+              onConfirm={() => toggleStatus()}
+            />
+          </Modal>
+        </ReactPortal>
+      }
+
+
       {dModalIsOpen &&
         <ReactPortal>
           <Modal>

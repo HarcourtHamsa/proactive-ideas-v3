@@ -19,12 +19,15 @@ import useAuth from "@/hooks/useAuth";
 import useRole from "@/hooks/useRole";
 import { Role } from "../../../types/types";
 import useCookie from "@/hooks/useCookie";
+import { updateIdeaPost } from "@/helper";
+import DefaultModalCard from "./DefaultModalCard";
 
 function Table({ data }: any) {
     const cookie = useCookie();
     const router = useRouter();
 
-
+    const [showEditModal, setShowEditModal] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
     const [current, setCurrent] = useState<any>({});
     const [dModalIsOpen, setDModalIsOpen] = useState(false)
     const [showDeleteLoader, setShowDeleteLoader] = useState(false)
@@ -54,6 +57,22 @@ function Table({ data }: any) {
 
 
     };
+
+    const toggleStatus = async () => {
+        const newStatus = current.status === "active" ? "inactive" : "active";
+        setIsLoading(true)
+        try {
+            await updateIdeaPost({ body: { status: newStatus }, id: current.id, token: '' })
+            notify({ msg: 'Status updated', type: 'success' })
+            window.location.reload()
+        } catch (error) {
+            console.log(error);
+        }
+
+        setShowEditModal(false)
+        setIsLoading(false)
+        setCurrent(null)
+    }
 
     return (
         <section className="">
@@ -108,6 +127,9 @@ function Table({ data }: any) {
                                     <th scope="col" className="px-4 py-3 whitespace-nowrap">
                                         Date created
                                     </th>
+                                    <th scope="col" className="px-4 py-3 whitespace-nowrap">
+                                        Date updated
+                                    </th>
                                     <th scope="col" className="px-4 py-3">
                                         <span className="">Actions</span>
                                     </th>
@@ -128,12 +150,22 @@ function Table({ data }: any) {
                                             <p className="truncate w-[90%]">{blog.title}</p>
                                         </td>
                                         <td className="px-4 py-3 text-black whitespace-nowrap">
-                                            <span className={`text-sm px-3 py-1 rounded-full ${blog.status === 'active' ? 'bg-green-500/30 text-green-500' : 'bg-orange-500/30 text-orange-500' }`}>
-                                                {blog.status === 'active' ? 'Published' : 'Draft'}
+                                            <span className="flex items-center cursor-pointer"
+                                                onClick={() => {
+                                                    setShowEditModal(!showEditModal)
+                                                    setCurrent(blog)
+                                                }}>
+                                                {/* <IoInformationCircleOutline /> */}
+                                                <span className={`px-4 py-1 rounded-full text-sm ${blog.status === 'active' ? 'bg-green-500/30 text-green-500' : 'bg-orange-500/30 text-orange-500'}`}>
+                                                    {blog.status === 'active' ? 'Published' : 'Draft'}
+                                                </span>
                                             </span>
                                         </td>
                                         <td className="px-4 py-3 text-black whitespace-nowrap">
                                             {new Date(blog.createdAt).toLocaleDateString()}
+                                        </td>
+                                        <td className="px-4 py-3 text-black whitespace-nowrap">
+                                            {new Date(blog.updatedAt).toLocaleDateString()}
                                         </td>
                                         <td className="px-8 py-3 relative flex">
                                             <button
@@ -169,6 +201,24 @@ function Table({ data }: any) {
                     </nav>
                 </div>
             </div>
+            {showEditModal &&
+
+                <ReactPortal>
+                    <Modal>
+                        <DefaultModalCard
+                            label="Are you sure you want to toggle this items's status?"
+                            isLoading={isLoading}
+                            onCancel={() => {
+                                setShowEditModal(false)
+                                setCurrent(null)
+                            }}
+                            onConfirm={() => toggleStatus()}
+                        />
+                    </Modal>
+                </ReactPortal>
+            }
+
+
             {dModalIsOpen &&
                 <ReactPortal>
                     <Modal>

@@ -220,7 +220,7 @@ export async function updateBlogPost({
   };
 
   try {
-    const res = await http.patch(`/blog/${id}`, body, options);
+    const res = await http.patch(`/update-blog-post?id=${id}`, body, options);
     return res.data;
   } catch (error: any) {
     throw new Error(error)
@@ -283,6 +283,32 @@ export async function updateIdeaPost({
 
   try {
     const res = await http.patch(`/update-idea-post?id=${id}`, body, options);
+    return res.data;
+  } catch (error: any) {
+    throw new Error(error)
+
+  }
+}
+
+
+export async function updateCourse({
+  body,
+  token,
+  id
+}: {
+  body: any;
+  token: string | null;
+  id: string | null;
+}) {
+
+  const options = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  try {
+    const res = await http.patch(`/update-course?id=${id}`, body, options);
     return res.data;
   } catch (error: any) {
     throw new Error(error)
