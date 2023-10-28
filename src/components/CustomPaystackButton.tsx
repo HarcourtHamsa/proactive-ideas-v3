@@ -39,7 +39,7 @@ function CustomPaystackButton({ amount, courseId, currency }: { amount: number, 
     // you can call this function anything
     const handlePaystackSuccessAction = (reference: ITransaction) => {
         // Implementation for whatever you want to do with reference and after success call.
-        console.log(reference);
+     
 
         handleCreateTx({
             amount: amount as any,
@@ -58,7 +58,6 @@ function CustomPaystackButton({ amount, courseId, currency }: { amount: number, 
     // you can call this function anything
     const handlePaystackCloseAction = () => {
         // implementation for  whatever you want to do when the Paystack dialog closed.
-        console.log('closed')
     }
 
     const componentProps = {

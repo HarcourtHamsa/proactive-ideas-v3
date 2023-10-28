@@ -78,9 +78,6 @@ function Navbar() {
   };
 
   const handleCloseModals = () => {
-    console.log({ dropDownIsOpen });
-    console.log({ resourcesSubMenuIsOpen });
-
     // if (dropDownIsOpen){
     //   setDropDownIsOpen(false)
     // }
@@ -131,11 +128,11 @@ function Navbar() {
                   className="py-5 cursor-pointer pl-3 hover:text-[#F08354] pr-4 relative flex items-center gap-1 rounded md:bg-transparent md:p-0 text-black"
                   aria-current="page"
                   tabIndex={0}
-                  onBlur={() => {
-                    if (resourcesSubMenuIsOpen) {
-                      setResourcesSubMenuIsOpen(false)
-                    }
-                  }}
+                  // onBlur={() => {
+                  //   if (resourcesSubMenuIsOpen) {
+                  //     setResourcesSubMenuIsOpen(false)
+                  //   }
+                  // }}
                 >Resources <IoCaretDownOutline /> </div>
                 {resourcesSubMenuIsOpen && (
                   <div className='absolute w-[250px] z-30 -bottom-36 translate-y-6 -translate-x-4 bg-white rounded shadow-xl overflow-hidden'>
@@ -165,11 +162,11 @@ function Navbar() {
           {cookie?.user ? <button
             type="button"
             onClick={() => setDropDownIsOpen(!dropDownIsOpen)}
-            onBlur={() => {
-              if (dropDownIsOpen) {
-                setDropDownIsOpen(false)
-              }
-            }}
+            // onBlur={() => {
+            //   if (dropDownIsOpen) {
+            //     setDropDownIsOpen(false)
+            //   }
+            // }}
             className="flex mr-3 bg-gray-800 relative rounded-full md:mr-0 focus:ring-4 focus:ring-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
             <span className="sr-only">Open user menu</span>
             <div className='w-10 h-10 rounded-full bg-[#404eed] flex justify-center items-center'>
@@ -213,7 +210,7 @@ function Navbar() {
                   <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-100  list-none ">Earnings</a>
                 </li> */}
                 <li onClick={logout}>
-                  <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 list-none ">Sign out</a>
+                  <a href="/" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 list-none ">Sign out</a>
                 </li>
               </ul>
             </div>

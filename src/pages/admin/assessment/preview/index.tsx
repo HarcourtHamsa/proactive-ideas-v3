@@ -33,7 +33,7 @@ function Index() {
     const [certificateData, setCertificateData] = useState([]);
 
 
-    console.log({ assessment });
+  
 
     const next = () => {
         setOffset((prevState: number) => prevState + 1)

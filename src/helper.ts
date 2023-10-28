@@ -171,7 +171,7 @@ export async function createBlogPost({
   };
 
   try {
-    console.log("body...", body);
+  
 
     const res = await http.post(`/create-blog-post`, { ...body }, options);
     return res.data;
@@ -376,7 +376,7 @@ export async function updateIdeaPostDraft({
   id: string | null;
 }) {
 
-  console.log({ body });
+
 
 
   const options = {
@@ -466,7 +466,7 @@ export async function getSingleCourse({ id }: { id: string }) {
 
 
 export function getPriceBasedOnLocation({ country, prices }: any) {
-  console.log();
+
 
   var coursePrice = prices?.find((price: any) => price.country_code.includes(country));
   var defaultPrice = prices?.find((price: any) => price.country_code.includes("US"));

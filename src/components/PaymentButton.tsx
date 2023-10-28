@@ -66,7 +66,7 @@ export default function PaymentButton({ amount, courseId, currency }: { amount: 
                 handleFlutterPayment({
                     callback: (response) => {
                         closePaymentModal() // this will close the modal programmatically
-                        console.log(response);
+                     
                         handleCreateTx({
                             amount: response?.amount as any,
                             transaction_id: response?.transaction_id,

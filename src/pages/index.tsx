@@ -37,6 +37,8 @@ function Index({ heroContent, certContent, newsletterContent }: any) {
   const { data: ideasPosts, isLoading: isFetchingIdeasPosts }: any = useFetchIdeasPostsQuery("");
   const { data: courses, isLoading: isFetchingCourses }: any = useFetchCoursesQuery("");
   const [offset, setOffset] = useState(0)
+  const [blogSlideroffset, setBlogSliderOffset] = useState(0)
+  const [ideaSlideroffset, setIdeaSliderOffset] = useState(0)
 
 
   if (geo) {
@@ -64,7 +66,7 @@ function Index({ heroContent, certContent, newsletterContent }: any) {
               </div>
 
               <div className='w-[50px] cursor-pointer h-[50px] bg-black/20 flex justify-center items-center rounded-full'
-                 onClick={() => {
+                onClick={() => {
                   if (offset === -6) return
                   setOffset(offset - 1)
                 }}
@@ -77,7 +79,7 @@ function Index({ heroContent, certContent, newsletterContent }: any) {
                 <div>
                   <p className='text-[#11393C] uppercase before:w-10 before:h-[2px] before:bg-[#11393C] before:inline-flex before:-translate-y-1 before:mr-4'>courses</p>
                   <h2 className="mb-4 text-3xl font-semibold leading-snug lg:font-extrabold lg:text-4xl lg:leading-none text-[#11393C] lg:mb-7 md:w-[600px]">
-                    Explore inspiring online courses 
+                    Explore inspiring online courses
                   </h2>
                 </div>
 
@@ -157,68 +159,121 @@ function Index({ heroContent, certContent, newsletterContent }: any) {
 
         </div>
 
-        <div className=' overflow-x-scroll scrollbar-none'>
-          <div className=" overflow-x-scroll scrollbar-none w-max">
 
-            {blogPosts ?
-              <div className="flex flex-nowrap lg:grid lg:grid-cols-4 2xl:grid-cols-5  gap-2 flex-shrink-0 flex-grow overflow-auto duration-200 ease-in-out scrollbar-hide">
-                {blogPosts?.data?.filter((post: any) => post.status !== 'inactive').slice(-8).reverse().map((post: any) => {
-                  return (
-                    <div className='w-[300px] block' key={Math.random()}>
-                      <BlogCard
-                        data={post}
-                      />
-                    </div>
-                  );
-                })}
+        <div className='min-h-[400px] h-fit bg-[#FAF7ED]  flex place-items-center'>
+          <div className='container w-[100%] mx-auto'>
+            <div className='h-fit pt-5 flex justify-center relative items-center'>
+
+              <div className='absolute w-full justify-between hidden md:flex z-20 text-black'>
+                <div className='w-[50px] cursor-pointer h-[50px] bg-black/20 flex justify-center items-center rounded-full'
+                  onClick={() => {
+                    if (blogSlideroffset === 0) return
+                    setBlogSliderOffset(blogSlideroffset + 1)
+                  }}
+                >
+                  <TbChevronLeft size={25} />
+                </div>
+
+                <div className='w-[50px] cursor-pointer h-[50px] bg-black/20 flex justify-center items-center rounded-full'
+                  onClick={() => {
+                    if (blogSlideroffset === -6) return
+                    setBlogSliderOffset(blogSlideroffset - 1)
+                  }}
+                >
+                  <TbChevronRight size={25} />
+                </div>
               </div>
+              <div className="container w-[90%] mx-auto pb-10">
+                <div className="flex overflow-x-scroll pb-10 scrollbar-none">
 
-              : <SkeletonLoader />}
+                  {blogPosts ?
 
+                    // CODE GOES HERE
+                    <div className={`flex flex-nowrap gap-2 flex-shrink-0 flex-grow overflow-auto duration-200 ease-in-out scrollbar-hide`} style={{ transform: `translateX(${blogSlideroffset * 10}%)` }}>
+                      {blogPosts?.data?.filter((post: any) => post.status !== 'inactive').slice(-8).reverse().map((post: any) => {
+                        return (
+                          <div className='w-[300px] block' key={Math.random()}>
+                            <BlogCard
+                              data={post}
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
 
+                    : <SkeletonLoader />}
 
-
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+
       </div>
 
-      {/* Ideas */}
       <div className="container w-[90%] mx-auto pb-24">
         <div className='flex justify-between gap-4 md:items-center my-10 flex-col md:flex-row'>
           <div>
             <p className='text-[#11393C] uppercase before:w-10 before:h-[2px] before:bg-[#11393C] before:inline-flex before:-translate-y-1 before:mr-4'>Ideas</p>
             <h2 className="text-2xl md:w-[500px] md:text-4xl text-[#11393C] text-left py-4 mx-auto font-semibold  xl:font-extrabold">
-              Bite-sized contents
+              Bite sized contents.
             </h2>
 
           </div>
 
           <div>
-            <button className='py-2 px-4 bg-[#11393C] rounded text-white' onClick={() => router.push("/ideas")}>View ideas posts</button>
+            <button className='py-2 px-4 bg-[#11393C] rounded hover:opacity-80 text-white' onClick={() => router.push("/ideas")}>View idea posts</button>
           </div>
 
 
         </div>
+        {/* Ideas */}
+        <div className='min-h-[400px] h-fit bg-[#FAF7ED]  flex place-items-center'>
+          <div className='container w-[100%] mx-auto'>
+            <div className='h-fit pt-5 flex justify-center relative items-center'>
 
-        <div className=' overflow-x-scroll scrollbar-none'>
-          <div className=" overflow-x-scroll scrollbar-none w-max">
+              <div className='absolute w-full justify-between hidden md:flex z-20 text-black'>
+                <div className='w-[50px] cursor-pointer h-[50px] bg-black/20 flex justify-center items-center rounded-full'
+                  onClick={() => {
+                    if (ideaSlideroffset === 0) return
+                    setIdeaSliderOffset(ideaSlideroffset + 1)
+                  }}
+                >
+                  <TbChevronLeft size={25} />
+                </div>
 
-            {ideasPosts ?
-              <div className="flex flex-nowrap lg:grid lg:grid-cols-4 2xl:grid-cols-5  gap-2 flex-shrink-0 flex-grow overflow-auto duration-200 ease-in-out scrollbar-hide">
-                {ideasPosts?.data?.filter((post: any) => post.status !== 'inactive').slice(-8).reverse().map((post: any) => {
-                  return (
-                    <div className='w-[300px] block' key={Math.random()}>
-                      <IdeaCard
-                        data={post}
-                      />
-                    </div>
-                  );
-                })}
+                <div className='w-[50px] cursor-pointer h-[50px] bg-black/20 flex justify-center items-center rounded-full'
+                  onClick={() => {
+                    if (ideaSlideroffset === -6) return
+                    setIdeaSliderOffset(ideaSlideroffset - 1)
+                  }}
+                >
+                  <TbChevronRight size={25} />
+                </div>
               </div>
-              :
-              <SkeletonLoader />}
+              <div className="container w-[90%] mx-auto pb-10">
+                <div className="flex overflow-x-scroll pb-10 scrollbar-none">
 
+                  {ideasPosts ?
 
+                    // CODE GOES HERE
+                    <div className={`flex flex-nowrap gap-2 flex-shrink-0 flex-grow overflow-auto duration-200 ease-in-out scrollbar-hide`} style={{ transform: `translateX(${blogSlideroffset * 10}%)` }}>
+                      {ideasPosts?.data?.filter((post: any) => post.status !== 'inactive').slice(-8).reverse().map((post: any) => {
+                        return (
+                          <div className='w-[300px] block' key={Math.random()}>
+                            <IdeaCard
+                              data={post}
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    : <SkeletonLoader />}
+
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

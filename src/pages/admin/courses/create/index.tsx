@@ -354,38 +354,38 @@ function Index() {
     const [USD, setUSD] = useState({
         currency: "USD",
         country_code: "US",
-        price: generalInfoData.prices.USD || ""
+        price: generalInfoData.prices.USD || "0"
     });
 
     const [INR, setINR] = useState({
         currency: "INR",
         country_code: "IND",
-        price: generalInfoData.prices.INR || ""
+        price: generalInfoData.prices.INR || "0"
     });
     const [NGN, setNGN] = useState({
         currency: "NGN",
         country_code: "NGA",
-        price: generalInfoData.prices.NGA || ""
+        price: generalInfoData.prices.NGA || "0"
     });
     const [KES, setKES] = useState({
         currency: "KES",
         country_code: "KEN",
-        price: generalInfoData.prices.KES || ""
+        price: generalInfoData.prices.KES || "0"
     });
     const [ZAR, setZAR] = useState({
         currency: "ZAR",
         country_code: "ZAF",
-        price: generalInfoData.prices.ZAR || ""
+        price: generalInfoData.prices.ZAR || "0"
     });
     const [GHS, setGHS] = useState({
         currency: "GHS",
         country_code: "GHA",
-        price: generalInfoData.prices.GHS || ""
+        price: generalInfoData.prices.GHS || "0"
     });
     const [GBP, setGBP] = useState({
         currency: "GBP",
         country_code: "GBR",
-        price: generalInfoData.prices.GBP || ""
+        price: generalInfoData.prices.GBP || "0"
     });
 
     function arrayToHTMLList(array: any[]) {
@@ -427,9 +427,7 @@ function Index() {
 
 
     const handlePriceChange = (e: any) => {
-        console.log("changing price...");
-        console.log(e.target.name);
-        console.log(e.target.value);
+ 
 
 
         switch (e.target.name) {
@@ -612,7 +610,7 @@ function Index() {
                                 </div>
                             </div>
 
-                            <div className='mt-8'>
+                            {/* <div className='mt-8'>
                                 <p>Prices</p>
                                 <div className='col-span-2 space-y-2'>
                                     <DynamicPricingInput price={USD} placeholder="Price in US Dollars" onChange={handlePriceChange} />
@@ -624,7 +622,7 @@ function Index() {
                                     <DynamicPricingInput price={ZAR} placeholder="Price in South African Rands" onChange={handlePriceChange} />
 
                                 </div>
-                            </div>
+                            </div> */}
 
 
                             <div className=''>

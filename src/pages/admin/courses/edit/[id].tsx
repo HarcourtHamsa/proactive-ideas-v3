@@ -1011,7 +1011,7 @@ function EditSingleCourse({ course }: any) {
                                 </ul>
                             </div>
 
-                            <div className='mt-8'>
+                            {/* <div className='mt-8'>
                                 <p>Prices</p>
                                 <div className='col-span-2 space-y-2'>
                                     <DynamicPricingInput price={USD} placeholder="Price in US Dollars" onChange={handlePriceChange} />
@@ -1023,7 +1023,7 @@ function EditSingleCourse({ course }: any) {
                                     <DynamicPricingInput price={ZAR} placeholder="Price in South African Rands" onChange={handlePriceChange} />
 
                                 </div>
-                            </div>
+                            </div> */}
 
                         </div>
                         <div className='border-t px-4 pb-4'>

@@ -72,7 +72,6 @@ function EditBlog() {
     return tagsArr
   }
 
-  // console.log({ blogContent });
 
 
   const [selectedTags, setSelectedTags] = useState<any[] | null>(generatePeviousTags());

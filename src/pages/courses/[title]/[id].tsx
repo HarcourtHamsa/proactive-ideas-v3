@@ -94,7 +94,7 @@ function SingleCourse({ course, lessons, subscriber }: any) {
             return;
         }
 
-       
+
 
 
         if (!parsedSubscriber) {
@@ -106,7 +106,7 @@ function SingleCourse({ course, lessons, subscriber }: any) {
 
         setCount(count + 1);
         setCopyOfCount(count + 1)
-        window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
+        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
         // setFakeCount(count);
 
 
@@ -125,9 +125,9 @@ function SingleCourse({ course, lessons, subscriber }: any) {
     const selectContent = (body: any) => {
         const lessonIndex = contents.findIndex((lesson: any) => lesson._id === body._id)
 
-        if (copyOfCount >= lessonIndex){
+        if (copyOfCount >= lessonIndex) {
             setCount(lessonIndex);
-            window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
+            window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
             // setCopyOfCount(lessonIndex);
         }
 
@@ -294,8 +294,11 @@ function SingleCourse({ course, lessons, subscriber }: any) {
                                                     </li>
                                                     <ul className=' list-disc divide-y-[1px] divide-gray-200 ul__unset'>
                                                         {section?.sub_sections?.map((ss: any, index: number) => {
-                                                            const targetTitle = ss.title;
-                                                            const foundindex = lessons.findIndex((lesson: any) => lesson.title === targetTitle);
+                                                            // const targetTitle = ss.title;
+                                                            const targetTitle = ss._id;
+                                                            console.log({ ss });
+
+                                                            const foundindex = lessons.findIndex((lesson: any) => lesson._id === targetTitle);
                                                             return (
                                                                 <li
                                                                     key={Math.random()}
@@ -313,7 +316,7 @@ function SingleCourse({ course, lessons, subscriber }: any) {
                                                             )
                                                         })}
                                                     </ul>
-                                                   
+
                                                 </span>
                                             )
                                         })}
@@ -321,13 +324,13 @@ function SingleCourse({ course, lessons, subscriber }: any) {
                                     <div className='px-4 h-[100px] flex justify-center items-center'>
                                         <div>
                                             {/* <p className='uppercase text-sm mb-4'>Interactive Assessment</p> */}
-                                        <div className='bg-orange-500/20 border-orange-500 text-orange-500 py-2 px-6 rounded-full text-center'>
-                                            <p>Assessment</p>
-                                        </div>
+                                            <div className='bg-orange-500/20 border-orange-500 text-orange-500 py-2 px-6 rounded-full text-center'>
+                                                <p>Assessment</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                   
+
                             </aside>
                         </div>
 

@@ -60,7 +60,6 @@ function Table({ categories }: { categories: string[] }) {
   async function createNewCategory() {
     setShowCategoryLoader(true);
 
-    console.log("GROUP", categoryGroup);
 
 
     await createCategory({
@@ -69,7 +68,7 @@ function Table({ categories }: { categories: string[] }) {
       group: categoryGroup
     })
       .then((res: any) => {
-        console.log(res);
+
         notify({ msg: "New Category Created", type: "success" });
 
         setTimeout(() => {
@@ -92,7 +91,6 @@ function Table({ categories }: { categories: string[] }) {
       token: cookie?.user.accessToken,
     })
       .then((res: any) => {
-        console.log(res);
         notify({ msg: "Category Deleted", type: "success" });
         setDeleteModalIsOpen(false);
       })

@@ -50,7 +50,7 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
     const cookie = useCookie()
     const [questions, setQuestions] = useState<any[]>(assessmentState.questions || assessments[0]?.questions || [])
 
-    // console.log({ assessments });
+    
 
 
 
@@ -302,7 +302,7 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
                                                     size={25}
                                                     className='cursor-pointer'
                                                     onClick={() => {
-                                                        // console.log({quiz});
+                                                     
                                                         
                                                         setModalIsOpen(true)
                                                         setQuestion(quiz?.question)
@@ -331,7 +331,7 @@ function Create({ course, assessments }: { course: any, assessments: any }) {
                                 onClick={() => {
                                     // dispatch(addQuestion({ questions }))
 
-                                    // console.log({ questions });
+                                 
 
 
                                     router.push({

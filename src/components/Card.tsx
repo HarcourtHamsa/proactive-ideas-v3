@@ -25,7 +25,7 @@ function Card({ data }: any) {
 
 
   return (
-    <div className=" w-[100%] h-[450px] cursor-pointer">
+    <div className=" w-[100%] h-[400px]">
       <div className="flex flex-col h-full bg-white border rounded overflow-hidden">
 
         <a className="block focus:outline-none focus-visible:ring-2 relative h-[40%]">
@@ -62,21 +62,21 @@ function Card({ data }: any) {
 
           {subscriber?.data ? <div>
             <button
-              className="py-3 mb-2 bg-[#F08354] text-white w-full rounded"
+              className="py-2 bg-[#F08354] text-white w-full rounded"
               onClick={() => router.push({ pathname: `/courses/${data.title}/${data?.id}` })}
             >
               Continue learning
             </button>
           </div> :
-            <div className="w-full flex-grow">
-              <button className="py-2 rounded mb-4 mt-2 w-full bg-orange-500/20 text-[#F08354]" onClick={() => router.push({
+            <div className="w-full">
+              <button className="py-2 rounded w-full bg-orange-500/20 text-[#F08354]" onClick={() => router.push({
                 pathname: `/courses/${data.id}/preview`, query: {
                   id: data?.id
                 }
-              }, `/courses/${data.id}/preview`)}>Preview Course</button>
+              }, `/courses/${data.id}/preview`)}>Start Course</button>
 
 
-              <button className="bg-[#F08354] shadow w-full flex items-center gap-1 justify-center text-white px-4 rounded py-2" onClick={() => router.push({
+              {/* <button className="bg-[#F08354] shadow w-full flex items-center gap-1 justify-center text-white px-4 rounded py-2" onClick={() => router.push({
                 pathname: `/courses/${data.id}/preview`, query: {
                   id: data?.id
                 }
@@ -100,7 +100,7 @@ function Card({ data }: any) {
                   }
                 </span>
 
-              </button>
+              </button> */}
             </div>}
 
 

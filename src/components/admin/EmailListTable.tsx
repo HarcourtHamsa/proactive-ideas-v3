@@ -24,7 +24,7 @@ function EmailListTable({ data }: any) {
     const cookie = useCookie()
     const role = useRole()
 
-    console.log(data);
+
 
 
 

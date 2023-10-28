@@ -60,7 +60,7 @@ function Layout({ children }: { children: React.ReactNode }) {
   };
 
   const logout = () => {
-    console.log('click click');
+
     
     router.push('/')
     deleteCookie('tkn')
