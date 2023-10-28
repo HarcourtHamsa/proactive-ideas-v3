@@ -210,7 +210,7 @@ function Navbar() {
                   <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-100  list-none ">Earnings</a>
                 </li> */}
                 <li onClick={logout}>
-                  <a href="/" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 list-none ">Sign out</a>
+                  <Link href="/" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 list-none ">Sign out</Link>
                 </li>
               </ul>
             </div>
