@@ -290,7 +290,7 @@ return (
                                                     className="py-3 mb-2 bg-[#F08354] text-white w-full rounded"
                                                     onClick={() => {
 
-                                                        router.push({ pathname: `/ courses / ${course.data.title} / ${course.data?.id}` })
+                                                        router.push({ pathname: `/courses/${course.data.title}/${course.data?.id}` })
                                                     }
                                                     }
                                                 >

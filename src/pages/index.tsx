@@ -142,142 +142,139 @@ function Index({ heroContent, certContent, newsletterContent }: any) {
         </div>
       </div>
 
-      <div className="container w-[90%] mx-auto pb-24">
-        <div className='flex justify-between gap-4 md:items-center my-10 flex-col md:flex-row'>
-          <div>
-            <p className='text-[#11393C] uppercase before:w-10 before:h-[2px] before:bg-[#11393C] before:inline-flex before:-translate-y-1 before:mr-4'>Blog</p>
-            <h2 className="text-2xl md:w-[500px] md:text-4xl text-[#11393C] text-left py-4 mx-auto font-semibold  xl:font-extrabold">
-              Fresh insights from experts.
-            </h2>
+      <div className='min-h-[400px] h-fit bg-[#FAF7ED]  flex place-items-center'>
+        <div className='container w-[100%] mx-auto'>
+          <div className='h-fit pt-5 flex justify-center relative items-center'>
 
-          </div>
-
-          <div>
-            <button className='py-2 px-4 bg-[#11393C] rounded hover:opacity-80 text-white' onClick={() => router.push("/blog")}>View blog posts</button>
-          </div>
-
-
-        </div>
-
-
-        <div className='min-h-[400px] h-fit bg-[#FAF7ED]  flex place-items-center'>
-          <div className='container w-[100%] mx-auto'>
-            <div className='h-fit pt-5 flex justify-center relative items-center'>
-
-              <div className='absolute w-full justify-between hidden md:flex z-20 text-black'>
-                <div className='w-[50px] cursor-pointer h-[50px] bg-black/20 flex justify-center items-center rounded-full'
-                  onClick={() => {
-                    if (blogSlideroffset === 0) return
-                    setBlogSliderOffset(blogSlideroffset + 1)
-                  }}
-                >
-                  <TbChevronLeft size={25} />
-                </div>
-
-                <div className='w-[50px] cursor-pointer h-[50px] bg-black/20 flex justify-center items-center rounded-full'
-                  onClick={() => {
-                    if (blogSlideroffset === -6) return
-                    setBlogSliderOffset(blogSlideroffset - 1)
-                  }}
-                >
-                  <TbChevronRight size={25} />
-                </div>
+            <div className='absolute w-full justify-between hidden md:flex z-20 text-black'>
+              <div className='w-[50px] cursor-pointer h-[50px] bg-black/20 flex justify-center items-center rounded-full'
+                onClick={() => {
+                  if (blogSlideroffset === 0) return
+                  setBlogSliderOffset(blogSlideroffset + 1)
+                }}
+              >
+                <TbChevronLeft size={25} />
               </div>
-              <div className="container w-[90%] mx-auto pb-10">
-                <div className="flex overflow-x-scroll pb-10 scrollbar-none">
 
-                  {blogPosts ?
-
-                    // CODE GOES HERE
-                    <div className={`flex flex-nowrap gap-2 flex-shrink-0 flex-grow overflow-auto duration-200 ease-in-out scrollbar-hide`} style={{ transform: `translateX(${blogSlideroffset * 10}%)` }}>
-                      {blogPosts?.data?.filter((post: any) => post.status !== 'inactive').slice(-8).reverse().map((post: any) => {
-                        return (
-                          <div className='w-[300px] block' key={Math.random()}>
-                            <BlogCard
-                              data={post}
-                            />
-                          </div>
-                        );
-                      })}
-                    </div>
-
-                    : <SkeletonLoader />}
-
-                </div>
+              <div className='w-[50px] cursor-pointer h-[50px] bg-black/20 flex justify-center items-center rounded-full'
+                onClick={() => {
+                  if (blogSlideroffset === -6) return
+                  setBlogSliderOffset(blogSlideroffset - 1)
+                }}
+              >
+                <TbChevronRight size={25} />
               </div>
             </div>
-          </div>
-        </div>
-
-      </div>
-
-      <div className="container w-[90%] mx-auto pb-24">
-        <div className='flex justify-between gap-4 md:items-center my-10 flex-col md:flex-row'>
-          <div>
-            <p className='text-[#11393C] uppercase before:w-10 before:h-[2px] before:bg-[#11393C] before:inline-flex before:-translate-y-1 before:mr-4'>Ideas</p>
-            <h2 className="text-2xl md:w-[500px] md:text-4xl text-[#11393C] text-left py-4 mx-auto font-semibold  xl:font-extrabold">
-              Bite sized contents.
-            </h2>
-
-          </div>
-
-          <div>
-            <button className='py-2 px-4 bg-[#11393C] rounded hover:opacity-80 text-white' onClick={() => router.push("/ideas")}>View idea posts</button>
-          </div>
-
-
-        </div>
-        {/* Ideas */}
-        <div className='min-h-[400px] h-fit bg-[#FAF7ED]  flex place-items-center'>
-          <div className='container w-[100%] mx-auto'>
-            <div className='h-fit pt-5 flex justify-center relative items-center'>
-
-              <div className='absolute w-full justify-between hidden md:flex z-20 text-black'>
-                <div className='w-[50px] cursor-pointer h-[50px] bg-black/20 flex justify-center items-center rounded-full'
-                  onClick={() => {
-                    if (ideaSlideroffset === 0) return
-                    setIdeaSliderOffset(ideaSlideroffset + 1)
-                  }}
-                >
-                  <TbChevronLeft size={25} />
+            <div className="container w-[90%] mx-auto pb-10">
+              <div className='flex justify-between gap-4 lg:items-center my-10 flex-col lg:flex-row'>
+                <div>
+                  <p className='text-[#11393C] uppercase before:w-10 before:h-[2px] before:bg-[#11393C] before:inline-flex before:-translate-y-1 before:mr-4'>Blogs</p>
+                  <h2 className="mb-4 text-3xl font-semibold leading-snug lg:font-extrabold lg:text-4xl lg:leading-none text-[#11393C] lg:mb-7 md:w-[600px]">
+                  Fresh insights from experts.
+                  </h2>
                 </div>
 
-                <div className='w-[50px] cursor-pointer h-[50px] bg-black/20 flex justify-center items-center rounded-full'
-                  onClick={() => {
-                    if (ideaSlideroffset === -6) return
-                    setIdeaSliderOffset(ideaSlideroffset - 1)
-                  }}
-                >
-                  <TbChevronRight size={25} />
+                <div className=''>
+                  <button className='py-2 px-4 whitespace-nowrap text-[#fff] rounded bg-[#11393C]' onClick={() => router.push("/blog")}>View blog posts</button>
                 </div>
+
+
               </div>
-              <div className="container w-[90%] mx-auto pb-10">
-                <div className="flex overflow-x-scroll pb-10 scrollbar-none">
 
-                  {ideasPosts ?
 
-                    // CODE GOES HERE
-                    <div className={`flex flex-nowrap gap-2 flex-shrink-0 flex-grow overflow-auto duration-200 ease-in-out scrollbar-hide`} style={{ transform: `translateX(${blogSlideroffset * 10}%)` }}>
-                      {ideasPosts?.data?.filter((post: any) => post.status !== 'inactive').slice(-8).reverse().map((post: any) => {
-                        return (
-                          <div className='w-[300px] block' key={Math.random()}>
-                            <IdeaCard
-                              data={post}
-                            />
-                          </div>
-                        );
-                      })}
-                    </div>
 
-                    : <SkeletonLoader />}
+              <div className="flex overflow-x-scroll pb-10 scrollbar-none">
 
-                </div>
+                {blogPosts ?
+
+                  // CODE GOES HERE
+                  <div className={`flex flex-nowrap gap-2 flex-shrink-0 flex-grow overflow-auto duration-200 ease-in-out scrollbar-hide`} style={{ transform: `translateX(${blogSlideroffset * 10}%)` }}>
+
+                    {blogPosts?.data?.filter((post: any) => post.status !== 'inactive').slice(-6).reverse().map((course: any) => {
+                      return (
+                        <div className='w-[300px] block' key={Math.random()}>
+                          <BlogCard
+                            data={course}
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  : <SkeletonLoader />}
+
               </div>
             </div>
           </div>
         </div>
       </div>
 
+      <div className='min-h-[400px] h-fit bg-[#FAF7ED]  flex place-items-center'>
+        <div className='container w-[100%] mx-auto'>
+          <div className='h-fit pt-5 flex justify-center relative items-center'>
+
+            <div className='absolute w-full justify-between hidden md:flex z-20 text-black'>
+              <div className='w-[50px] cursor-pointer h-[50px] bg-black/20 flex justify-center items-center rounded-full'
+                onClick={() => {
+                  if (ideaSlideroffset === 0) return
+                  setIdeaSliderOffset(ideaSlideroffset + 1)
+                }}
+              >
+                <TbChevronLeft size={25} />
+              </div>
+
+              <div className='w-[50px] cursor-pointer h-[50px] bg-black/20 flex justify-center items-center rounded-full'
+                onClick={() => {
+                  if (ideaSlideroffset === -6) return
+                  setIdeaSliderOffset(ideaSlideroffset - 1)
+                }}
+              >
+                <TbChevronRight size={25} />
+              </div>
+            </div>
+            <div className="container w-[90%] mx-auto pb-10">
+              <div className='flex justify-between gap-4 lg:items-center my-10 flex-col lg:flex-row'>
+                <div>
+                  <p className='text-[#11393C] uppercase before:w-10 before:h-[2px] before:bg-[#11393C] before:inline-flex before:-translate-y-1 before:mr-4'>Ideas</p>
+                  <h2 className="mb-4 text-3xl font-semibold leading-snug lg:font-extrabold lg:text-4xl lg:leading-none text-[#11393C] lg:mb-7 md:w-[600px]">
+                  Bite sized contents.
+                  </h2>
+                </div>
+
+                <div className=''>
+                  <button className='py-2 px-4 whitespace-nowrap text-[#fff] rounded bg-[#11393C]' onClick={() => router.push("/ideas")}>View idea posts</button>
+                </div>
+
+
+              </div>
+
+
+
+              <div className="flex overflow-x-scroll pb-10 scrollbar-none">
+
+                {ideasPosts ?
+
+                  // CODE GOES HERE
+                  <div className={`flex flex-nowrap gap-2 flex-shrink-0 flex-grow overflow-auto duration-200 ease-in-out scrollbar-hide`} style={{ transform: `translateX(${ideaSlideroffset * 10}%)` }}>
+
+                    {ideasPosts?.data?.filter((post: any) => post.status !== 'inactive').slice(-6).reverse().map((course: any) => {
+                      return (
+                        <div className='w-[300px] block' key={Math.random()}>
+                          <BlogCard
+                            data={course}
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  : <SkeletonLoader />}
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div className='w-[100%] h-[400px] relative bg-[#FAF7ED] py-0 -translate-y-14'>
         <Newsletter content={newsletterContent} />
