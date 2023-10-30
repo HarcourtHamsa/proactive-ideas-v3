@@ -13,12 +13,12 @@ import { useFetchCourseEnrollmentQuery } from "@/features/apiSlice";
 // { title, duration }: { title: string; duration: string }
 
 function Card({ data }: any) {
-  const router = useRouter(); 
+  const router = useRouter();
   const geo = useSelector((state: RootState) => state.geo)
   const cookie = useCookie();
 
   const courseId = data?.id
-  const userId = cookie?.user?.id 
+  const userId = cookie?.user?.id
 
   const { data: subscriber, isLoading } = useFetchCourseEnrollmentQuery({ course: courseId, user: userId })
 
@@ -49,11 +49,17 @@ function Card({ data }: any) {
 
 
             <header className="mb-3">
+              <div className="text-sm rounded-full bg-orange-400/20 text-orange-400 w-fit mb-3 px-2 py-1">
+                {data?.category}
+              </div>
+
               <a className="block focus:outline-none focus-visible:ring-2">
                 <p className="text-lg font-semibold leading-snug capitalize line-clamp-2">{data?.title}</p>
               </a>
 
             </header>
+
+
 
             <div className=" line-clamp-2 my-4">
               <p className="line-clamp-2">{data?.description}</p>
@@ -69,7 +75,7 @@ function Card({ data }: any) {
             </button>
           </div> :
             <div className="w-full">
-              <button className="py-2 rounded w-full bg-orange-500/20 text-[#F08354]" onClick={() => router.push({
+              <button className="py-2 rounded w-full bg-[#F08354] text-[#fff]" onClick={() => router.push({
                 pathname: `/courses/${data.id}/preview`, query: {
                   id: data?.id
                 }

@@ -10,7 +10,7 @@ import Spinner from "../Spinner";
 
 import deleteSVG from "../../assets/delete.svg";
 import Image from "next/image";
-import { useCreateCategoryMutation, useDeleteCategoryMutation } from "@/features/apiSlice";
+import { useCreateCategoryMutation, useDeleteCategoryMutation, useUpdateCategoryMutation } from "@/features/apiSlice";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import Search from "../SVGs/Search";
@@ -23,13 +23,14 @@ function Table({ categories }: { categories: string[] }) {
   const [data, setData] = useState(categories);
   const [currentFilter, setCurrentFilter] = useState("")
   const [createModalIsOpen, setCreateModalIsOpen] = useState(false);
-  const [categoryName, setCategoryName] = useState("");
-  const [categoryGroup, setCategoryGroup] = useState("Blog");
+  const [categoryName, setCategoryName] = useState<null | string>(null);
+  const [categoryGroup, setCategoryGroup] = useState<null | string>(null);
   const [showCategoryLoader, setShowCategoryLoader] = useState(false);
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
   const [showDeleteLoader, setShowDeleteLoader] = useState(false);
   const [currentCategory, setCurrentCategory] = useState<any>({});
   const { "0": createCategory } = useCreateCategoryMutation()
+  const { "0": updateCategory } = useUpdateCategoryMutation()
   const { "0": deleteCategory } = useDeleteCategoryMutation()
   const cookie = useCookie()
 
@@ -78,6 +79,41 @@ function Table({ categories }: { categories: string[] }) {
       .catch((err: any) => {
         console.log(err);
         notify({ msg: "Failed To Create Category", type: "error" });
+      })
+      .finally(() => {
+        setShowCategoryLoader(false);
+      });
+  }
+
+  async function editCategory() {
+    setShowCategoryLoader(true);
+
+
+    console.log({
+      name: categoryName || currentCategory.name,
+      group: categoryGroup || currentCategory.group
+    });
+
+
+    await updateCategory({
+      id: currentCategory.id,
+      token: cookie?.user.accessToken,
+      name: categoryName || currentCategory.name,
+      group: categoryGroup || currentCategory.group
+    })
+      .then((res: any) => {
+
+        notify({ msg: "Category Updated", type: "success" });
+
+        setTimeout(() => {
+          setCreateModalIsOpen(false);
+        }, 1000 * 2);
+
+        window.location.reload()
+      })
+      .catch((err: any) => {
+        console.log(err);
+        notify({ msg: "Failed To Update Category", type: "error" });
       })
       .finally(() => {
         setShowCategoryLoader(false);
@@ -211,13 +247,18 @@ function Table({ categories }: { categories: string[] }) {
                     </td>
 
                     <td className="px-4 py-3 flex justify-end gap-2">
-                      <button className="flex items-center gap-2 px-3 py-2 bg-[#404eed] hover:bg-blue-600 rounded whitespace-nowrap  text-white">
+                      <button className="flex items-center gap-2 px-2 py-1 bg-[#404eed] hover:bg-blue-600 rounded whitespace-nowrap  text-white"
+                        onClick={() => {
+                          setCurrentCategory(category);
+                          setCreateModalIsOpen(true);
+                        }}
+                      >
 
-                        <span>Edit Category</span>
+                        <span>Edit</span>
                       </button>
 
                       <button
-                        className="flex items-center gap-2 px-3 py-2 bg-red-500 hover:bg-red-600 rounded whitespace-nowrap  text-white"
+                        className="flex items-center gap-2 px-2 py-1 bg-red-500 hover:bg-red-600 rounded whitespace-nowrap  text-white"
                         onClick={() => {
                           setCurrentCategory(category);
                           setDeleteModalIsOpen(true);
@@ -238,12 +279,15 @@ function Table({ categories }: { categories: string[] }) {
           <ReactPortal>
             <Modal>
               <div className="flex justify-between">
-                <h3 className="text-xl">Create Category</h3>
+                <p className="text-lg">Create Category</p>
 
                 <div
                   className="w-6 h-6 border rounded-full flex items-center justify-center cursor-pointer"
                   onClick={() => {
                     setCreateModalIsOpen(false);
+                    setCurrentCategory({})
+                    setCategoryName("")
+                    setCategoryGroup("")
                   }}
                 >
                   <AiOutlineClose size={12} />
@@ -261,7 +305,7 @@ function Table({ categories }: { categories: string[] }) {
                       placeholder=""
                       className="bg-white rounded border px-4 py-2"
                       name="categoryName"
-                      value={categoryName}
+                      value={categoryName || currentCategory.name}
                       onChange={handleCategoryChange}
                     />
                   </div>
@@ -271,7 +315,8 @@ function Table({ categories }: { categories: string[] }) {
                     <select
                       id="countries"
                       className="bg-white border text-gray-900  rounded block w-full p-2.5 py-3" onChange={(e: any) => setCategoryGroup(e.target.value)}
-                      value={categoryGroup}>
+                      value={categoryGroup || currentCategory.group}>
+                      <option value=""></option>
                       <option value="blog">blog</option>
                       <option value="ideas">ideas</option>
                       <option value="course">course</option>
@@ -280,10 +325,23 @@ function Table({ categories }: { categories: string[] }) {
 
 
                   <button
-                    className="py-3 px-4 flex justify-center items-center gap-2 w-full rounded  hover:opacity-80 mt-6 border"
-                    onClick={createNewCategory}
+                    className="py-2 px-4 bg-orange-500 text-white flex justify-center items-center gap-2 w-full rounded  hover:opacity-80 mt-6 border"
+                    onClick={() => {
+
+                      if (currentCategory) {
+                        editCategory()
+                      } else {
+                        createNewCategory()
+                      }
+                    }
+
+
+
+                    }
                   >
-                    {showCategoryLoader && <Spinner />}Create new category
+                    {showCategoryLoader && <Spinner />}
+                    {currentCategory ? "Edit category" : "Create category"}
+
                   </button>
                 </div>
               </div>

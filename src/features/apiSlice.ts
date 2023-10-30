@@ -279,6 +279,16 @@ export const apiSlice = createApi({
                 }
             }),
         }),
+        updateCategory: builder.mutation({
+            query: ({ token, id, ...rest }: any) => ({
+                url: `/update-category?id=${id}`,
+                method: 'PATCH',
+                body: rest,
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                }
+            }),
+        }),
         deleteBlog: builder.mutation({
             query: ({ token, id }: any) => ({
                 url: `/delete-blog-post?id=${id}`,
@@ -371,6 +381,7 @@ export const {
     useUpdateQuizMutation,
     useFetchEmailListQuery,
     useFetchAllCoursesQuery,
-    useFetchAllBlogPostsQuery
+    useFetchAllBlogPostsQuery,
+    useUpdateCategoryMutation,
 }
     = apiSlice
