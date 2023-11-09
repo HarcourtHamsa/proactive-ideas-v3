@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://www.proactiveideas.co/
+
+# Sitemaps
+Sitemap: https://www.proactiveideas.co/sitemap.xml

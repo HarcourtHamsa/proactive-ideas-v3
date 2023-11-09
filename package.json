@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postbuild": "next-sitemap"
   },
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^36.0.1",
@@ -64,6 +65,7 @@
     "next-sanity-image": "^6.0.0",
     "next-seo": "^6.1.0",
     "next-share": "^0.23.0",
+    "next-sitemap": "^4.2.3",
     "node-html-parser": "^6.1.5",
     "object-hash": "^3.0.0",
     "parchment": "^2.0.1",
