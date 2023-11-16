@@ -1,6 +1,9 @@
 # *
 User-agent: *
+
 Allow: /
+
+Disallow: /admin
 
 # Host
 Host: https://www.proactiveideas.co/

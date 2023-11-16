@@ -21,11 +21,11 @@ function BlogCard({
         }
       }, `/blog/${data.id}/${data.title.replace(/ /g, "-").replace(/\//g, "-").toLowerCase()}`)}>
 
-        <a className="block focus:outline-none h-[48%] focus-visible:ring-2">
+        <div className="block focus:outline-none h-[48%] focus-visible:ring-2">
           <figure className="relative h-full overflow-hidden ">
             <Image className='object-center' src={data?.header_image} width={500} height={550} alt="Course" />
           </figure>
-        </a>
+        </div>
 
         <div className="flex-grow flex flex-col px-4 pt-3">
 
@@ -37,9 +37,9 @@ function BlogCard({
 
 
             <header className="mb-3 min-h-[30px] h-fit">
-              <a className="block focus:outline-none focus-visible:ring-2">
+              <div className="block focus:outline-none focus-visible:ring-2">
                 <p className="text-lg font-semibold leading-snug capitalize line-clamp-1">{data?.title}</p>
-              </a>
+              </div>
             </header>
 
             <div className="mb-4 line-clamp-2">

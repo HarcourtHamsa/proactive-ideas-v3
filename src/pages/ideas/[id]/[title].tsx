@@ -1,24 +1,29 @@
 import React, { useState, useRef, useEffect } from 'react'
-import Footer from '@/components/Footer';
-import Navbar from '@/components/Navbar';
-import { useRouter, withRouter } from 'next/router';
-import moment from 'moment'
-import { NextSeo } from 'next-seo';
-
 import Image from 'next/image';
-import { calculateReadingTime, fetchBlogPostByID, fetchIdeaPostByID, modifyHTMLString } from '@/helper';
-
-import { useFetchBlogPostsQuery, useFetchIdeasPostsQuery } from '@/features/apiSlice';
-import Loader from '@/components/Loader';
-import BlogCard from '@/components/BlogCard';
-import { IoClose, IoHeart } from 'react-icons/io5';
-import ProgressBar from '@/components/ProgressBar';
+import { NextSeo } from 'next-seo';
 import { GetServerSideProps } from 'next';
-import ShareButton from '@/components/ShareButton';
-import TableOfContents from '@/components/TableOfContent';
+import { useRouter, withRouter } from 'next/router';
+
+import moment from 'moment'
+import { IoClose, IoHeart } from 'react-icons/io5';
+
+import dynamic from 'next/dynamic'
+
+const Footer = dynamic(() => import('@/components/Footer'));
+const Navbar = dynamic(() => import('@/components/Navbar'));
+const ProgressBar = dynamic(() => import('@/components/ProgressBar'));
+const ShareButton = dynamic(() => import('@/components/ShareButton'));
+const TableOfContents = dynamic(() => import('@/components/TableOfContent'));
+const IdeaCard = dynamic(() => import('@/components/IdeaCard'))
+
 import notify from '@/components/Notification';
+
+
+
+import { calculateReadingTime, fetchIdeaPostByID, modifyHTMLString } from '@/helper';
+import { useFetchIdeasPostsQuery } from '@/features/apiSlice';
 import http from '@/lib/http';
-import IdeaCard from '@/components/IdeaCard'
+
 
 
 function Title({ blogDetails }: any) {
@@ -63,8 +68,8 @@ function Title({ blogDetails }: any) {
         try {
             setHasLiked(true)
             setLikes(likes + 1)
-            console.log({id: blogDetails.id});
-            
+            console.log({ id: blogDetails.id });
+
             await http.post(`/like-idea-post?id=${blogDetails.id}`)
         } catch (error) {
             notify({ msg: 'An error occured', type: 'error' })
@@ -191,8 +196,8 @@ function Title({ blogDetails }: any) {
                                 <div className='mt-8'>
                                     <div
                                         className='border px-4 py-2 bg-white w-fit flex items-center rounded-full gap-4 mb-8 cursor-pointer'
-                                        onClick={() => !hasLiked ? like(): console.log('')}
-                                        >
+                                        onClick={() => !hasLiked ? like() : console.log('')}
+                                    >
                                         <IoHeart size={20} />
                                         <p>{likes}</p>
                                     </div>

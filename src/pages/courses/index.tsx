@@ -1,21 +1,26 @@
 import React, { FormEvent, useState } from "react";
+import dynamic from 'next/dynamic'
 import Image from "next/image";
-import { RxMixerHorizontal } from "react-icons/rx";
-import Card from "../../components/Card";
-import Modal from "../../components/Modal";
-import Navbar from "../../components/Navbar";
-import ReactPortal from "../../components/ReactPortal";
+
+
+const Card = dynamic(() => import("../../components/Card"));
+const Modal = dynamic(() => import("../../components/Modal"));
+const Navbar = dynamic(() => import("../../components/Navbar"));
+const ReactPortal = dynamic(() => import("../../components/ReactPortal"));
+const Footer = dynamic(() => import("../../components/Footer"));
+const SkeletonLoader = dynamic(() => import("@/components/SkeletonLoader"));
+
+
 import { AiOutlineClose } from "react-icons/ai";
-import Footer from "../../components/Footer";
 import { ImSearch } from "react-icons/im";
+import { RxMixerHorizontal } from "react-icons/rx";
+import { IoClose } from "react-icons/io5";
 
 
 import headerImage from "../../assets/Second.png"
+
 import { useFetchCoursesQuery, useFetchCategoriesQuery } from "@/features/apiSlice";
-import Loader from "@/components/Loader";
 import client from "@/lib/sanity";
-import SkeletonLoader from "@/components/SkeletonLoader";
-import { IoClose } from "react-icons/io5";
 
 function Filter({
     label,

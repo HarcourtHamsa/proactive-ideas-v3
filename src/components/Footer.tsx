@@ -36,18 +36,19 @@ function Footer() {
                     </li>
                 </ul>
                 <div className='grid-cols-3 grid w-fit mx-auto gap-4 mb-6'>
-                    <Link href={'https://www.facebook.com/proactive.ideas'} target='_blank'>
+                    <Link href={'https://www.facebook.com/proactive.ideas'} target='_blank' aria-label='Facebook link'>
                         <div className='w-12 h-12 bg-black/20 rounded-full cursor-pointer flex justify-center items-center'>
                             <IoLogoFacebook color='white' size={30} />
+
                         </div>
                     </Link>
-                    <Link href={'https://instagram.com/proactive_ideas?igshid=ZDc4ODBmNjlmNQ=='} target='_blank'>
+                    <Link href={'https://instagram.com/proactive_ideas?igshid=ZDc4ODBmNjlmNQ=='} target='_blank' aria-label='Instagram link'>
                         <div className='w-12 h-12 bg-black/20 rounded-full cursor-pointer flex justify-center items-center'>
                             <IoLogoInstagram color='white' size={30} />
                         </div>
                     </Link>
 
-                    <Link href={'https://www.linkedin.com/company/proactive-ideas/'} target='_blank'>
+                    <Link href={'https://www.linkedin.com/company/proactive-ideas/'} target='_blank' aria-label='LinkedIn link'>
                         <div className='w-12 h-12 bg-black/20 rounded-full cursor-pointer flex justify-center items-center'>
                             <IoLogoLinkedin color='white' size={30} />
                         </div>

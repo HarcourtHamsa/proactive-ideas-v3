@@ -1,21 +1,25 @@
-import Footer from '@/components/Footer'
-import { getCookie } from 'cookies-next';
-import Navbar from '@/components/Navbar'
-import { NextApiRequest, NextApiResponse } from 'next';
 import React from 'react'
-import { IoPencil } from 'react-icons/io5'
+import dynamic from 'next/dynamic'
+import { NextApiRequest, NextApiResponse } from 'next';
+
+
+const Navbar = dynamic(() => import("@/components/Navbar"), { ssr: false });
+const Card = dynamic(() => import("@/components/Card"), { ssr: false });
+const Footer = dynamic(() => import("@/components/Footer"), { ssr: false });
+
+
+import { getCookie } from 'cookies-next';
+
+
+import { decryptData, fetchUserEnrollments } from '@/helper';
+import useCookie from '@/hooks/useCookie';
+
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
-import { decryptData, fetchUserEnrollments } from '@/helper';
-import Card from '@/components/Card';
-import useCookie from '@/hooks/useCookie';
 
 function Profile({ enrollments }) {
     const cookie = useCookie()
     const parsedEnrollments = JSON.parse(enrollments)
-
-
-
 
     return (
         <div className='bg-[#FAF7ED]'>

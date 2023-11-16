@@ -28,7 +28,7 @@ function Card({ data }: any) {
     <div className=" w-[100%] h-[400px]">
       <div className="flex flex-col h-full bg-white border rounded overflow-hidden">
 
-        <a className="block focus:outline-none focus-visible:ring-2 relative h-[40%]">
+        <div className="block focus:outline-none focus-visible:ring-2 relative h-[40%]">
           <figure className="relative h-full overflow-hidden">
             <Image className="absolute inset-0 m-auto h-full w-full transform object-cover hover:scale-105 transition duration-700 ease-out" src={data?.header_image} width="100" height="100" alt="Course" />
           </figure>
@@ -38,7 +38,7 @@ function Card({ data }: any) {
           </div>}
 
 
-        </a>
+        </div>
 
         <div className="flex-grow flex flex-col p-4">
 
@@ -53,9 +53,9 @@ function Card({ data }: any) {
                 {data?.category}
               </div>
 
-              <a className="block focus:outline-none focus-visible:ring-2">
+              <div className="block focus:outline-none focus-visible:ring-2">
                 <p className="text-lg font-semibold leading-snug capitalize line-clamp-2">{data?.title}</p>
-              </a>
+              </div>
 
             </header>
 
@@ -80,33 +80,6 @@ function Card({ data }: any) {
                   id: data?.id
                 }
               }, `/courses/${data.id}/preview`)}>Start Course</button>
-
-
-              {/* <button className="bg-[#F08354] shadow w-full flex items-center gap-1 justify-center text-white px-4 rounded py-2" onClick={() => router.push({
-                pathname: `/courses/${data.id}/preview`, query: {
-                  id: data?.id
-                }
-              }, `/courses/${data.id}/preview`)}>
-                <IoCart size={20} />
-                Buy
-                <span>
-                  {" "}
-                  {
-                    getPriceBasedOnLocation({
-                      country: geo.country,
-                      prices: data.prices
-                    })[2]
-                  }
-                  {
-
-                    getPriceBasedOnLocation({
-                      country: geo.country,
-                      prices: data.prices
-                    })[0]
-                  }
-                </span>
-
-              </button> */}
             </div>}
 
 

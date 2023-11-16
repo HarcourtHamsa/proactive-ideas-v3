@@ -1,11 +1,14 @@
 import React from "react";
-import BlogCard from "@/components/BlogCard";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import dynamic from 'next/dynamic'
+
+const Navbar = dynamic(() => import("@/components/Navbar"), { ssr: false });
+const Footer = dynamic(() => import("@/components/Footer"), { ssr: false }); 
+const SkeletonLoader = dynamic(() => import("@/components/SkeletonLoader"), { ssr: false });
+const IdeaCard = dynamic(() => import("@/components/IdeaCard"), { ssr: false });
+
+
 import { useFetchIdeasPostsQuery } from "@/features/apiSlice";
 import client from "@/lib/sanity";
-import SkeletonLoader from "@/components/SkeletonLoader";
-import IdeaCard from "@/components/IdeaCard";
 
 
 

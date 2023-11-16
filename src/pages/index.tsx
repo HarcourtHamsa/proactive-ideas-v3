@@ -1,29 +1,38 @@
 import React, { useState } from 'react'
 
-import Hero from '@/components/Hero'
-import Card from '@/components/Card'
+import dynamic from 'next/dynamic'
+import Image from 'next/image'
+import { useRouter } from 'next/router'
 
 
-import Footer from '@/components/Footer'
-import Newsletter from '@/components/Newsletter'
+const Hero = dynamic(() => import("@/components/Hero"), { ssr: false });
+const Card = dynamic(() => import("@/components/Card"), { ssr: false });
+const Footer = dynamic(() => import("@/components/Footer"), { ssr: false });
+const Newsletter = dynamic(() => import("@/components/Newsletter"), { ssr: false });
+const BlogCard = dynamic(() => import("@/components/BlogCard"), { ssr: false });
+const IdeaCard = dynamic(() => import("@/components/IdeaCard"), { ssr: false });
+
+
 
 import certImage1 from '../assets/certificate-image-1.png'
 import certImage2 from '../assets/certificate-image-2.png'
 import bookDoodleImage from '../assets/book-doodle.svg'
 
-import Image from 'next/image'
 
-import { useFetchBlogPostsQuery, useFetchCoursesQuery, useFetchGeolocationDataQuery, useFetchIdeasPostsQuery } from '@/features/apiSlice'
+import {
+  useFetchBlogPostsQuery,
+  useFetchCoursesQuery,
+  useFetchGeolocationDataQuery,
+  useFetchIdeasPostsQuery
+} from '@/features/apiSlice'
 
-import BlogCard from '@/components/BlogCard'
-import { useRouter } from 'next/router'
+
 import client from '@/lib/sanity'
 
-import IdeaCard from '@/components/IdeaCard'
 
 import useLocalStorage from '@/hooks/useLocalStorage'
 import SkeletonLoader from '@/components/SkeletonLoader'
-import Loader from '@/components/Loader'
+
 import { TbChevronLeft, TbChevronRight } from 'react-icons/tb'
 
 function Index({ heroContent, certContent, newsletterContent }: any) {
@@ -170,7 +179,7 @@ function Index({ heroContent, certContent, newsletterContent }: any) {
                 <div>
                   <p className='text-[#11393C] uppercase before:w-10 before:h-[2px] before:bg-[#11393C] before:inline-flex before:-translate-y-1 before:mr-4'>Blogs</p>
                   <h2 className="mb-4 text-3xl font-semibold leading-snug lg:font-extrabold lg:text-4xl lg:leading-none text-[#11393C] lg:mb-7 md:w-[600px]">
-                  Fresh insights from experts.
+                    Fresh insights from experts.
                   </h2>
                 </div>
 
@@ -237,7 +246,7 @@ function Index({ heroContent, certContent, newsletterContent }: any) {
                 <div>
                   <p className='text-[#11393C] uppercase before:w-10 before:h-[2px] before:bg-[#11393C] before:inline-flex before:-translate-y-1 before:mr-4'>Ideas</p>
                   <h2 className="mb-4 text-3xl font-semibold leading-snug lg:font-extrabold lg:text-4xl lg:leading-none text-[#11393C] lg:mb-7 md:w-[600px]">
-                  Bite sized contents.
+                    Bite sized contents.
                   </h2>
                 </div>
 
@@ -260,7 +269,7 @@ function Index({ heroContent, certContent, newsletterContent }: any) {
                     {ideasPosts?.data?.filter((post: any) => post.status !== 'inactive').slice(-6).reverse().map((course: any) => {
                       return (
                         <div className='w-[300px] block' key={Math.random()}>
-                          <BlogCard
+                          <IdeaCard
                             data={course}
                           />
                         </div>

@@ -1,6 +1,10 @@
 import React from "react";
-import Footer from "../components/Footer";
-import Navbar from "../components/Navbar";
+import dynamic from 'next/dynamic'
+
+const Footer = dynamic(() => import("@/components/Footer"), { ssr: false });
+const Navbar = dynamic(() => import("@/components/Navbar"), { ssr: false });
+
+
 import leftGrid from "../assets/grid-left.svg";
 import rightGrid from "../assets/grid-right.svg";
 import learnImage from "../assets/learn.png";

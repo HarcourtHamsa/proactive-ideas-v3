@@ -1,11 +1,15 @@
-import Footer from '@/components/Footer'
-import Navbar from '@/components/Navbar'
-import Spinner from '@/components/Spinner'
-import http from '@/lib/http'
 import React, { useState } from 'react'
+import dynamic from 'next/dynamic'
+
+const Footer = dynamic(() => import("@/components/Footer"), { ssr: false });
+const Navbar = dynamic(() => import("@/components/Navbar"), { ssr: false });
+const Spinner = dynamic(() => import("@/components/Spinner"), { ssr: false });
+
+
+import http from '@/lib/http'
+
 import { AiOutlineStop } from 'react-icons/ai'
-import { IoStop, IoStopCircle, IoStopCircleOutline } from 'react-icons/io5'
-import { MdStop } from 'react-icons/md'
+
 
 function Verify() {
     const [certId, setCertId] = useState<string>('')

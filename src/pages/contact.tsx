@@ -1,10 +1,19 @@
 import React, { useState } from "react";
-import { TbLocation, TbMail, TbMessage, TbPhoneCall } from "react-icons/tb";
-import CustomInput from "../components/CustomInput";
-import Footer from "../components/Footer";
-import Navbar from "../components/Navbar";
-import { Link } from "react-router-dom";
-import Spinner from "@/components/Spinner";
+import dynamic from 'next/dynamic'
+
+const Spinner = dynamic(() => import("@/components/Spinner"), { ssr: false });
+const Navbar = dynamic(() => import("@/components/Navbar"), { ssr: false });
+const Footer = dynamic(() => import("@/components/Footer"), { ssr: false });
+const CustomInput = dynamic(() => import("@/components/CustomInput"), { ssr: false });
+
+import { 
+    TbMail, 
+    TbPhoneCall 
+} from "react-icons/tb";
+
+
+
+
 
 function Contact() {
     const [isLoading, setIsLoading] = useState(false);
