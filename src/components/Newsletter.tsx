@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import React, { useState } from 'react'
-import pointerPNG from "../assets/mail.png"
+import pointerPNG from "../assets/mail.webp"
 import client from '@/lib/sanity'
 import { subscribe } from '@/helper'
 import Spinner from './Spinner'

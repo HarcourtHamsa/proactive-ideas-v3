@@ -1,28 +1,22 @@
 import React, { useState } from "react";
-import Image from "next/image";
+
 import { useRouter } from "next/router";
 import CustomInput from "../../components/CustomInput";
 import Spinner from "../../components/Spinner";
-import logo from "../../assets/logo.png"
+
 
 import { useDispatch } from "react-redux";
-import { setAuth } from "../../features/auth/authSlice";
+
 
 import notify from "../../components/Notification";
 import { ToastContainer } from "react-toastify";
-import http from "../../lib/http";
+
 import Link from "next/link";
-import FacebookButton from "@/components/FacebookButton";
+
 import GoogleButton from "@/components/GoogleButton";
-import GithubButton from "@/components/GithubButton";
-import { useSession, signOut, signIn } from "next-auth/react"
-import usePreviousRoute from "@/hooks/usePreviousPath";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
-import axios from "axios";
+
 import { handleSetCookie, login } from "@/helper";
-import { supabase } from "@/lib/supabaseClient";
-import { Role } from "../../../types/types";
+
 
 
 

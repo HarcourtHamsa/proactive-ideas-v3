@@ -5,8 +5,7 @@ import Footer from "@/components/Footer";
 import Image from "next/image";
 import headerImage from "../../assets/Second.png"
 import { useFetchBlogPostsQuery } from "@/features/apiSlice";
-import Loader from "@/components/Loader";
-import Search from "@/components/SVGs/Search";
+
 import { useRouter } from "next/router";
 import client from "@/lib/sanity";
 import SkeletonLoader from "@/components/SkeletonLoader";

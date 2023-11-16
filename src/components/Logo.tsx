@@ -1,6 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
-import logo from "../assets/idea.png"
+import logo from "../assets/idea.webp"
 import Link from 'next/link'
 
 const Logo = ({ color }: { color?: string }) => {

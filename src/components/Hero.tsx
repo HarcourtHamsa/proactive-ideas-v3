@@ -3,9 +3,9 @@ import Image from 'next/image';
 
 import { useRouter } from 'next/router';
 
-import personPNG from "../assets/welcome-woman.png";
-import semiCircle from "../assets/semi-circle.png";
-import yellowSemiCircle from "../assets/header.png";
+import personPNG from "../assets/welcome-woman.webp";
+import semiCircle from "../assets/semi-circle.webp";
+import yellowSemiCircle from "../assets/header.webp";
 import Navbar from './Navbar';
 import { Transition } from '@headlessui/react';
 import { useDispatch } from 'react-redux';

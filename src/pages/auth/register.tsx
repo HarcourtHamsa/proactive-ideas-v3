@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
-import Image from "next/image";
+
 
 import { useFormik } from 'formik'
 import CustomInput from "../../components/CustomInput";
 import notify from "../../components/Notification";
 import Spinner from "../../components/Spinner";
 
-import logo from "../../assets/logo.png"
+
 
 import { ToastContainer } from "react-toastify";
 import GoogleButton from "@/components/GoogleButton";
-import FacebookButton from "@/components/FacebookButton";
+
 import Link from "next/link";
 import { register } from "@/helper";
 

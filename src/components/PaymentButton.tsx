@@ -1,12 +1,10 @@
 import React from 'react';
 import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3';
-import { useCreateTransactionMutation, useEnrollToCourseMutation } from '@/features/apiSlice';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/store';
+import { useEnrollToCourseMutation } from '@/features/apiSlice';
+
 import Spinner from './Spinner';
 import { useRouter } from 'next/router';
-import flutterwaveLogo from "@/assets/flutterwave.png"
-import Image from 'next/image';
+
 import useCookie from '@/hooks/useCookie';
 
 export default function PaymentButton({ amount, courseId, currency }: { amount: string, courseId: string, currency: string }) {

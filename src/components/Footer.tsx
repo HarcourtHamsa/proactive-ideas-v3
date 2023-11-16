@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
-import whiteLogo from "../assets/logo-white.png"
+import whiteLogo from "../assets/logo-white.webp"
 import logo from "../assets/logo.svg"
 import Logo from './Logo'
 import { IoLogoFacebook, IoLogoInstagram, IoLogoLinkedin } from 'react-icons/io5'

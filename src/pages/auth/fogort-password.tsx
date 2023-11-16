@@ -1,10 +1,7 @@
 import React, { useState } from "react";
 import CustomInput from "../../components/CustomInput";
 
-import logo from "../../assets/logo.png"
-import Image from "next/image";
 import Logo from "@/components/Logo";
-import CustomLink from "@/components/CustomLink";
 import Link from "next/link";
 import { forgotPassword } from "@/helper";
 import Spinner from "@/components/Spinner";

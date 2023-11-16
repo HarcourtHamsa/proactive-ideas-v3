@@ -14,8 +14,8 @@ const IdeaCard = dynamic(() => import("@/components/IdeaCard"), { ssr: false });
 
 
 
-import certImage1 from '../assets/certificate-image-1.png'
-import certImage2 from '../assets/certificate-image-2.png'
+import certImage1 from '../assets/certificate-image-1.webp'
+import certImage2 from '../assets/certificate-image-2.webp'
 import bookDoodleImage from '../assets/book-doodle.svg'
 
 
