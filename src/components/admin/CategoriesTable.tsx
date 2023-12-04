@@ -1,22 +1,23 @@
 import React, { useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
-import { IoCreateOutline, IoTrash, IoWarning } from "react-icons/io5";
 import { ToastContainer } from "react-toastify";
-import useAuth from "../../hooks/useAuth";
 import Modal from "../Modal";
 import notify from "../Notification";
 import ReactPortal from "../ReactPortal";
 import Spinner from "../Spinner";
 
-import deleteSVG from "../../assets/delete.svg";
-import Image from "next/image";
 import { useCreateCategoryMutation, useDeleteCategoryMutation, useUpdateCategoryMutation } from "@/features/apiSlice";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
+
 import Search from "../SVGs/Search";
 import { TbPlus } from "react-icons/tb";
 import DeleteModalCard from "./DeleteModalCard";
 import useCookie from "@/hooks/useCookie";
+
+interface ICategory {
+  id: string,
+  name: string,
+  group: string,
+}
 
 function Table({ categories }: { categories: string[] }) {
   const [seachQry, setSearchQry] = useState("");
@@ -28,7 +29,7 @@ function Table({ categories }: { categories: string[] }) {
   const [showCategoryLoader, setShowCategoryLoader] = useState(false);
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
   const [showDeleteLoader, setShowDeleteLoader] = useState(false);
-  const [currentCategory, setCurrentCategory] = useState<any>({});
+  const [currentCategory, setCurrentCategory] = useState<null | ICategory>(null);
   const { "0": createCategory } = useCreateCategoryMutation()
   const { "0": updateCategory } = useUpdateCategoryMutation()
   const { "0": deleteCategory } = useDeleteCategoryMutation()
@@ -89,17 +90,11 @@ function Table({ categories }: { categories: string[] }) {
     setShowCategoryLoader(true);
 
 
-    console.log({
-      name: categoryName || currentCategory.name,
-      group: categoryGroup || currentCategory.group
-    });
-
-
     await updateCategory({
-      id: currentCategory.id,
+      id: currentCategory?.id,
       token: cookie?.user.accessToken,
-      name: categoryName || currentCategory.name,
-      group: categoryGroup || currentCategory.group
+      name: categoryName || currentCategory?.name,
+      group: categoryGroup || currentCategory?.group
     })
       .then((res: any) => {
 
@@ -122,11 +117,17 @@ function Table({ categories }: { categories: string[] }) {
 
   const deleteItem = async () => {
     setShowDeleteLoader(true);
+
+   
+
+
     await deleteCategory({
       id: currentCategory?.id,
       token: cookie?.user.accessToken,
     })
       .then((res: any) => {
+        console.log({ res });
+
         notify({ msg: "Category Deleted", type: "success" });
         setDeleteModalIsOpen(false);
       })
@@ -285,7 +286,7 @@ function Table({ categories }: { categories: string[] }) {
                   className="w-6 h-6 border rounded-full flex items-center justify-center cursor-pointer"
                   onClick={() => {
                     setCreateModalIsOpen(false);
-                    setCurrentCategory({})
+                    setCurrentCategory(null)
                     setCategoryName("")
                     setCategoryGroup("")
                   }}
@@ -305,7 +306,7 @@ function Table({ categories }: { categories: string[] }) {
                       placeholder=""
                       className="bg-white rounded border px-4 py-2"
                       name="categoryName"
-                      value={categoryName || currentCategory.name}
+                      value={categoryName || currentCategory?.name}
                       onChange={handleCategoryChange}
                     />
                   </div>
@@ -315,7 +316,7 @@ function Table({ categories }: { categories: string[] }) {
                     <select
                       id="countries"
                       className="bg-white border text-gray-900  rounded block w-full p-2.5 py-3" onChange={(e: any) => setCategoryGroup(e.target.value)}
-                      value={categoryGroup || currentCategory.group}>
+                      value={categoryGroup || currentCategory?.group}>
                       <option value=""></option>
                       <option value="blog">blog</option>
                       <option value="ideas">ideas</option>

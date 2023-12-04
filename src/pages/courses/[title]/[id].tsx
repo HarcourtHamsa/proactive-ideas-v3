@@ -90,6 +90,7 @@ function SingleCourse({ course, lessons, subscriber }: any) {
 
         if (count === contents.length - 1) {
             // code goes here
+            await http.patch(`/update-progress?course=${course?.id}&user=${cookie.user?.id}`, { progress: '100' })
             setCourseIsComplete(true)
             return;
         }
@@ -379,7 +380,7 @@ function SingleCourse({ course, lessons, subscriber }: any) {
 
                                     {quizzes &&
 
-                                        <div className='my-8'>
+                                        <div className='mb-8 mt-14'>
                                             {generateQuiz(Array.from(contents)) &&
                                                 <div>
                                                     <h2 className='lg:text-3xl font-semibold text-2xl mb-6'>Knowledge Check</h2>
@@ -459,13 +460,21 @@ function SingleCourse({ course, lessons, subscriber }: any) {
                                                     </div>
                                                     : <div className='flex gap-2'>
                                                         <button
-                                                            className='border py-2 hover:opacity-50 bg-[#F08354]/20 text-[#F08354] w-full whitespace-nowrap rounded px-4'
+                                                            className='border py-2 w-full hover:opacity-50 rounded px-4 bg-gray-200'
+                                                            onClick={() => {
+                                                                setCourseIsComplete(false)
+                                                                router.push('/')
+                                                            }
+                                                            
+                                                            }>Exit</button>
+
+                                                        <button
+                                                            className='border py-2 hover:opacity-50 bg-[#F08354] text-white w-full whitespace-nowrap rounded px-4'
                                                             onClick={async () => {
                                                                 await createCertificate()
                                                                 router.push(`/assessment/${assessment?.data[0].id}`)
                                                             }}
                                                         >Take Assessment</button>
-                                                        <button className='border py-2 w-full hover:opacity-50 text-white rounded px-4 bg-[#F08354]' onClick={() => setCourseIsComplete(false)}>Close</button>
                                                     </div>
                                             }
 

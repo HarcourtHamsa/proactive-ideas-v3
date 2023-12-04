@@ -76,7 +76,7 @@ function Index({ heroContent, certContent, newsletterContent }: any) {
 
               <div className='w-[50px] cursor-pointer h-[50px] bg-black/20 flex justify-center items-center rounded-full'
                 onClick={() => {
-                  if (offset === -6) return
+                  if (offset === -4) return
                   setOffset(offset - 1)
                 }}
               >
@@ -167,7 +167,7 @@ function Index({ heroContent, certContent, newsletterContent }: any) {
 
               <div className='w-[50px] cursor-pointer h-[50px] bg-black/20 flex justify-center items-center rounded-full'
                 onClick={() => {
-                  if (blogSlideroffset === -6) return
+                  if (blogSlideroffset === -4) return
                   setBlogSliderOffset(blogSlideroffset - 1)
                 }}
               >
@@ -234,7 +234,7 @@ function Index({ heroContent, certContent, newsletterContent }: any) {
 
               <div className='w-[50px] cursor-pointer h-[50px] bg-black/20 flex justify-center items-center rounded-full'
                 onClick={() => {
-                  if (ideaSlideroffset === -6) return
+                  if (ideaSlideroffset === -4) return
                   setIdeaSliderOffset(ideaSlideroffset - 1)
                 }}
               >

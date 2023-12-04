@@ -87,6 +87,7 @@ function EditSingleCourse({ course }: any) {
         title: course?.title,
         author: course?.author,
         header_image: course?.header_image,
+        certificate: course?.certificate,
         prices: course?.prices,
         tags: '',
         category: course?.category,
@@ -242,11 +243,11 @@ function EditSingleCourse({ course }: any) {
     function getPriceByCurrency(pricesArray, currency) {
         const priceObj = pricesArray.find((price) => price.currency === currency);
         if (priceObj) {
-          return priceObj.price;
+            return priceObj.price;
         }
         return null; // Return null or handle the case when the currency is not found
-      }
-    
+    }
+
     const [USD, setUSD] = useState({
         currency: "USD",
         country_code: "US",
@@ -355,6 +356,12 @@ function EditSingleCourse({ course }: any) {
                 setGeneralInfoData((prevState: any) => ({
                     ...prevState,
                     tags: e.target.value
+                }))
+                break;
+            case 'certificate':
+                setGeneralInfoData((prevState: any) => ({
+                    ...prevState,
+                    certificate: !generalInfoData.certificate
                 }))
                 break;
             case 'category':
@@ -489,14 +496,12 @@ function EditSingleCourse({ course }: any) {
     // HERE TOO
     const handleSubmit = async () => {
 
-        console.log({agg});
-        
 
         const courseObj = Object.assign({}, course, generalInfoData);
         courseObj.tags = [courseObj.tags];
 
-        if (agg){
-            courseObj.sections = agg 
+        if (agg) {
+            courseObj.sections = agg
         }
 
         var prices = [
@@ -511,11 +516,8 @@ function EditSingleCourse({ course }: any) {
 
 
 
-        delete courseObj.certificateId;
-        delete courseObj.certificate;
-
+        // DO NOT FORGET
         const parsedObjectives = arrayToHTMLList(generalInfoData.objectives)
-
         courseObj.objectives = parsedObjectives
 
         // DO NOT FORGET
@@ -523,21 +525,13 @@ function EditSingleCourse({ course }: any) {
         setIsUpdatingCourseInfo(true)
 
         courseObj.prices = prices
-        
-
-
-        // const courseShallowCopy = Object.assign({}, courseObj, { sections: courseInfoData })
-
-
-        console.log({ course_to_update: courseObj });
-
 
         await updateCourse({ token: cookie?.user?.accessToken, id: courseId, data: courseObj }).then((res) => {
-            console.log({res});
-            
+            console.log({ res });
+
             notify({ msg: "Course updated", type: 'success' })
         }).catch((error: any) => {
-            console.log({error})
+            console.log({ error })
             notify({ msg: "An error occured!", type: 'error' });
 
         }).finally(() => {
@@ -928,7 +922,22 @@ function EditSingleCourse({ course }: any) {
 
                             <CustomInput label='Course title' type='text' name='courseTitle' value={generalInfoData.title} onChange={handleChange} />
 
-                            <div className='grid grid-cols-2 gap-4'>
+                            <div className='grid grid-cols-3 gap-4'>
+                                <div className='translate-y-10'>
+                                    <label className="relative inline-flex items-center cursor-pointer">
+                                        <input
+                                            type="checkbox"
+                                            name="certificate"
+                                            className="sr-only peer"
+                                            checked={generalInfoData.certificate}
+                                            value={generalInfoData.certificate}
+                                            onChange={handleChange}
+                                        />
+                                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                                        <span className="ml-3 font-medium text-gray-900">Certificate</span>
+                                    </label>
+                                </div>
+
                                 <CustomInput label='Author' type='text' name='author' value={generalInfoData.author} onChange={handleChange} />
                                 {/* <CustomInput label='Price' type='text' name='price' value={generalInfoData.price} onChange={handleChange} /> */}
                                 <div>
@@ -1030,7 +1039,7 @@ function EditSingleCourse({ course }: any) {
                             <button
                                 className='bg-[#11393C] px-4 py-2 rounded text-white mt-4 flex'
                                 onClick={handleSubmit}>
-                                {isUpdatingGeneralInfo && <Spinner />} Update Changes 
+                                {isUpdatingGeneralInfo && <Spinner />} Update Changes
                             </button>
 
                         </div>

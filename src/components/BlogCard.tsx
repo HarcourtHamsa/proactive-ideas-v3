@@ -1,6 +1,7 @@
 import React from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
+import moment from "moment";
 
 function BlogCard({
   data
@@ -52,7 +53,8 @@ function BlogCard({
               <p className="w-1 h-1 bg-[#11393C] rounded-full"></p>
 
               <p>
-                {new Date(data?.createdAt).toLocaleDateString()}
+                {moment(data?.createdAt).format('MMMM YYYY')}
+                {/* {new Date(data?.createdAt).toLocaleDateString()} */}
               </p>
             </div>
 

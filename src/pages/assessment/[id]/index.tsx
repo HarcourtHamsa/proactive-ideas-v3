@@ -15,12 +15,14 @@ function Index({ assessment, id }: any) {
     const [offset, setOffset] = useState(0)
     const [option, setOption] = useState<null | number>(null)
     const [totalAssessments, setTotoalAssessments] = useState(assessment?.questions.length)
+    const [numberOfQuestionsAnswered, setNumberOfQuestionsAnswered] = useState(1)
     const [feedback, setFeedback] = useState<null | string>(null)
     const [totalCorrectAnswers, setTotalCorrectAnswers] = useState(0)
     const [isCorrect, setIsCorrect] = useState(false)
     const [isOpen, setIsOpen] = useState(false)
     const [activeBtn, setActiveBtn] = useState<number | null>(null)
     const [certificateData, setCertificateData] = useState([]);
+    const [showModal, setShowModal] = useState(false);
     const [isGeneratingCert, setIsGeneratingCert] = useState(false)
     const router = useRouter()
     const cookie = useCookie()
@@ -53,6 +55,7 @@ function Index({ assessment, id }: any) {
         setActiveBtn(null)
         setFeedback(null)
         setIsCorrect(false)
+        setNumberOfQuestionsAnswered(numberOfQuestionsAnswered + 1)
     }
 
     const passedCutoffMark = () => {
@@ -172,7 +175,7 @@ function Index({ assessment, id }: any) {
 
                                 <p>
 
-                                Prepare to demonstrate your expertise as we embark on a journey of thought-provoking questions specially crafted to assess your knowledge, critical thinking, and problem-solving abilities. This isn&apos;t your typical dull examination; we&apos;ve designed it to be engaging, informative, and, if we may say so, rather captivating!
+                                    Prepare to demonstrate your expertise as we embark on a journey of thought-provoking questions specially crafted to assess your knowledge, critical thinking, and problem-solving abilities. This isn&apos;t your typical dull examination; we&apos;ve designed it to be engaging, informative, and, if we may say so, rather captivating!
 
                                 </p>
 
@@ -181,7 +184,7 @@ function Index({ assessment, id }: any) {
                                 </p>
 
                                 <p>
-                                In this assessment, you&apos;ll encounter a variety of questions, including multiple-choice, true or false, and more. Your goal is to answer all the questions and aim for a score of at least 80% to successfully pass the assessment and receive your digital certificate. It&apos;s a learning experience that&apos;s as enriching as it is rewarding.
+                                    In this assessment, you&apos;ll encounter a variety of questions, including multiple-choice, true or false, and more. Your goal is to answer all the questions and aim for a score of at least 80% to successfully pass the assessment and receive your digital certificate. It&apos;s a learning experience that&apos;s as enriching as it is rewarding.
                                 </p>
 
                                 <button className='border h-[50px] flex items-center px-6 rounded duo-button' onClick={next}>Start Assessment</button>
@@ -195,9 +198,25 @@ function Index({ assessment, id }: any) {
                 {assessment?.questions?.map((question: any, index: any) => {
                     return (
                         <div key={Math.random()} className='h-screen w-screen bg-[#FAF7ED] relative flex justify-center items-center' style={{ display: `${offset === index + 1 ? 'flex' : 'none'}` }}>
+                            <div className='fixed top-0 w-full flex items-center justify-center bg-orange-400 py-1'>
+                                <div className='flex px-2'>
+                                    <span className='text-white line-clamp-1'>{assessment?.title} </span>
+                                    
+                                    <span>
+                                        <button 
+                                        className='bg-white ml-4 lg:ml-12 px-2 rounded-md shadow'
+                                        onClick={() => setIsOpen(true)}
+                                        >
+                                            Exit
+                                            </button>
+                                    </span>
+                                </div>
+                            </div>
 
-
-                            <div className='container lg:w-[50%]  w-[90%] bg-white border-t-8 border-t-[#11393C] z-20 border lg:px-8 px-4 mx-auto  rounded-lg box-border py-8'>
+                            <div className='container lg:w-[40%]  w-[90%] bg-white border-t-8 border-t-[#11393C] z-20 border lg:px-8 px-4 mx-auto  rounded-lg box-border py-4'>
+                                <p className='ml-auto w-fit font-medium text-gray-300 mb-4'>
+                                    <span className='text-2xl'>{numberOfQuestionsAnswered}</span>/{totalAssessments}</p>
+                                
                                 <p className='text-lg lg:text-xl mb-2'>
                                     {/* <span>Question {index + 1}: </span> */}
                                     {question?.question}
@@ -319,12 +338,12 @@ function Index({ assessment, id }: any) {
                             Are you sure you want to quit?
                         </p>
 
-                        <p>You will be redirected to the home page</p>
+                        <p className='text-gray-400 mb-3'>You will be redirected to the home page</p>
 
 
                         <div className='flex gap-3 mt-4'>
-                            <button className='px-4 py-2 w-full border rounded' onClick={() => router.push(`/courses/${assessment?.course}/preview`)}>Continue</button>
-                            <button className='px-4 py-2 w-full border rounded' onClick={() => setIsOpen(false)}>Close</button>
+                            <button className='px-4 py-2 w-full bg-gray-200  rounded' onClick={() => setIsOpen(false)}>Close</button>
+                            <button className='px-4 py-2 w-full  rounded bg-orange-400 text-white' onClick={() => router.push(`/courses/${assessment?.course.id}/preview`)}>Continue</button>
                         </div>
                     </div>
                 </Modal>
