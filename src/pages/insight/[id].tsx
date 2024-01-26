@@ -24,7 +24,7 @@ const StackedCards = ({ data, index }) => {
 
                 if (cardIndex === index) {
                     return (
-                        <div>
+                        <div key={Math.random()}>
                             <div
                                 key={index}
                                 className=" z-[100] bg-[conic-gradient(at_left,_var(--tw-gradient-stops))] relative from-rose-500 to-indigo-700 p-6 flex items-center justify-center w-[250px] text-center h-[300px] rounded-lg shadow-md mb-4"
@@ -78,7 +78,7 @@ function InsightById() {
                         <Image src={cogGif} alt='' className='w-fit mx-auto' />
 
                         <p className='mt-4 text-lg'>Hold on Tight</p>
-                        <p className=' text-gray-400'>We're Fetching Your Survey</p>
+                        <p className=' text-gray-400'>We&apos;re Fetching Your Survey</p>
                     </div>
                 </div>
             }
