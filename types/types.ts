@@ -3,6 +3,9 @@ export enum QuizTypes {
     multipleOptions = "multiple_choice"
 }
 
+export interface IQuestion {
+    question: string;
+}
 
 export enum Role {
     admin = "admin",

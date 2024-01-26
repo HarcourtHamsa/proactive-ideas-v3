@@ -34,6 +34,7 @@ import useLocalStorage from '@/hooks/useLocalStorage'
 import SkeletonLoader from '@/components/SkeletonLoader'
 
 import { TbChevronLeft, TbChevronRight } from 'react-icons/tb'
+import Loader from '@/components/Loader';
 
 function Index({ heroContent, certContent, newsletterContent }: any) {
   const router = useRouter();
@@ -292,7 +293,7 @@ function Index({ heroContent, certContent, newsletterContent }: any) {
       <div className='mt-24 lg:mt-0'>
         <Footer />
       </div>
-    </div>
+    </div>   
   )
 }
 

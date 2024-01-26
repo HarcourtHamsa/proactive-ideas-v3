@@ -5,6 +5,8 @@ import {
   IoChevronUp,
   IoChevronForward,
   IoClose,
+  IoSparkles,
+  IoSparklesOutline,
 } from "react-icons/io5";
 
 import HMenu from "../Menu";
@@ -61,10 +63,10 @@ function Layout({ children }: { children: React.ReactNode }) {
 
   const logout = () => {
 
-    
+
     router.push('/')
     deleteCookie('tkn')
-    signOut({redirect: false})
+    signOut({ redirect: false })
   }
 
   return (
@@ -206,6 +208,19 @@ function Layout({ children }: { children: React.ReactNode }) {
                 <span className="flex-1 ml-3 whitespace-nowrap text-gray-900">
                   Categories
                 </span>
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/admin/insight"
+                className="flex items-center p-2  group font-normal rounded text-white hover:bg-gray-100/10"
+              >
+                <IoSparklesOutline size={25} color="black" />
+                <span className="flex-1 ml-3 whitespace-nowrap text-gray-900">
+                  Insights
+                </span>
+
+                <span className="text-sm px-3 bg-orange-200 text-orange-500 rounded-3xl">New</span>
               </Link>
             </li>
 
@@ -473,6 +488,20 @@ function Layout({ children }: { children: React.ReactNode }) {
                     <span className="flex-1 ml-3 whitespace-nowrap text-gray-900">
                       Categories
                     </span>
+                  </Link>
+                </li>
+
+                <li>
+                  <Link
+                    href="/admin/insight"
+                    className="flex items-center p-2  group font-normal rounded text-white hover:bg-gray-100/10"
+                  >
+                    <IoSparklesOutline size={25} color="black" />
+                    <span className="flex-1 ml-3 whitespace-nowrap text-gray-900">
+                      Insights
+                    </span>
+
+                    <span className="text-sm px-3 bg-orange-200 text-orange-500 rounded-3xl">New</span>
                   </Link>
                 </li>
 

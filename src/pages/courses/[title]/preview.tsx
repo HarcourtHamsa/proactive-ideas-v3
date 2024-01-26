@@ -11,7 +11,7 @@ import {
 } from "react-icons/ai";
 import Footer from "../../../components/Footer";
 import headerImage from "../../../assets/course-details-header.jpg"
-import { IoBook, IoBookOutline, IoLockClosed, IoVideocam } from "react-icons/io5";
+import { IoBook, IoBookOutline, IoLockClosed, IoSparklesOutline, IoVideocam } from "react-icons/io5";
 import { TbCertificate, TbFileCertificate, TbFiles, TbLanguage, TbLock, TbLockOpen, TbStack, TbStack2 } from "react-icons/tb";
 import PaymentButton from "@/components/PaymentButton";
 import { useSession } from "next-auth/react";
@@ -125,7 +125,7 @@ function Preview({ subscriber }: any) {
             <ToastContainer />
 
             <div className="bg-[#FAF7ED] pb-20 pt-28">
-                <div className="container w-[90%] mx-auto gap-4 grid grid-cols-1 lg:grid-cols-3">
+                <div className="container w-[90%] mx-auto gap-20 grid grid-cols-1 lg:grid-cols-3">
                     <div className="h-fit col-span-2 order-1 lg:order-1">
                         <div className="border bg-white rounded-md overflow-hidden">
                             {/* header image */}
@@ -148,7 +148,7 @@ function Preview({ subscriber }: any) {
                                 </div>
 
                             </div>
-                            <div className="p-4 bg-white">
+                            <div className="p-4 px-8 bg-white">
                                 {/* code goes here */}
                                 <div className="flex gap-2">
                                     <p>{course?.data?.author}</p>
@@ -163,9 +163,10 @@ function Preview({ subscriber }: any) {
                             </div>
 
 
-                            <div className="p-4">
+                            <div className="p-4 px-8">
+                            <hr  className="mb-2"/>
                                 <h1 className="mb-4 text-2xl font-bold text-gray-900 leading-snug lg:font-extrabold lg:text-3xl lg:leading-none">Learning Objectives</h1>
-                                <main className="custom__list" dangerouslySetInnerHTML={{ __html: course?.data?.objectives }}></main>
+                                <main className="custom__list" id="objectives" dangerouslySetInnerHTML={{ __html: course?.data?.objectives }}></main>
                             </div>
                         </div>
 
@@ -197,7 +198,7 @@ function Preview({ subscriber }: any) {
                                                                     className="px-4 py-2 hover:bg-zinc-100/10 rounded duration-200 cursor-pointer"
                                                                 >
 
-                                                                    <p className="text-lg flex items-center gap-1 text-black">
+                                                                    <p className="text-lg flex border-t-2 pt-2 bg-gray-200 items-center gap-1 text-black">
                                                                         <span className="flex justify-center items-center rounded-full">
                                                                             Section {index + 1}:
                                                                         </span>
@@ -206,7 +207,7 @@ function Preview({ subscriber }: any) {
 
                                                                     <div className="w-full my-2 ml-4">
                                                                         {item.sub_sections.map((s: any, i: number) => (
-                                                                            <span key={Math.random()} className="py-3 px-2 whitespace-nowrap overflow-hidden text-ellipsis flex gap-2 items-center hover:bg-gray-500/10 rounded" onClick={() => router.push({ pathname: `/courses/${course?.data.title}/${course?.data.id}` })}>
+                                                                            <span key={Math.random()} className="py-3 border-t-2 px-2 whitespace-nowrap overflow-hidden text-ellipsis flex gap-2 items-center hover:bg-gray-500/10 rounded" onClick={() => router.push({ pathname: `/courses/${course?.data.title}/${course?.data.id}` })}>
                                                                                 {/* {index === 0 ? i <= 1 ? <TbLockOpen size={20} /> : <TbLock size={20} /> : <TbLock size={20} />} */}
                                                                                 {s.title}
                                                                                 {/* {index} */}
@@ -232,25 +233,6 @@ function Preview({ subscriber }: any) {
                         <div className="w-[100%]">
                             <div className="flex flex-col h-full bg-[#fff] border rounded-md overflow-hidden">
                                 <div className="flex-grow flex flex-col px-4 py-4">
-
-
-                                    {/* <h2 className="text-4xl text-center text-[#11393C] font-semibold mb-4">
-                                        {
-                                            getPriceBasedOnLocation({
-                                                country: geo.country,
-                                                prices: course?.data?.prices
-                                            })[2]
-                                        }
-                                        {
-
-                                            getPriceBasedOnLocation({
-                                                country: geo.country,
-                                                prices: course?.data?.prices
-                                            })[0]
-                                        }
-                                    </h2> */}
-
-
 
                                     <ul className="ul__unset" id="meta-info" ref={targetElement}>
                                         <li className="justify-between flex py-2">
@@ -358,6 +340,20 @@ function Preview({ subscriber }: any) {
                                     <Image src={certificate} alt="" className="w-full h-full" />
                                 </div>
                             }
+
+
+                            <div className="h-fit bg-[conic-gradient(at_left,_var(--tw-gradient-stops))] from-rose-500 to-indigo-700 border rounded mt-4 p-4">
+                                <h3 className="flex gap-2 text-white "><IoSparklesOutline size={25} /> Insights</h3>
+                                <p className="my-3 text-sm text-white">
+                                    Elevate your business decisions with our cutting-edge AI feature for deeper,
+                                    data-driven insights tailored just for you.
+                                </p>
+                                <button 
+                                className=" py-2 w-full mt-2 rounded bg-[#F08354] text-white"
+                                onClick={() => router.push(`/insight/${course.data.id}`)}
+                                >Upgrade to Plus</button>
+                            </div>
+
                         </div>
                     </div>
                 </div>

@@ -39,7 +39,7 @@ function BlogCard({
 
             <header className="mb-3 min-h-[30px] h-fit">
               <div className="block focus:outline-none focus-visible:ring-2">
-                <p className="text-lg font-semibold leading-snug capitalize line-clamp-1">{data?.title}</p>
+                <p className="text-lg leading-snug capitalize line-clamp-1">{data?.title}</p>
               </div>
             </header>
 

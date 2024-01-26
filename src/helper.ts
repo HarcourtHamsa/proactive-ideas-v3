@@ -8,6 +8,7 @@ import useAuth from "./hooks/useAuth";
 const parse5 = require('parse5');
 import { load } from 'cheerio';
 import CryptoJS from 'crypto-js';
+import { IQuestion } from "../types/types";
 
 
 
@@ -119,12 +120,86 @@ export async function fetchSubSectionQuiz({ id }: any) {
 
 export async function fetchCourses() {
   try {
-    const res = await http.get(`/courses`);
+    const res = await http.get(`/get-courses`);
     return res.data;
   } catch (error) {
     console.log(error);
   }
 }
+
+
+export async function getInsightForCourse(course: string) {
+ 
+  try {
+    const res = await http.get(`/get-insight-for-course?course=${course}`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+
+export async function createInsight(
+  {
+    title,
+    course,
+    questions
+  }:
+    {
+      title: string,
+      course: string,
+      questions: IQuestion[]
+    }
+) {
+  try {
+    const res = await http.post(`/create-insight`, { title, course, questions });
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function updateInsight(
+  {
+    title,
+    course,
+    questions,
+    id
+  }:
+    {
+      title: string,
+      course: string,
+      id: string,
+      questions: IQuestion[]
+    }
+) {
+  try {
+    const res = await http.patch(`/update-insight?id=${id}`, { title, course, questions });
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+
+export async function getInsights() {
+  try {
+    const res = await http.get(`/get-insights`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function deleteInsight(id: string) {
+  try {
+    const res = await http.delete(`/delete-insight?id=${id}`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 
 export async function fetchCourseById(id: string) {
   try {
@@ -171,7 +246,7 @@ export async function createBlogPost({
   };
 
   try {
-  
+
 
     const res = await http.post(`/create-blog-post`, { ...body }, options);
     return res.data;

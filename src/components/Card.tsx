@@ -23,7 +23,6 @@ function Card({ data }: any) {
 
   const { data: subscriber, isLoading } = useFetchCourseEnrollmentQuery({ course: courseId, user: userId })
 
-
   const isCompleteted = subscriber?.data?.progress === "100";
 
   return (
@@ -56,7 +55,7 @@ function Card({ data }: any) {
             <header className="mb-3">
 
               <div className="flex flex-wrap">
-              <div className="text-sm rounded-full bg-orange-400/20 text-orange-400 w-fit mb-3 px-2 py-1">
+                <div className="text-sm rounded-full bg-orange-400/20 text-orange-400 w-fit mb-3 px-2 py-1">
                   {data?.category}
                 </div>
 
@@ -66,11 +65,11 @@ function Card({ data }: any) {
                   </div>
                 }
 
-               
+
               </div>
 
               <div className="block focus:outline-none focus-visible:ring-2">
-                <p className="text-lg font-semibold leading-snug capitalize line-clamp-2">{data?.title}</p>
+                <p className="text-lg leading-snug capitalize line-clamp-2">{data?.title}</p>
               </div>
 
             </header>
@@ -82,7 +81,7 @@ function Card({ data }: any) {
             </div>
           </div>
 
-          {subscriber?.data ? <div>
+          {subscriber?.data?.keys ? <div>
             <button
               className="py-2 bg-[#F08354] text-white w-full rounded"
               onClick={() => router.push({ pathname: `/courses/${data.title}/${data?.id}` })}

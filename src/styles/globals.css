@@ -4,6 +4,12 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'Recoleta';
+  src: url('../assets/fonts/Recoleta-Bold.woff2') format('woff2');
+  font-display: swap;
+}
+
 
 @tailwind base;
 @tailwind components;
@@ -29,6 +35,7 @@
   --tetiary-color: "#F08354"
 }
 
+
 * {
   box-sizing: border-box;
   padding: 0;
@@ -41,11 +48,27 @@
 }
 
 
+#objectives li{ 
+  /* list-style:none; */
+  list-style-image: url("../assets//check.svg");
+  margin-left: 0;
+  padding-left: 0;
+  /* height: 50px; */
+}
+
+
+
+
+
+
+
 
 h1,
 h2,
 h3 {
   line-height: 1.4 !important;
+  font-family: 'Recoleta' !important;
+
 }
 
 .button-container {

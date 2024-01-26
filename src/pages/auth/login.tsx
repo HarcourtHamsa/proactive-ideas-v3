@@ -35,6 +35,9 @@ function Login() {
 
         await login({ email, password }).then(async (res) => {
 
+            // Inspect cookies
+            console.log("document cookies", document.cookie);
+
             const authObj = {
                 user: {
                     accessToken: "",

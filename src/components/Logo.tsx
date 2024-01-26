@@ -8,10 +8,10 @@ const Logo = ({ color }: { color?: string }) => {
         <Link href="/"  className='flex'>
             <Image
                 src={logo}
-                className="w-[30px] h-[40px] lg:translate-x-20 translate-x-10 top-0 left-0 bottom-0 right-0"
+                className="w-[50px] scale-[180%] lg:translate-x-10 translate-x-2 top-0 left-0 bottom-0 right-0"
                 alt="Proactive Ideas Logo"
-                height={20}
-                width={20}
+                height={10}
+                width={10}
             />
         </Link>
 
