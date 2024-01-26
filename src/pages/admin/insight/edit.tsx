@@ -20,13 +20,11 @@ interface IFormattedCourses {
 function Create() {
     const { query } = useRouter()
     const { insight } = query
-    const parsedInsight = JSON.parse(insight as string);
+    const parsedInsight =  insight ? JSON.parse(insight as string) : {};
 
-    console.log({ parsedInsight });
-
-    const [title, setTitle] = useState(parsedInsight.title || '');
-    const [course, setCourse] = useState(parsedInsight.course.id || '');
-    const [questions, setQuestions] = useState<Array<IQuestion>>(parsedInsight.questions || []);
+    const [title, setTitle] = useState(parsedInsight?.title || '');
+    const [course, setCourse] = useState(parsedInsight?.course?.id || '');
+    const [questions, setQuestions] = useState<Array<IQuestion>>(parsedInsight?.questions || []);
     const [courses, setCourses] = useState<Array<IFormattedCourses>>([])
     const [isLoading, setIsLoading] = useState(false);
 
@@ -94,7 +92,7 @@ function Create() {
     useEffect(() => {
         async function fetchData() {
             await fetchCourses().then((res) => {
-                const formattedCourses = res.data?.map((d) => ({ title: d.title, id: d.id }))
+                const formattedCourses = res?.data?.map((d) => ({ title: d.title, id: d.id }))
                 setCourses(formattedCourses)
             })
         };
