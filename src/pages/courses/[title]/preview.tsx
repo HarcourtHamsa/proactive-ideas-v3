@@ -22,7 +22,7 @@ import { RootState } from "@/store";
 import { BsFile, BsFiletypeSvg } from "react-icons/bs";
 import ContentsSVG from "@/components/SVGs/Contents";
 import { decryptData, fetchCourseById, fetchCourseEnrollment, getPriceBasedOnLocation } from "@/helper";
-import certificate from "../../../assets/sample-certificate.jpg"
+import certificate from "../../../assets/sample-certificate.png"
 import { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
 import CustomPaystackButton from "@/components/CustomPaystackButton";
 import useCookie from "@/hooks/useCookie";

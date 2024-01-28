@@ -1,17 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import { TbBook, TbCheck } from "react-icons/tb";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { fetchCourseEnrollment, getPriceBasedOnLocation } from "@/helper";
-import { IoCart } from "react-icons/io5";
-import { NextApiRequest, NextApiResponse } from "next";
 import useCookie from "@/hooks/useCookie";
 import { useFetchCourseEnrollmentQuery } from "@/features/apiSlice";
-import { FiCheckCircle } from "react-icons/fi";
-
-// { title, duration }: { title: string; duration: string }
 
 function Card({ data }: any) {
   const router = useRouter();
@@ -94,7 +87,9 @@ function Card({ data }: any) {
                 pathname: `/courses/${data.id}/preview`, query: {
                   id: data?.id
                 }
-              }, `/courses/${data.id}/preview`)}>Start Course</button>
+              }, `/courses/${data.id}/preview`)}>
+                Start Course
+                </button>
             </div>}
 
 

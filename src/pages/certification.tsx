@@ -8,7 +8,7 @@ const Navbar = dynamic(() => import("@/components/Navbar"), { ssr: false });
 import leftGrid from "../assets/grid-left.svg";
 import rightGrid from "../assets/grid-right.svg";
 import learnImage from "../assets/learn.webp";
-import sampleCertificateImage from "../assets/sample-certificate.jpg";
+import sampleCertificateImage from "../assets/sample-certificate.png";
 import Image from "next/image";
 import client from "@/lib/sanity";
 

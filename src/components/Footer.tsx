@@ -12,7 +12,7 @@ function Footer() {
 
         <footer className="p-4 bg-[#11393C] md:p-8 lg:p-10">
             <div className="mx-auto max-w-screen-xl text-center mt-32">
-                <div className='w-fit mx-auto lg:-translate-x-0 -translate-x-0 my-4'>
+                <div className='w-fit mx-auto lg:-translate-x-0 -translate-x-0 my-4 scale-75 lg:scale-100'>
                     <Image src={whiteLogo} alt='logo white variant' width={80} height={80} />
                 </div>
                 {/* <p className="my-6 text-gray-500 dark:text-gray-400">Open-source library of over 400+ web components and interactive elements built for better web.</p> */}
@@ -54,7 +54,7 @@ function Footer() {
                         </div>
                     </Link>
                 </div>
-                <span className="text-sm text-gray-300 sm:text-center">©2023 <a href="#" className="hover:underline">Proactive Ideas</a>. All Rights Reserved.</span>
+                <span className="text-sm text-gray-300 sm:text-center">©{new Date().getFullYear()} <a href="#" className="hover:underline">Proactive Ideas</a>. All Rights Reserved.</span>
             </div>
         </footer>
 

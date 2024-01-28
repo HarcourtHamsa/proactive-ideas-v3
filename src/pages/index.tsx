@@ -57,6 +57,9 @@ function Index({ heroContent, certContent, newsletterContent }: any) {
     }
   }
 
+  console.log({ courses });
+
+
   return (
     <div className='bg-[#FAF7ED]'>
       <Hero data={heroContent} />
@@ -293,7 +296,7 @@ function Index({ heroContent, certContent, newsletterContent }: any) {
       <div className='mt-24 lg:mt-0'>
         <Footer />
       </div>
-    </div>   
+    </div>
   )
 }
 
