@@ -11,7 +11,7 @@ function Footer() {
     return (
 
         <footer className="p-4 bg-[#11393C] md:p-8 lg:p-10">
-            <div className="mx-auto max-w-screen-xl text-center mt-32">
+            <div className="mx-auto max-w-screen-xl text-center mt-10 sm:mt-28">
                 <div className='w-fit mx-auto lg:-translate-x-0 -translate-x-0 my-4 scale-75 lg:scale-100'>
                     <Image src={whiteLogo} alt='logo white variant' width={80} height={80} />
                 </div>
