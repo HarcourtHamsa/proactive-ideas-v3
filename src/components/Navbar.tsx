@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux'
 import { IoCaretDownOutline, IoChevronDown, IoClose, IoMenu } from 'react-icons/io5'
 
 import Menu from "./Menu"
-
+import logo from "@/assets/idea.webp"
 import Logo from './Logo'
 import { useRouter } from 'next/router';
 import Link from 'next/link';
@@ -101,8 +101,14 @@ function Navbar() {
     <nav className={`px-4 navbar sm:px-4 py-2 md:py-2 fixed top-0 left-0 right-0 transition-transform duration-700 ease-in-out border-b z-20 bg-[#FAF7ED] ${visible ? 'block' : 'hidden'}`}>
       <div className="container flex flex-wrap items-center justify-between mx-auto">
         <div className='flex items-center'>
-          <div className='md:-translate-y-0 -translate-x-5 w-fit block'>
-            <Logo />
+          <div className='w-full flex justify-center relative h-[20px]'>
+            <Image
+              src={logo}
+              className="w-[120px] h-[120px] -translate-y-[40%] -translate-x-[25%] lg:-translate-x-[10%]"
+              alt="Proactive Ideas Logo"
+              height={100}
+              width={100}
+            />
           </div>
 
           {/* desktop nav */}
@@ -128,11 +134,11 @@ function Navbar() {
                   className="py-5 cursor-pointer pl-3 hover:text-[#F08354] pr-4 relative flex items-center gap-1 rounded md:bg-transparent md:p-0 text-black"
                   aria-current="page"
                   tabIndex={0}
-                  // onBlur={() => {
-                  //   if (resourcesSubMenuIsOpen) {
-                  //     setResourcesSubMenuIsOpen(false)
-                  //   }
-                  // }}
+                // onBlur={() => {
+                //   if (resourcesSubMenuIsOpen) {
+                //     setResourcesSubMenuIsOpen(false)
+                //   }
+                // }}
                 >Resources <IoCaretDownOutline /> </div>
                 {resourcesSubMenuIsOpen && (
                   <div className='absolute w-[250px] z-30 -bottom-36 translate-y-6 -translate-x-4 bg-white rounded shadow-xl overflow-hidden'>

@@ -11,7 +11,7 @@ import {
 } from "react-icons/ai";
 import Footer from "../../../components/Footer";
 import headerImage from "../../../assets/course-details-header.jpg"
-import { IoBook, IoBookOutline, IoLockClosed, IoSparklesOutline, IoVideocam } from "react-icons/io5";
+import { IoBatteryFullSharp, IoBook, IoBookOutline, IoLockClosed, IoSparklesOutline, IoVideocam } from "react-icons/io5";
 import { TbCertificate, TbFileCertificate, TbFiles, TbLanguage, TbLock, TbLockOpen, TbStack, TbStack2 } from "react-icons/tb";
 import PaymentButton from "@/components/PaymentButton";
 import { useSession } from "next-auth/react";
@@ -125,7 +125,7 @@ function Preview({ subscriber }: any) {
             <ToastContainer />
 
             <div className="bg-[#FAF7ED] pb-20 pt-28">
-                <div className="container w-[90%] mx-auto gap-20 grid grid-cols-1 lg:grid-cols-3">
+                <div className="container w-[90%] mx-auto lg:gap-20 grid grid-cols-1 lg:grid-cols-3">
                     <div className="h-fit col-span-2 order-1 lg:order-1">
                         <div className="border bg-white rounded-md overflow-hidden">
                             {/* header image */}
@@ -195,25 +195,31 @@ function Preview({ subscriber }: any) {
                                                             {course?.data?.sections.map((item: any, index: number) => (
                                                                 <div
                                                                     key={Math.random()}
-                                                                    className="px-4 py-2 hover:bg-zinc-100/10 rounded duration-200 cursor-pointer"
+                                                                    className="px-4 py-2 rounded duration-200 cursor-pointer"
                                                                 >
 
-                                                                    <p className="text-lg flex border-t-2 pt-2 bg-gray-200 items-center gap-1 text-black">
-                                                                        <span className="flex justify-center items-center rounded-full">
+                                                                    <p className=" border-t-1 pt-2 items-center gap-1 line-clamp-1 text-black">
+                                                                        {/* <span className="flex justify-center items-center rounded-full">
                                                                             Section {index + 1}:
-                                                                        </span>
+                                                                        </span> */}
 
-                                                                        {item.title}</p>
+                                                                        {item.title}
+                                                                        </p>
+                                                                     
 
-                                                                    <div className="w-full my-2 ml-4">
-                                                                        {item.sub_sections.map((s: any, i: number) => (
-                                                                            <span key={Math.random()} className="py-3 border-t-2 px-2 whitespace-nowrap overflow-hidden text-ellipsis flex gap-2 items-center hover:bg-gray-500/10 rounded" onClick={() => router.push({ pathname: `/courses/${course?.data.title}/${course?.data.id}` })}>
-                                                                                {/* {index === 0 ? i <= 1 ? <TbLockOpen size={20} /> : <TbLock size={20} /> : <TbLock size={20} />} */}
-                                                                                {s.title}
-                                                                                {/* {index} */}
-                                                                            </span>
+                                                                    <ul className="my-2 ml-8 custom__list">
+                                                                        {item.sub_sections.map(
+                                                                            (s: any, i: number) => (
+                                                                            <li 
+                                                                            key={Math.random()} 
+                                                                            className="list-disc" 
+                                                                            onClick={() => router.push({ 
+                                                                                pathname: `/courses/${course?.data.title}/${course?.data.id}` })}>
+                                                                                   
+                                                                                {s.title} 
+                                                                            </li>
                                                                         ))}
-                                                                    </div>
+                                                                    </ul>
                                                                 </div>
                                                             ))}
                                                         </div>
@@ -229,7 +235,7 @@ function Preview({ subscriber }: any) {
                             </div>
                         </div>
                     </div>
-                    <div className="h-fit  w-[100%] ml-auto order-1 lg:order-2">
+                    <div className="h-fit w-[100%] ml-auto order-1 lg:order-2 mt-10 lg:mt-0">
                         <div className="w-[100%]">
                             <div className="flex flex-col h-full bg-[#fff] border rounded-md overflow-hidden">
                                 <div className="flex-grow flex flex-col px-4 py-4">

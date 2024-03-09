@@ -57,8 +57,6 @@ function Index({ heroContent, certContent, newsletterContent }: any) {
     }
   }
 
-  console.log({ courses });
-
 
   return (
     <div className='bg-[#FAF7ED]'>
