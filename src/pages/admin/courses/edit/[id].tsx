@@ -28,6 +28,7 @@ import {
   getSingleCourse,
   seperateBlogDataIntoComponents,
 } from "@/helper";
+import pako from "pako";
 import Spinner from "@/components/Spinner";
 import http from "@/lib/http";
 import {
@@ -525,6 +526,27 @@ function EditSingleCourse({ course }: any) {
   //     return changedSections;
   // }
 
+  function sanitizeDto(data: Record<string, any>): any {
+    const shallowCopyOfDto = Object.assign({}, data);
+
+    const blackList = ["prices", "alias", "createdAt", "updatedAt", "id"];
+
+    blackList.map((item: string) => {
+      if (Object.keys(shallowCopyOfDto).includes(item)) {
+        delete shallowCopyOfDto[item];
+      }
+    });
+
+    return shallowCopyOfDto;
+  }
+
+  const compress = async (data) => {
+    const jsonString = JSON.stringify(data);
+    const compressedData = pako.gzip(jsonString);
+
+    return compressedData;
+  };
+
   // HERE TOO
   const handleSubmit = async () => {
     const courseObj = Object.assign({}, course, generalInfoData);
@@ -534,7 +556,7 @@ function EditSingleCourse({ course }: any) {
       courseObj.sections = agg;
     }
 
-    var prices = [USD, INR, NGN, GBP, GHS, ZAR, KES];
+    // var prices = [USD, INR, NGN, GBP, GHS, ZAR, KES];
 
     // DO NOT FORGET
     const parsedObjectives = arrayToHTMLList(generalInfoData.objectives);
@@ -544,18 +566,18 @@ function EditSingleCourse({ course }: any) {
     setIsUpdatingGeneralInfo(true);
     setIsUpdatingCourseInfo(true);
 
-    courseObj.prices = prices;
+    // courseObj.prices = prices;
 
-    console.log({ courseObj });
+    // const sanitizedData = sanitizeDto(courseObj);
+
+    const compressedData = await compress(courseObj);
 
     await updateCourse({
       token: cookie?.user?.accessToken,
       id: courseId,
-      data: courseObj,
+      data: compressedData,
     })
       .then((res) => {
-        console.log({ res });
-
         notify({ msg: "Course updated", type: "success" });
       })
       .catch((error: any) => {
