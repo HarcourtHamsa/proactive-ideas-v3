@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const apiSlice = createApi({
   reducerPath: "apiSlice",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://shielded-cliffs-15232-110fd52a9c2c.herokuapp.com/api/",
+    baseUrl: "https://proactive-ideas-backup-6ef9825a1d26.herokuapp.com/api/",
     // baseUrl: "http://localhost:8000/api/",
     headers: {
       "Access-Control-Allow-Origin": "*",
